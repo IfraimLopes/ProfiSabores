@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
 import json
 
 from datetime import timedelta
@@ -86,41 +90,33 @@ def pagina_entrada(request):
 
 
 @never_cache
+@never_cache
 def home(request):
-    """Página inicial do Profisabores."""
-    hoje = timezone.localdate()
-    tipo_utilizador = obter_tipo_utilizador(request)
+    try:
+        hoje = timezone.localdate()
+        tipo_utilizador = obter_tipo_utilizador(request)
+        ementas = obter_ementas_do_dia(hoje, tipo_utilizador)
 
-    ementas = obter_ementas_do_dia(
-        hoje,
-        tipo_utilizador,
-    )
+        banners_topo = BannerHome.objects.filter(
+            posicao="topo", ativo=True
+        ).order_by("ordem", "id")
 
-    # Banners ativos do carrossel superior
-    banners_topo = BannerHome.objects.filter(
-        posicao="topo",
-        ativo=True,
-    ).order_by("ordem", "id")
+        banners_fim = BannerHome.objects.filter(
+            posicao="fim", ativo=True
+        ).order_by("ordem", "id")
 
-    # Banners ativos do carrossel inferior
-    banners_fim = BannerHome.objects.filter(
-        posicao="fim",
-        ativo=True,
-    ).order_by("ordem", "id")
+        contexto = {
+            "ementas": ementas,
+            "hoje": hoje,
+            "banners_topo": banners_topo,
+            "banners_fim": banners_fim,
+        }
 
-    contexto = {
-        "ementas": ementas,
-        "hoje": hoje,
-        "banners_topo": banners_topo,
-        "banners_fim": banners_fim,
-    }
+        return render(request, "index.html", contexto)
 
-    return render(
-        request,
-        "index.html",
-        contexto,
-    )
-
+    except Exception:
+        logger.exception("ERRO AO CARREGAR A PAGINA /inicio/")
+        raise
 
 @never_cache
 def menu(request):
