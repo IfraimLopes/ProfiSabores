@@ -1,0 +1,864 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="pt">
+
+<head>
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Profisabores</title>
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+     <link
+    rel="stylesheet"
+    href="{% static 'css/loading.css' %}"
+>
+
+
+       <!-- Font Awesome -->
+
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+
+
+    <link rel="stylesheet" href="{% static 'css/tutorial.css' %}?v=20261017-1">
+</head>
+
+<body>
+
+    <!-- =========================
+     LOADING
+========================= -->
+
+<div id="loading-screen">
+
+
+<img
+    src="{% static 'img/rofiteclaICON.png' %}"
+            alt="Logo Profitecla"
+    class="loading-logo"
+>
+
+
+</div>
+
+
+<header>
+
+    <div class="header-text">
+
+        <img
+            src="{% static 'img/rofiteclaICON.png' %}"
+            alt="Logo Profitecla"
+        >
+
+        
+
+    </div>
+
+    <div class="button-header">
+
+        <img
+            src="{% static 'img/chefe-de-cozinha.png' %}"
+            alt="Ícone de notificação"
+        >
+
+    </div>
+
+</header>
+
+
+<main class="pagina">
+
+    <div class="pagina-header">
+
+        <h1>
+            Minhas Reservas
+        </h1>
+
+        <p>
+            Consulta as tuas reservas no restaurante.
+        </p>
+
+    </div>
+
+
+    <!-- SELEÇÃO MÚLTIPLA DE RESERVAS -->
+
+    <section id="barraSelecaoReservas" class="barra-selecao-reservas" hidden>
+        <label class="selecionar-todas-label">
+            <input type="checkbox" id="selecionarTodasReservas">
+            Selecionar todas as reservas confirmadas
+        </label>
+
+        <p id="contadorReservasSelecionadas" aria-live="polite">
+            0 reservas selecionadas
+        </p>
+
+        <button
+            type="button"
+            id="cancelarReservasSelecionadas"
+            class="cancelar-btn"
+            disabled
+        >
+            Cancelar selecionadas
+        </button>
+    </section>
+
+
+    <!-- LISTA DE RESERVAS -->
+
+    <div id="listaReservas">
+
+        <div class="infocard">
+
+            <span class="info-icon">
+                ⏳
+            </span>
+
+            <div>
+
+                <strong>
+                    A carregar reservas...
+                </strong>
+
+                <p>
+                    Aguarda um momento.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- NOVA RESERVA -->
+
+    <a
+        href="{% url 'menu' %}"
+        class="nova-reserva-btn"
+    >
+
+        + Fazer nova reserva
+
+    </a>
+
+</main>
+
+
+<!-- NAVEGAÇÃO INFERIOR -->
+
+<nav class="bottom-nav">
+
+    <a
+        href="{% url 'home' %}"
+        class="nav-btn"
+    >
+
+        <span>
+            ⌂
+        </span>
+
+        <small>
+            Início
+        </small>
+
+    </a>
+
+
+    <a
+        href="{% url 'menu' %}"
+        class="nav-btn"
+    >
+
+        <span>
+            ☷
+        </span>
+
+        <small>
+            Menu
+        </small>
+
+    </a>
+
+
+   <a
+    href="{% url 'pagina_reservas' %}"
+    class="nav-btn active"
+>
+
+        <span>
+            ▣
+        </span>
+
+        <small>
+            Reservas
+        </small>
+
+    </a>
+
+
+    <a
+        href="{% url 'perfil' %}"
+        class="nav-btn"
+    >
+
+        <span>  
+             <i class="fa fa-user" aria-hidden="true"></i>
+        </span>
+
+        <small>
+            Perfil
+        </small>
+
+    </a>
+
+</nav>
+
+
+<footer class="footer-dev">
+
+    Desenvolvido Por © 2026
+    <strong>Ifraim Lopes</strong>
+    · PGI25 · Profitecla Restaurante
+
+</footer>
+
+
+<script src="{% static 'js/script.js' %}"></script>
+
+
+<script>
+
+document.addEventListener(
+    "DOMContentLoaded",
+    carregarReservas
+);
+
+
+async function carregarReservas() {
+
+    const lista =
+        document.getElementById(
+            "listaReservas"
+        );
+
+    try {
+
+        const resposta =
+            await fetch(
+                "/reservas/api/",
+                {
+                    method: "GET"
+                }
+            );
+
+
+        if (resposta.status === 401) {
+
+            window.location.href =
+                "/utilizadores/login/";
+
+            return;
+
+        }
+
+
+        const dados =
+            await resposta.json();
+
+
+        if (!resposta.ok) {
+
+            throw new Error(
+                dados.erro ||
+                "Não foi possível carregar as reservas."
+            );
+
+        }
+
+
+        const reservas =
+            dados.reservas || [];
+
+
+        if (reservas.length === 0) {
+
+            lista.innerHTML = `
+
+                <div class="infocard">
+
+                    <span class="info-icon">
+                        🍽️
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Ainda não tens reservas
+                        </strong>
+
+                        <p>
+                            Escolhe um prato no menu e faz a tua primeira reserva.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        lista.innerHTML = "";
+
+
+        reservas.forEach(
+            reserva => {
+
+                const item =
+                    reserva.ementa?.descricao ||
+                    reserva.prato ||
+                    reserva.sobremesa ||
+                    "Item não definido";
+
+
+                const estado =
+                    reserva.estado === "confirmada"
+                        ? "Confirmada"
+                        : "Cancelada";
+
+
+                const estadoClasse =
+                    reserva.estado === "confirmada"
+                        ? "confirmada"
+                        : "cancelada";
+
+
+                const extrasHtml =
+                    Array.isArray(reserva.extras) && reserva.extras.length
+                        ? `
+                            <div class="reserva-extras">
+                                <strong>🍽️ Extras</strong>
+                                <ul>
+                                    ${reserva.extras.map(extra => `
+                                        <li>
+                                            ${escapeHtml(extra.nome)}
+                                            × ${Number(extra.quantidade) || 1}
+                                            — € ${formatarPreco(extra.subtotal)}
+                                        </li>
+                                    `).join("")}
+                                </ul>
+                            </div>
+                          `
+                        : `
+                            <div class="reserva-extras">
+                                <strong>🍽️ Extras:</strong> Sem extras
+                            </div>
+                          `;
+
+
+                const botaoApagar =
+                    `
+                        <button
+                            type="button"
+                            class="apagar-cartao-btn"
+                            aria-label="Apagar cartão da reserva ${reserva.id}"
+                        >
+                            Apagar cartão
+                        </button>
+                    `;
+
+
+                const alergias =
+                    reserva.alergias &&
+                    reserva.alergias.trim()
+                        ? `
+                            <div class="reserva-alergias">
+                                ⚠️
+                                <span>
+                                    ${escapeHtml(reserva.alergias)}
+                                </span>
+                            </div>
+                          `
+                        : "";
+
+
+                const botaoCancelar =
+                    reserva.estado === "confirmada"
+                        ? `
+                            <button
+                                type="button"
+                                class="cancelar-btn"
+                                data-reserva-id="${reserva.id}"
+                            >
+                                Cancelar
+                            </button>
+                          `
+                        : "";
+
+
+                const dataFormatada =
+                    formatarData(
+                        reserva.data
+                    );
+
+
+                const horaFormatada =
+                    reserva.hora
+                        ? reserva.hora.substring(
+                            0,
+                            5
+                        )
+                        : "13:00";
+
+
+                const card =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "reserva-card";
+
+
+                card.innerHTML = `
+
+                    <div class="reserva-top">
+
+                        <div>
+
+                            <span
+                                class="reserva-status ${estadoClasse}"
+                            >
+                                ${estado}
+                            </span>
+
+                            <h2>
+                                ${escapeHtml(item)}
+                            </h2>
+
+                        </div>
+
+
+                        <span class="reserva-check">
+                            ✓
+                        </span>
+
+                    </div>
+
+
+                    <div class="reserva-info">
+
+                        <div>
+
+                            <span>
+                                📅
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    Data
+                                </small>
+
+                                <strong>
+                                    ${dataFormatada}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                🕐
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    Hora
+                                </small>
+
+                                <strong>
+                                    ${horaFormatada}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+${extrasHtml}
+
+
+                        <div>
+
+                            <span>
+                                💰
+                            </span>
+
+                            <div>
+
+                                <small>
+                                    Total
+                                </small>
+
+                                <strong>
+                                    € ${formatarPreco(
+                                        reserva.total
+                                    )}
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    ${alergias}
+
+
+                    <div class="reserva-footer">
+
+                        ${botaoCancelar}
+                        ${botaoApagar}
+
+                    </div>
+
+                `;
+
+
+                lista.appendChild(
+                    card
+                );
+
+            }
+        );
+
+
+        adicionarEventosCancelar();
+        adicionarEventosApagarCartao();
+
+
+    } catch (erro) {
+
+        console.error(
+            "Erro ao carregar reservas:",
+            erro
+        );
+
+
+        lista.innerHTML = `
+
+            <div class="infocard">
+
+                <span class="info-icon">
+                    ⚠️
+                </span>
+
+                <div>
+
+                    <strong>
+                        Não foi possível carregar as reservas
+                    </strong>
+
+                    <p>
+                        ${escapeHtml(
+                            erro.message
+                        )}
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+}
+
+
+function adicionarEventosCancelar() {
+
+    const botoes =
+        document.querySelectorAll(
+            ".cancelar-btn"
+        );
+
+
+    botoes.forEach(
+        botao => {
+
+            botao.addEventListener(
+                "click",
+                async function () {
+
+                    const reservaId =
+                        this.dataset.reservaId;
+
+
+                    const confirmar =
+                        confirm(
+                            "Tens a certeza que queres cancelar esta reserva?"
+                        );
+
+
+                    if (!confirmar) {
+                        return;
+                    }
+
+
+                    this.disabled = true;
+
+                    this.textContent =
+                        "A cancelar...";
+
+
+                    try {
+
+                        const resposta =
+                            await fetch(
+                                `/reservas/cancelar/${reservaId}/`,
+                                {
+                                    method: "POST"
+                                }
+                            );
+
+
+                        const dados =
+                            await resposta.json();
+
+
+                        if (!resposta.ok) {
+
+                            throw new Error(
+                                dados.erro ||
+                                "Não foi possível cancelar a reserva."
+                            );
+
+                        }
+
+
+                        await carregarReservas();
+
+
+                    } catch (erro) {
+
+                        alert(
+                            erro.message
+                        );
+
+
+                        this.disabled = false;
+
+                        this.textContent =
+                            "Cancelar";
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+}
+
+
+function adicionarEventosApagarCartao() {
+    const chave = "profisabores_cartoes_ocultados";
+
+    let idsOcultados = [];
+
+    try {
+        idsOcultados = JSON.parse(
+            localStorage.getItem(chave) || "[]"
+        );
+    } catch (erro) {
+        idsOcultados = [];
+    }
+
+    // Ocultar novamente os cartões já removidos anteriormente.
+    document.querySelectorAll(".reserva-card").forEach(card => {
+        const botao = card.querySelector(".apagar-cartao-btn");
+
+        if (!botao) {
+            return;
+        }
+
+        const id = botao.getAttribute("aria-label")
+            ?.match(/reserva\s+(\d+)/i)?.[1];
+
+        if (id && idsOcultados.includes(String(id))) {
+            card.remove();
+        }
+    });
+
+    // Ligar os botões dos cartões ainda visíveis.
+    document.querySelectorAll(".apagar-cartao-btn").forEach(botao => {
+        if (botao.dataset.ocultarLigado === "sim") {
+            return;
+        }
+
+        botao.dataset.ocultarLigado = "sim";
+
+        botao.addEventListener("click", function () {
+            const card = this.closest(".reserva-card");
+
+            if (!card) {
+                return;
+            }
+
+            const id = this.getAttribute("aria-label")
+                ?.match(/reserva\s+(\d+)/i)?.[1];
+
+            if (!id) {
+                alert("Não foi possível identificar esta reserva.");
+                return;
+            }
+
+            const confirmar = confirm(
+                "Queres ocultar este cartão? " +
+                "A reserva e o histórico continuarão guardados."
+            );
+
+            if (!confirmar) {
+                return;
+            }
+
+            try {
+                const guardados = JSON.parse(
+                    localStorage.getItem(chave) || "[]"
+                );
+
+                if (!guardados.includes(String(id))) {
+                    guardados.push(String(id));
+                }
+
+                localStorage.setItem(chave, JSON.stringify(guardados));
+                card.remove();
+            } catch (erro) {
+                alert(
+                    "Não foi possível guardar a ocultação neste navegador."
+                );
+            }
+        });
+    });
+}
+
+function formatarData(data) {
+
+    if (!data) {
+        return "—";
+    }
+
+
+    const partes =
+        data.split("-");
+
+
+    if (partes.length !== 3) {
+        return data;
+    }
+
+
+    return (
+        partes[2] +
+        "/" +
+        partes[1] +
+        "/" +
+        partes[0]
+    );
+
+}
+
+
+function formatarPreco(preco) {
+
+    const numero =
+        Number(preco);
+
+
+    if (Number.isNaN(numero)) {
+        return preco;
+    }
+
+
+    return numero.toFixed(2)
+        .replace(".", ",");
+
+}
+
+
+function escapeHtml(texto) {
+
+    if (texto === null ||
+        texto === undefined) {
+
+        return "";
+
+    }
+
+
+    return String(texto)
+        .replace(
+            /&/g,
+            "&amp;"
+        )
+        .replace(
+            /</g,
+            "&lt;"
+        )
+        .replace(
+            />/g,
+            "&gt;"
+        )
+        .replace(
+            /"/g,
+            "&quot;"
+        )
+        .replace(
+            /'/g,
+            "&#039;"
+        );
+
+}
+
+</script>
+<script src="{% static 'js/notificacoes.js' %}"></script>
+
+    <!-- Deteção do ambiente e tutorial de introdução -->
+    <script src="{% static 'js/deteccao-ambiente.js' %}?v=20261017-1"></script>
+    <script src="{% static 'js/tutorial.js' %}?v=20261017-1"></script>
+
+</body>
+
+</html>

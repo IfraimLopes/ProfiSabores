@@ -1,0 +1,615 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Secretaria | Profisabores</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #8bc2f5 0%, #b3daff 50%, #ffffff 100%);
+            color: #1f2937;
+        }
+
+        .pagina {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .cabecalho,
+        .filtros,
+        .card,
+        .tabela-container {
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .cabecalho {
+            padding: 25px 30px;
+            margin-bottom: 25px;
+        }
+
+        .cabecalho h1 {
+            font-size: 28px;
+            margin-bottom: 7px;
+        }
+
+        .cabecalho p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .cabecalho-acoes {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 15px;
+        }
+
+        .badge-consulta {
+            display: inline-flex;
+            padding: 8px 13px;
+            border-radius: 20px;
+            background: #e8f3ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .botao-logout {
+            display: inline-block;
+            padding: 9px 16px;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+            border: 1px solid #ddd;
+        }
+
+        .botao-logout:hover {
+            background: #f2f2f2;
+        }
+
+        .filtros {
+            padding: 22px;
+            margin-bottom: 25px;
+        }
+
+        .filtros h2 {
+            font-size: 18px;
+            margin-bottom: 18px;
+        }
+
+        .form-filtros {
+            display: grid;
+            grid-template-columns:
+                minmax(160px, 1fr)
+                minmax(160px, 1fr)
+                minmax(200px, 1.5fr)
+                auto;
+            gap: 15px;
+            align-items: end;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            min-width: 0;
+        }
+
+        .campo label {
+            font-size: 13px;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .campo input,
+        .campo select {
+            width: 100%;
+            height: 44px;
+            border: 1px solid #dbe3ec;
+            border-radius: 11px;
+            padding: 0 13px;
+            background: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .campo input:focus,
+        .campo select:focus {
+            border-color: #8bc2f5;
+        }
+
+        .btn-filtrar {
+            min-height: 44px;
+            border: none;
+            border-radius: 11px;
+            padding: 0 22px;
+            background: #2563eb;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-filtrar:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-limpar {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 44px;
+            padding: 0 16px;
+            border: 1px solid #dbe3ec;
+            border-radius: 11px;
+            color: #475569;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .resumo {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            padding: 22px;
+            min-width: 0;
+        }
+
+        .card-titulo {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+
+        .card-valor {
+            font-size: 28px;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .card-total .card-valor {
+            color: #2563eb;
+        }
+
+        .card-pago .card-valor {
+            color: #16a34a;
+        }
+
+        .card-pendente .card-valor {
+            color: #f59e0b;
+        }
+
+        .tabela-container {
+            padding: 25px;
+            overflow: hidden;
+        }
+
+        .tabela-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .tabela-topo h2 {
+            font-size: 20px;
+        }
+
+        .data-mostrada {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .tabela-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1150px;
+        }
+
+        th {
+            text-align: left;
+            padding: 14px 12px;
+            background: #f8fafc;
+            color: #475569;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #edf2f7;
+            font-size: 13px;
+            vertical-align: top;
+        }
+
+        tbody tr:hover {
+            background: #f8fbff;
+        }
+
+        .hora {
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        .nome-cliente {
+            font-weight: bold;
+            overflow-wrap: anywhere;
+        }
+
+        .telefone {
+            display: block;
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .curso {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 7px;
+            background: #eef6ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .refeicao {
+            min-width: 230px;
+            max-width: 330px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .refeicao-titulo {
+            display: block;
+            margin-top: 5px;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .lista-extras {
+            padding-left: 18px;
+            margin-top: 4px;
+        }
+
+        .sem-ementa {
+            color: #64748b;
+            font-weight: normal;
+        }
+
+        .valor {
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        .pagamento {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 11px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .pagamento::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        .pago {
+            background: #e9f9ef;
+            color: #15803d;
+        }
+
+        .pago::before {
+            background: #16a34a;
+        }
+
+        .pendente {
+            background: #fff7e6;
+            color: #b45309;
+        }
+
+        .pendente::before {
+            background: #f59e0b;
+        }
+
+        .sem-resultados {
+            text-align: center;
+            padding: 50px 20px;
+            color: #64748b;
+        }
+
+        .sem-resultados .icone {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        .sem-resultados strong {
+            display: block;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .sem-resultados p {
+            font-size: 14px;
+        }
+
+        @media (max-width: 1100px) {
+            .form-filtros {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .resumo {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 650px) {
+            .pagina {
+                padding: 12px;
+            }
+
+            .cabecalho,
+            .filtros,
+            .tabela-container {
+                padding: 18px;
+                border-radius: 16px;
+            }
+
+            .cabecalho h1 {
+                font-size: 23px;
+            }
+
+            .form-filtros,
+            .resumo {
+                grid-template-columns: 1fr;
+            }
+
+            .btn-filtrar,
+            .btn-limpar {
+                width: 100%;
+            }
+
+            .card {
+                padding: 18px;
+            }
+
+            .tabela-topo {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="pagina">
+
+    <header class="cabecalho">
+        <h1>🏢 Painel da Secretaria</h1>
+        <p>Consulta das reservas, ementas e pagamentos do Profisabores.</p>
+
+        <div class="cabecalho-acoes">
+            <span class="badge-consulta">Gestão de pagamentos</span>
+            <a href="{% url 'logout_funcionarios' %}" class="botao-logout">Sair</a>
+        </div>
+    </header>
+
+    <section class="filtros">
+        <h2>🔎 Consultar reservas</h2>
+
+        <form method="GET" class="form-filtros">
+            <div class="campo">
+                <label for="data">Data da refeição</label>
+                <input
+                    type="date"
+                    id="data"
+                    name="data"
+                    value="{{ data_selecionada|date:'Y-m-d' }}"
+                >
+            </div>
+
+            <div class="campo">
+                <label for="pagamento">Estado do pagamento</label>
+                <select id="pagamento" name="pagamento">
+                    <option value="todos" {% if pagamento_filtro == "todos" %}selected{% endif %}>
+                        Todos
+                    </option>
+                    <option value="pago" {% if pagamento_filtro == "pago" %}selected{% endif %}>
+                        Pagos
+                    </option>
+                    <option value="pendente" {% if pagamento_filtro == "pendente" %}selected{% endif %}>
+                        Pendentes
+                    </option>
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="pesquisa">Pesquisar reserva</label>
+                <input
+                    type="text"
+                    id="pesquisa"
+                    name="pesquisa"
+                    value="{{ pesquisa }}"
+                    placeholder="Nome, telefone, curso, prato ou extra"
+                >
+            </div>
+
+            <button type="submit" class="btn-filtrar">Consultar</button>
+            <a href="?data={{ data_selecionada|date:'Y-m-d' }}" class="btn-limpar">
+                Limpar filtros
+            </a>
+        </form>
+    </section>
+
+    <section class="resumo">
+        <div class="card card-total">
+            <div class="card-titulo">👥 Total de reservas</div>
+            <div class="card-valor">{{ total_reservas }}</div>
+        </div>
+
+        <div class="card card-pago">
+            <div class="card-titulo">✅ Pagamentos efetuados</div>
+            <div class="card-valor">{{ total_pagos }}</div>
+        </div>
+
+        <div class="card card-pendente">
+            <div class="card-titulo">⏳ Pagamentos pendentes</div>
+            <div class="card-valor">{{ total_pendentes }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-titulo">💰 Total recebido</div>
+            <div class="card-valor">€ {{ total_recebido|floatformat:2 }}</div>
+        </div>
+    </section>
+
+    <section class="tabela-container">
+        <div class="tabela-topo">
+            <h2>📋 Reservas</h2>
+            <span class="data-mostrada">
+                {{ data_selecionada|date:"d/m/Y" }}
+            </span>
+        </div>
+
+        {% if reservas %}
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Curso</th>
+                            <th>Ementa e extras</th>
+                            <th>Total</th>
+                            <th>Pagamento</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for reserva in reservas %}
+                            <tr>
+                                <td class="hora">
+                                    {{ reserva.hora|time:"H:i" }}
+                                </td>
+
+                                <td>
+                                    <div class="nome-cliente">{{ reserva.nome }}</div>
+                                    {% if reserva.telemovel %}
+                                        <span class="telefone">{{ reserva.telemovel }}</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if reserva.curso %}
+                                        <span class="curso">{{ reserva.curso.codigo }}</span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+
+                                <td class="refeicao">
+                                    {% if reserva.ementa %}
+                                        <span class="refeicao-titulo">🥗 Entrada</span>
+                                        {% if reserva.ementa.entrada %}
+                                            {{ reserva.ementa.entrada.nome }}
+                                        {% else %}
+                                            Não definida
+                                        {% endif %}
+
+                                        <span class="refeicao-titulo">🍛 Prato principal</span>
+                                        {% if reserva.ementa.prato_principal %}
+                                            {{ reserva.ementa.prato_principal.nome }}
+                                        {% else %}
+                                            Não definido
+                                        {% endif %}
+
+                                        {% with extras_reserva=reserva.extras.all %}
+                                            {% if extras_reserva %}
+                                                <span class="refeicao-titulo">➕ Extras</span>
+                                                <ul class="lista-extras">
+                                                    {% for reserva_extra in extras_reserva %}
+                                                        <li>
+                                                            {{ reserva_extra.extra.nome }}
+                                                            × {{ reserva_extra.quantidade }}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% else %}
+                                        {% if reserva.prato %}
+                                            🍛 {{ reserva.prato.nome }}
+                                        {% elif reserva.sobremesa %}
+                                            🍰 {{ reserva.sobremesa.nome }}
+                                        {% else %}
+                                            <span class="sem-ementa">Ementa não associada</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+
+                                <td class="valor">
+                                    € {{ reserva.total|floatformat:2 }}
+                                </td>
+
+                                <td>
+                                    {% if reserva.pagamento == "pago" %}
+                                        <span class="pagamento pago">Pago</span>
+                                    {% else %}
+                                        <span class="pagamento pendente">Pendente</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="sem-resultados">
+                <div class="icone">📭</div>
+                <strong>Não existem reservas para esta consulta.</strong>
+                <p>Experimenta selecionar outra data ou alterar os filtros.</p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+</body>
+</html>

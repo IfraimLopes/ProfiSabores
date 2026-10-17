@@ -1,0 +1,609 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8bc2f5">
+
+    <title>Profisabores</title>
+
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+    <link rel="shortcut icon" href="{% static 'img/icon.png' %}" type="image/x-icon">
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ementas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/loading.css' %}">
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <link rel="stylesheet" href="{% static 'css/tutorial.css' %}?v=20261017-1">
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+    <header>
+        <div class="header-text">
+            <img
+                src="{% static 'img/rofiteclaICON.png' %}"
+                alt="Logo Profisabores">
+        </div>
+
+        <div class="button-header">
+            <img
+                src="{% static 'img/chefe-de-cozinha.png' %}"
+                alt="Notificações">
+        </div>
+    </header>
+
+    <!-- LOADING -->
+    <div id="loading-screen">
+        <img
+            src="{% static 'img/rofiteclaICON.png' %}"
+            alt="Logo Profisabores"
+            class="loading-logo">
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main>
+        <section id="home" class="screen active">
+            <div class="welcome-card">
+                <div>
+                    <span class="muted">
+                        Olá 👋
+                           {% if request.user.is_authenticated %}
+            {% firstof request.user.perfil.nome_completo request.user.first_name request.user.username %}
+        {% else %}
+            Visitante
+        {% endif %}
+        !
+    </strong>
+                    </span>
+
+                    <h2>
+                        <strong>O que vais comer hoje?</strong>
+                    </h2>
+
+                    <p>
+                        Consulta a ementa e faz a tua reserva sem papel.
+                    </p>
+                </div>
+
+                <span class="plate">🍽️</span>
+            </div>
+        </section>
+    </main>
+
+    <!-- CARROSSEL SUPERIOR -->
+    {% if banners_topo %}
+    <section class="banner-carousel" id="bannerTopo">
+        <div class="banner-slides">
+            {% for banner in banners_topo %}
+            <div
+                class="banner-slide {% if forloop.first %}ativo{% endif %}"
+                data-slide="{{ forloop.counter0 }}">
+
+                <img
+                    src="{{ banner.imagem.url }}"
+                    alt="Banner {{ forloop.counter }}">
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="banner-dots">
+            {% for banner in banners_topo %}
+            <button
+                type="button"
+                class="banner-dot {% if forloop.first %}ativo{% endif %}"
+                data-slide="{{ forloop.counter0 }}"
+                aria-label="Ir para imagem {{ forloop.counter }}">
+            </button>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+ 
+<!-- ======================================================
+     EMENTAS DO DIA
+====================================================== -->
+
+<section class="ementas-section">
+
+    {% if ementas %}
+
+        <div class="ementas-grid">
+
+            {% for ementa in ementas %}
+
+                <article class="ementa-card">
+
+                    <!-- CABEÇALHO -->
+                    <div class="ementa-card-header">
+
+                        <div>
+                            <span class="ementa-tag">
+                                <i class="fa-solid fa-utensils"></i>
+                                Ementa do dia
+                            </span>
+
+                            <h3>
+                                Ementa de
+                                {{ ementa.data_refeicao|date:"d/m/Y" }}
+                            </h3>
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIÇÃO -->
+                    {% if ementa.descricao %}
+                        <p class="ementa-descricao">
+                            {{ ementa.descricao }}
+                        </p>
+                    {% endif %}
+
+
+                    <!-- ENTRADA -->
+                    {% if ementa.entrada %}
+
+                        <div class="ementa-item">
+
+                            {% if ementa.entrada.imagem %}
+                                <img
+                                    src="{{ ementa.entrada.imagem.url }}"
+                                    alt="{{ ementa.entrada.nome }}"
+                                    class="ementa-item-imagem"
+                                    loading="lazy"
+                                >
+                            {% endif %}
+
+                            <div class="ementa-item-conteudo">
+
+                                <span class="ementa-item-tipo">
+                                    Entrada
+                                </span>
+
+                                <h4>
+                                    {{ ementa.entrada.nome }}
+                                </h4>
+
+                                {% if ementa.entrada.descricao %}
+                                    <p>
+                                        {{ ementa.entrada.descricao }}
+                                    </p>
+                                {% endif %}
+
+                                {% if ementa.entrada.alergenios %}
+                                    <p class="ementa-alergenios">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        Alergénios:
+                                        {{ ementa.entrada.alergenios }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    <!-- PRATO PRINCIPAL -->
+                    {% if ementa.prato_principal %}
+
+                        <div class="ementa-item">
+
+                            {% if ementa.prato_principal.imagem %}
+                                <img
+                                    src="{{ ementa.prato_principal.imagem.url }}"
+                                    alt="{{ ementa.prato_principal.nome }}"
+                                    class="ementa-item-imagem"
+                                    loading="lazy"
+                                >
+                            {% endif %}
+
+                            <div class="ementa-item-conteudo">
+
+                                <span class="ementa-item-tipo">
+                                    Prato principal
+                                </span>
+
+                                <h4>
+                                    {{ ementa.prato_principal.nome }}
+                                </h4>
+
+                                {% if ementa.prato_principal.descricao %}
+                                    <p>
+                                        {{ ementa.prato_principal.descricao }}
+                                    </p>
+                                {% endif %}
+
+                                {% if ementa.prato_principal.alergenios %}
+                                    <p class="ementa-alergenios">
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+                                        Alergénios:
+                                        {{ ementa.prato_principal.alergenios }}
+                                    </p>
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    
+
+
+                    <!-- PREÇO E RESERVA -->
+                    <div class="ementa-card-footer">
+
+                        <div class="ementa-preco-info">
+
+                            <span class="ementa-preco-label">
+                                Preço da ementa
+                            </span>
+
+                            <strong class="ementa-preco">
+                                {{ ementa.preco|floatformat:2 }} €
+                            </strong>
+
+                            <small>
+                                Extras selecionados são cobrados à parte.
+                            </small>
+
+                        </div>
+
+                        
+                    <!-- EXTRAS NO CARTÃO -->
+                 
+{% with extras=ementa.extras.all %}
+    {% if extras %}
+        <div class="ementa-extras">
+            <h4>
+                <i class="fa-solid fa-plus"></i>
+                Extras disponíveis
+            </h4>
+
+            {% for extra in extras %}
+                {% if extra.ativo %}
+                    <div class="extra-item extra-item-card">
+
+                        <input
+                            type="checkbox"
+                            class="extra-checkbox-card"
+                            data-extra-id="{{ extra.id }}"
+                            data-preco="{{ extra.preco_exibicao|stringformat:'s' }}"
+                            aria-label="{{ extra.nome }}"
+                        >
+
+                        <span class="extra-conteudo">
+                            <strong>{{ extra.nome }}</strong>
+
+                            {% if extra.descricao %}
+                                <small>{{ extra.descricao }}</small>
+                            {% endif %}
+
+                            {% if extra.alergenios %}
+                                <small class="ementa-alergenios">
+                                    Alergénios: {{ extra.alergenios }}
+                                </small>
+                            {% endif %}
+                        </span>
+
+                        <span class="extra-preco">
+                            +{{ extra.preco_exibicao|floatformat:2 }} €
+                        </span>
+
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+   
+
+<button
+                            type="button"
+                            class="reserva-link btn-reservar"
+                            data-ementa-id="{{ ementa.id }}"
+                            data-prato-id="{{ ementa.id }}"
+                            data-prato="Ementa de {{ ementa.data_refeicao|date:'d/m/Y' }}"
+                            data-data="{{ ementa.data_refeicao|date:'Y-m-d' }}"
+                        
+data-preco="{{ ementa.preco|floatformat:2 }}"
+data-entrada="{% if ementa.entrada %}{{ ementa.entrada.nome|escape }}{% endif %}"
+data-prato-principal="{% if ementa.prato_principal %}{{ ementa.prato_principal.nome|escape }}{% endif %}"
+data-extras="{{ ementa.extras_json|escape }}"
+
+>
+                            <i
+                                class="fa-solid fa-calendar-check"
+                                aria-hidden="true"
+                            ></i>
+                            Reservar ementa
+                        </button>
+
+                    </div>
+
+                </article>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="ementas-vazio">
+
+            <i class="fa-solid fa-calendar-xmark"></i>
+
+            <h3>Não há ementa disponível para hoje</h3>
+
+            <p>
+                Consulta novamente mais tarde para veres se foi publicada
+                uma nova ementa.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</section>
+
+
+    <!-- INFORMAÇÃO -->
+    <section class="inf">
+        <div class="infocard">
+            <span class="info-icon">💡</span>
+
+            <div>
+                <strong>Sem filas desnecessárias</strong>
+                <p>
+                    Reserva antes de ires ao restaurante e ajuda a cozinha
+                    a preparar a quantidade certa.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- NAVEGAÇÃO INFERIOR -->
+    <nav class="bottom-nav" aria-label="Navegação principal">
+
+        <a href="{% url 'home' %}" class="nav-btn active">
+            <span>⌂</span>
+            <small>Início</small>
+        </a>
+
+        <a href="{% url 'menu' %}" class="nav-btn">
+            <span>☷</span>
+            <small>Ementas</small>
+        </a>
+
+        <a href="{% url 'pagina_reservas' %}" class="nav-btn">
+            <span>▣</span>
+            <small>Reservas</small>
+        </a>
+
+        <a href="{% url 'perfil' %}" class="nav-btn">
+            <span><i class="fa fa-user" aria-hidden="true"></i></span>
+            <small>Perfil</small>
+        </a>
+
+    </nav>
+
+  
+<!-- MODAL DE RESERVA — PROFISABORES -->
+<div id="reservaModal" class="modal">
+    <div class="modal-content">
+
+        <!-- CABEÇALHO -->
+        <header class="modal-cabecalho">
+            <div class="modal-titulo-grupo">
+                <span class="modal-icone">
+                    <i class="fa-solid fa-utensils"></i>
+                </span>
+
+                <div>
+                    <h2>Confirmar reserva</h2>
+                    <p class="modal-subtitulo">
+                        Restaurante Pedagógico
+                    </p>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                id="fecharModal"
+                class="fechar-modal"
+                aria-label="Fechar modal">
+                &times;
+            </button>
+        </header>
+
+        <form 
+    id="reservaForm"
+    data-autenticado="{% if request.user.is_authenticated %}true{% else %}false{% endif %}">
+            {% csrf_token %}
+
+            <!-- EMENTA SELECIONADA -->
+            <section class="resumo-refeicao">
+                <span class="modal-etiqueta">EMENTA SELECIONADA</span>
+
+                <input
+                    type="text"
+                    id="prato"
+                    name="prato"
+                    aria-label="Ementa selecionada"
+                    readonly
+                >
+
+                <input
+                    type="hidden"
+                    id="ementaId"
+                    name="ementa_id"
+                >
+
+                <div class="resumo-pratos">
+                    <p>
+                        <strong>Entrada</strong>
+                        <span id="modalEntrada">—</span>
+                    </p>
+
+                    <p>
+                        <strong>Prato principal</strong>
+                        <span id="modalPratoPrincipal">—</span>
+                    </p>
+                </div>
+            </section>
+
+            <!-- EXTRAS -->
+            <section class="modal-extras">
+                <div class="modal-seccao-cabecalho">
+                    <h3>Adicionar extras</h3>
+                    <p>Escolhe os extras que pretendes.</p>
+                </div>
+
+                <div id="extrasLista">
+                    <p>Seleciona uma ementa para ver os extras.</p>
+                </div>
+            </section>
+
+            
+<!-- DADOS DO VISITANTE -->
+<div id="dadosVisitante" style="display: none;">
+
+    <div class="modal-campo">
+        <label for="nomeReserva">Nome completo</label>
+        <input
+            type="text"
+            id="nomeReserva"
+            name="nome"
+            maxlength="100"
+            autocomplete="name"
+            placeholder="O teu nome completo"
+        >
+    </div>
+
+    <div class="modal-campo">
+        <label for="telemovelReserva">Telemóvel</label>
+        <input
+            type="tel"
+            id="telemovelReserva"
+            name="telemovel"
+            maxlength="20"
+            autocomplete="tel"
+            placeholder="O teu número de telemóvel"
+        >
+    </div>
+
+</div>
+
+
+            <!-- DATA -->
+            <div class="modal-campo">
+                <label for="dataPrato">Data da reserva</label>
+
+                <input
+                    type="date"
+                    id="dataPrato"
+                    name="data"
+                    required
+                >
+            </div>
+
+            <!-- HORA -->
+            <div class="hora-reserva">
+                <span>
+                    <i class="fa-regular fa-clock"></i>
+                    Hora da refeição
+                </span>
+
+                <strong>13:00</strong>
+            </div>
+
+            <!-- ALERGIAS -->
+            <div class="modal-campo">
+                <label for="alergias">
+                    Alergias ou restrições
+                    <span class="campo-opcional">Opcional</span>
+                </label>
+
+                <textarea
+                    id="alergias"
+                    name="alergias"
+                    rows="3"
+                    placeholder="Ex.: frutos secos, lactose..."
+                ></textarea>
+            </div>
+
+            <!-- TOTAL -->
+            <div class="total-reserva">
+                <div>
+                    <span>Total da reserva</span>
+                    <small>Inclui os extras selecionados</small>
+                </div>
+
+                <strong id="total">0,00 €</strong>
+            </div>
+
+            <!-- CONFIRMAR -->
+            <button
+                type="submit"
+                class="confirmar-reserva">
+                <i class="fa-solid fa-check"></i>
+                Confirmar reserva
+            </button>
+
+            <p id="mensagem" role="status" aria-live="polite"></p>
+        </form>
+    </div>
+</div>
+
+    <!-- CARROSSEL INFERIOR -->
+    {% if banners_fim %}
+    <section class="banner-carousel" id="bannerFim">
+        <div class="banner-slides">
+            {% for banner in banners_fim %}
+            <div
+                class="banner-slide {% if forloop.first %}ativo{% endif %}"
+                data-slide="{{ forloop.counter0 }}">
+
+                <img
+                    src="{{ banner.imagem.url }}"
+                    alt="Banner {{ forloop.counter }}"
+                    loading="lazy">
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="banner-dots">
+            {% for banner in banners_fim %}
+            <button
+                type="button"
+                class="banner-dot {% if forloop.first %}ativo{% endif %}"
+                data-slide="{{ forloop.counter0 }}"
+                aria-label="Ir para imagem {{ forloop.counter }}">
+            </button>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- JAVASCRIPT -->
+    <script src="{% static 'js/script.js' %}"></script>
+    <script src="{% static 'js/notificacoes.js' %}"></script>
+
+
+    <!-- Deteção do ambiente e tutorial de introdução -->
+    <script src="{% static 'js/deteccao-ambiente.js' %}?v=20261017-1"></script>
+    <script src="{% static 'js/tutorial.js' %}?v=20261017-1"></script>
+
+
+</body>
+</html>

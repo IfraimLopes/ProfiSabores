@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel da Cozinha | Profisabores</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: linear-gradient(135deg, #8bc2f5 0%, #b3daff 50%, #ffffff 100%);
+            color: #1f2937;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header, .card, .quantidade-box, .reservas {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
+        }
+
+        .header {
+            padding: 25px 30px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+        }
+
+        .header p, .data-info {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .badge {
+            background: #e8f3ff;
+            color: #2563eb;
+            padding: 10px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .botao-logout {
+            display: inline-block;
+            padding: 9px 15px;
+            margin-left: 8px;
+            border-radius: 10px;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            border: 1px solid #ddd;
+        }
+
+        .botao-logout:hover {
+            background: #f2f2f2;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            padding: 25px;
+        }
+
+        .card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 14px;
+            color: #6b7280;
+            font-weight: normal;
+        }
+
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8f3ff;
+            font-size: 22px;
+        }
+
+        .numero {
+            font-size: 32px;
+            font-weight: bold;
+            color: #111827;
+        }
+
+        .quantidades {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .quantidade-box {
+            padding: 25px;
+            min-width: 0;
+        }
+
+        .quantidade-box h2 {
+            font-size: 19px;
+            margin-bottom: 20px;
+        }
+
+        .lista {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-quantidade {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 13px 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px solid #eef2f7;
+        }
+
+        .item-nome {
+            font-size: 14px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .item-numero {
+            min-width: 32px;
+            min-height: 32px;
+            padding: 0 8px;
+            border-radius: 18px;
+            background: #8bc2f5;
+            color: #123;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        .sem-resultados {
+            color: #6b7280;
+            font-size: 14px;
+            padding: 10px 0;
+        }
+
+        .reservas {
+            padding: 25px;
+            overflow: hidden;
+        }
+
+        .reservas-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .reservas-header h2 {
+            font-size: 20px;
+        }
+
+        .tabela-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1050px;
+        }
+
+        th {
+            text-align: left;
+            padding: 13px 12px;
+            background: #f8fafc;
+            color: #6b7280;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 12px;
+            border-bottom: 1px solid #eef2f7;
+            font-size: 14px;
+            vertical-align: top;
+        }
+
+        .hora {
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .nome {
+            font-weight: 600;
+        }
+
+        .tipo-utilizador {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .tipo-aluno {
+            background: #e8f3ff;
+            color: #2563eb;
+        }
+
+        .tipo-staff {
+            background: #f1eaff;
+            color: #7c3aed;
+        }
+
+        .curso {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 7px;
+            background: #eef6ff;
+            color: #2563eb;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .refeicao {
+            min-width: 240px;
+            line-height: 1.7;
+        }
+
+        .refeicao strong {
+            display: block;
+            margin-top: 5px;
+        }
+
+        .refeicao ul {
+            padding-left: 18px;
+            margin-top: 3px;
+        }
+
+        .alergias {
+            min-width: 190px;
+            max-width: 300px;
+            color: #6b7280;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .alerta-alergeno {
+            display: block;
+            color: #b45309;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            border-radius: 7px;
+            padding: 5px 8px;
+            margin-top: 5px;
+        }
+
+        .sem-reservas {
+            text-align: center;
+            padding: 45px 20px;
+            color: #6b7280;
+        }
+
+        .sem-reservas-icon {
+            font-size: 42px;
+            margin-bottom: 12px;
+        }
+
+        .sem-reservas h3 {
+            color: #374151;
+            margin-bottom: 7px;
+        }
+
+        @media (max-width: 1100px) {
+            .cards {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .quantidades {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 650px) {
+            body {
+                padding: 12px;
+            }
+
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 23px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .card, .quantidade-box, .reservas {
+                padding: 16px;
+            }
+
+            .numero {
+                font-size: 27px;
+            }
+
+            .reservas-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .badge {
+                white-space: normal;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <header class="header">
+        <div>
+            <h1>🍳 Painel da Cozinha</h1>
+            <p>Consulta das reservas de refeições confirmadas e pagas.</p>
+        </div>
+
+        <div class="badge">
+            Apenas consulta
+            <a href="{% url 'logout_funcionarios' %}" class="botao-logout">Sair</a>
+        </div>
+    </header>
+
+    <section class="cards">
+        <div class="card">
+            <div class="card-top">
+                <h3>Total de refeições</h3>
+                <div class="card-icon">🍽️</div>
+            </div>
+            <div class="numero">{{ total_refeicoes }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-top">
+                <h3>Total de entradas</h3>
+                <div class="card-icon">🥗</div>
+            </div>
+            <div class="numero">{{ total_entradas }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-top">
+                <h3>Total de pratos principais</h3>
+                <div class="card-icon">🍛</div>
+            </div>
+            <div class="numero">{{ total_pratos }}</div>
+        </div>
+
+        <div class="card">
+            <div class="card-top">
+                <h3>Total de extras</h3>
+                <div class="card-icon">➕</div>
+            </div>
+            <div class="numero">{{ total_extras }}</div>
+        </div>
+    </section>
+
+    <section class="quantidades">
+        <div class="quantidade-box">
+            <h2>🥗 Quantidade de entradas</h2>
+            <div class="lista">
+                {% for entrada, quantidade in entradas_contagem %}
+                    <div class="item-quantidade">
+                        <span class="item-nome">{{ entrada }}</span>
+                        <span class="item-numero">{{ quantidade }}</span>
+                    </div>
+                {% empty %}
+                    <p class="sem-resultados">Não existem entradas para hoje.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="quantidade-box">
+            <h2>🍛 Quantidade de pratos principais</h2>
+            <div class="lista">
+                {% for prato, quantidade in pratos_contagem %}
+                    <div class="item-quantidade">
+                        <span class="item-nome">{{ prato }}</span>
+                        <span class="item-numero">{{ quantidade }}</span>
+                    </div>
+                {% empty %}
+                    <p class="sem-resultados">Não existem pratos principais para hoje.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="quantidade-box">
+            <h2>🍰 Quantidade de sobremesas</h2>
+            <div class="lista">
+                {% for sobremesa, quantidade in sobremesas_contagem %}
+                    <div class="item-quantidade">
+                        <span class="item-nome">{{ sobremesa }}</span>
+                        <span class="item-numero">{{ quantidade }}</span>
+                    </div>
+                {% empty %}
+                    <p class="sem-resultados">Não existem sobremesas identificadas para hoje.</p>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="quantidade-box">
+            <h2>➕ Quantidade de extras</h2>
+            <div class="lista">
+                {% for chave, quantidade in extras_contagem %}
+                    <div class="item-quantidade">
+                        <span class="item-nome">{{ chave.0 }} — {{ chave.1 }}</span>
+                        <span class="item-numero">{{ quantidade }}</span>
+                    </div>
+                {% empty %}
+                    <p class="sem-resultados">Não existem extras para hoje.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <section class="reservas">
+        <div class="reservas-header">
+            <h2>📋 Reservas confirmadas</h2>
+            <div class="data-info">{{ data_selecionada|date:"d/m/Y" }}</div>
+        </div>
+
+        {% if reservas %}
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Hora</th>
+                            <th>Nome</th>
+                            <th>Tipo</th>
+                            <th>Curso</th>
+                            <th>Ementa e extras</th>
+                            <th>Alergénios e alergias indicadas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for reserva in reservas %}
+                            <tr>
+                                <td class="hora">{{ reserva.hora|time:"H:i" }}</td>
+
+                                <td class="nome">{{ reserva.nome }}</td>
+
+                                <td>
+                                    {% if reserva.utilizador and reserva.utilizador.perfil.tipo == "staff" %}
+                                        <span class="tipo-utilizador tipo-staff">Staff</span>
+                                    {% else %}
+                                        <span class="tipo-utilizador tipo-aluno">Aluno</span>
+                                    {% endif %}
+                                </td>
+
+                                <td>
+                                    {% if reserva.curso %}
+                                        <span class="curso">{{ reserva.curso.codigo }}</span>
+                                    {% else %}
+                                        —
+                                    {% endif %}
+                                </td>
+
+                                <td class="refeicao">
+                                    {% if reserva.ementa %}
+                                        <strong>🥗 Entrada:</strong>
+                                        {% if reserva.ementa.entrada %}
+                                            {{ reserva.ementa.entrada.nome }}
+                                        {% else %}
+                                            Não definida
+                                        {% endif %}
+
+                                        <strong>🍛 Prato principal:</strong>
+                                        {% if reserva.ementa.prato_principal %}
+                                            {{ reserva.ementa.prato_principal.nome }}
+                                        {% else %}
+                                            Não definido
+                                        {% endif %}
+
+                                        {% with extras_reserva=reserva.extras.all %}
+                                            {% if extras_reserva %}
+                                                <strong>➕ Extras:</strong>
+                                                <ul>
+                                                    {% for reserva_extra in extras_reserva %}
+                                                        <li>
+                                                            {{ reserva_extra.extra.nome }}
+                                                            × {{ reserva_extra.quantidade }}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        {% endwith %}
+                                    {% else %}
+                                        Ementa não associada
+                                    {% endif %}
+                                </td>
+
+                                <td class="alergias">
+                                    {% if reserva.alergias %}
+                                        <strong>Alergias indicadas:</strong>
+                                        {{ reserva.alergias }}
+                                    {% endif %}
+
+                                    {% if reserva.ementa.entrada and reserva.ementa.entrada.alergenios %}
+                                        <span class="alerta-alergeno">
+                                            <strong>Alergénios da entrada:</strong>
+                                            {{ reserva.ementa.entrada.alergenios }}
+                                        </span>
+                                    {% endif %}
+
+                                    {% if reserva.ementa.prato_principal and reserva.ementa.prato_principal.alergenios %}
+                                        <span class="alerta-alergeno">
+                                            <strong>Alergénios do prato:</strong>
+                                            {{ reserva.ementa.prato_principal.alergenios }}
+                                        </span>
+                                    {% endif %}
+
+                                    {% for reserva_extra in reserva.extras.all %}
+                                        {% if reserva_extra.extra.alergenios %}
+                                            <span class="alerta-alergeno">
+                                                <strong>{{ reserva_extra.extra.nome }}:</strong>
+                                                {{ reserva_extra.extra.alergenios }}
+                                            </span>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if not reserva.alergias %}
+                                        {% if not reserva.ementa.entrada.alergenios and not reserva.ementa.prato_principal.alergenios %}
+                                            {% with extras_reserva=reserva.extras.all %}
+                                                {% if not extras_reserva %}
+                                                    Nenhuma indicação registada.
+                                                {% else %}
+                                                    {% if not extras_reserva|length %}
+                                                        Nenhuma indicação registada.
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endwith %}
+                                        {% endif %}
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="sem-reservas">
+                <div class="sem-reservas-icon">📭</div>
+                <h3>Nenhuma reserva encontrada</h3>
+                <p>Não existem reservas confirmadas e pagas para hoje.</p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+
+<script>
+    setInterval(function () {
+        window.location.reload();
+    }, 5000);
+</script>
+</body>
+</html> 

@@ -1,0 +1,68 @@
+firebase/
+private/
+.env
+db.sqlite3
+
+# Segredos e variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Bases de dados e cópias de segurança
+*.sqlite3
+*.sqlite
+backups/
+
+# Ambientes Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# Credenciais privadas Firebase
+firebase/*admin*.json
+firebase/*service-account*.json
+firebase/*private*.json
+
+# Configuração Firebase Android
+android/app/google-services.json
+
+# Ficheiros locais do macOS
+.DS_Store
+
+# Dependências JavaScript
+node_modules/
+
+# Cookies e sessões locais
+cookies.txt
+cookies*.txt
+
+# Arquivos de backup e exportações
+*.bak
+*.bak_*
+profisabores-analise.zip
+
+# Ficheiros enviados pelos utilizadores
+media/
+
+# Ambientes e configurações locais
+.venv/
+venv/
+.env
+.env.*
+!.env.example
+
+staticfiles/
+*.bak*
+
+# Cópias de trabalho e backups
+*.save
+*_backup.py
+*_backup_*.py
+*_backup
+
+# Configuração Firebase iOS: rever antes de publicar
+ios/App/App/GoogleService-Info.plist
+
+# Configuração local da IDE Android
+android/.idea/

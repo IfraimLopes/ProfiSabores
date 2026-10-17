@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html lang="pt">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Autenticar conta - Restaurante Profitecla</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(
+                180deg,
+                #b3daff 0%,
+                #ffffff 65%
+            );
+            padding: 20px;
+        }
+
+        .caixa {
+            width: 100%;
+            max-width: 430px;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+            text-align: center;
+        }
+
+        .logo {
+            width: 85px;
+            height: 85px;
+            object-fit: contain;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            color: #222;
+            font-size: 27px;
+        }
+
+        .descricao {
+            color: #666;
+            font-size: 15px;
+            line-height: 1.5;
+            margin-bottom: 25px;
+        }
+
+        .email {
+            background: #f1f7fd;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: #333;
+            font-weight: bold;
+            word-break: break-word;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        #codigo {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 25px;
+            text-align: center;
+            letter-spacing: 8px;
+            outline: none;
+        }
+
+        #codigo:focus {
+            border-color: #8bc2f5;
+            box-shadow:
+                0 0 0 3px
+                rgba(139, 194, 245, 0.20);
+        }
+
+        button {
+            width: 100%;
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: #8bc2f5;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #70afe9;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .mensagem {
+            margin-top: 18px;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .erro {
+            color: #d93025;
+        }
+
+        .sucesso {
+            color: #188038;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="caixa">
+
+        <img
+            src="/static/img/rofiteclaICON.png"
+            alt="Profitecla"
+            class="logo"
+        >
+
+        <h1>Autenticar conta</h1>
+
+        <p class="descricao">
+            Enviámos um PIN de 6 dígitos para o teu email.
+            Introduz o código abaixo para entrar na tua conta.
+        </p>
+
+        <div
+            class="email"
+            id="emailUtilizador"
+        >
+            A carregar email...
+        </div>
+
+        <form id="formVerificacao">
+
+            <label for="codigo">
+                PIN
+            </label>
+
+            <input
+                type="text"
+                id="codigo"
+                name="codigo"
+                maxlength="6"
+                minlength="6"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                placeholder="______"
+                required
+            >
+
+            <button
+                type="submit"
+                id="btnVerificar"
+            >
+                Verificar
+            </button>
+
+        </form>
+
+        <div
+            id="mensagem"
+            class="mensagem"
+        ></div>
+
+    </div>
+
+
+<script>
+
+    // ============================================================
+    // OBTER EMAIL DO LOGIN
+    // ============================================================
+
+    const email =
+        sessionStorage.getItem("login_email");
+
+    const emailElemento =
+        document.getElementById("emailUtilizador");
+
+    const form =
+        document.getElementById("formVerificacao");
+
+    const codigo =
+        document.getElementById("codigo");
+
+    const botao =
+        document.getElementById("btnVerificar");
+
+    const mensagem =
+        document.getElementById("mensagem");
+
+
+    // ============================================================
+    // VERIFICAR SE EXISTE EMAIL
+    // ============================================================
+
+    if (!email) {
+
+        mensagem.className =
+            "mensagem erro";
+
+        mensagem.textContent =
+            "Sessão de autenticação não encontrada. Faça login novamente.";
+
+        botao.disabled = true;
+
+        setTimeout(function () {
+
+            window.location.href =
+                "/utilizadores/login/";
+
+        }, 2000);
+
+    } else {
+
+        emailElemento.textContent =
+            email;
+
+    }
+
+
+    // ============================================================
+    // PERMITIR APENAS NÚMEROS
+    // ============================================================
+
+    codigo.addEventListener(
+        "input",
+        function () {
+
+            this.value =
+                this.value.replace(/\D/g, "");
+
+        }
+    );
+
+
+    // ============================================================
+    // VERIFICAR PIN
+    // ============================================================
+
+    form.addEventListener(
+        "submit",
+        async function (event) {
+
+            event.preventDefault();
+
+            mensagem.className =
+                "mensagem";
+
+            mensagem.textContent =
+                "";
+
+            const valorCodigo =
+                codigo.value.trim();
+
+
+            // ----------------------------------------------------
+            // VALIDAR TAMANHO
+            // ----------------------------------------------------
+
+            if (valorCodigo.length !== 6) {
+
+                mensagem.className =
+                    "mensagem erro";
+
+                mensagem.textContent =
+                    "O PIN deve ter 6 dígitos.";
+
+                return;
+
+            }
+
+
+            // ----------------------------------------------------
+            // BLOQUEAR BOTÃO
+            // ----------------------------------------------------
+
+            botao.disabled = true;
+
+            botao.textContent =
+                "A verificar...";
+
+
+            // ----------------------------------------------------
+            // PREPARAR DADOS
+            // ----------------------------------------------------
+
+            const dados =
+                new FormData();
+
+            dados.append(
+                "email",
+                email
+            );
+
+            dados.append(
+                "codigo",
+                valorCodigo
+            );
+
+
+            try {
+
+                // ------------------------------------------------
+                // ENVIAR PARA VERIFICAÇÃO DE LOGIN
+                // ------------------------------------------------
+
+                const resposta =
+                    await fetch(
+                        "/utilizadores/api/verificar-login/",
+                        {
+                            method: "POST",
+                            body: dados,
+                            headers: {
+                                "X-Requested-With":
+                                    "XMLHttpRequest"
+                            }
+                        }
+                    );
+
+
+                const resultado =
+                    await resposta.json();
+
+
+                // ------------------------------------------------
+                // ERRO
+                // ------------------------------------------------
+
+                if (
+                    !resposta.ok ||
+                    !resultado.sucesso
+                ) {
+
+                    throw new Error(
+                        resultado.erro ||
+                        "PIN incorreto."
+                    );
+
+                }
+
+
+                // ------------------------------------------------
+                // LOGIN CONCLUÍDO
+                // ------------------------------------------------
+
+                mensagem.className =
+                    "mensagem sucesso";
+
+                mensagem.textContent =
+                    resultado.mensagem ||
+                    "Login efetuado com sucesso.";
+
+
+                // ------------------------------------------------
+                // APAGAR EMAIL TEMPORÁRIO
+                // ------------------------------------------------
+
+                sessionStorage.removeItem(
+                    "login_email"
+                );
+
+
+                // ------------------------------------------------
+                // ENTRAR NA APLICAÇÃO
+                // ------------------------------------------------
+
+                setTimeout(
+                    function () {
+
+                        window.location.href =
+                            resultado.redirect || "/";
+
+                    },
+                    800
+                );
+
+
+            } catch (erro) {
+
+                mensagem.className =
+                    "mensagem erro";
+
+                mensagem.textContent =
+                    erro.message ||
+                    "PIN incorreto.";
+
+                codigo.value =
+                    "";
+
+                codigo.focus();
+
+
+            } finally {
+
+                botao.disabled =
+                    false;
+
+                botao.textContent =
+                    "Verificar";
+
+            }
+
+        }
+    );
+
+</script>
+
+</body>
+
+</html>

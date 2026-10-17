@@ -1,0 +1,582 @@
+
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt">
+
+<head>
+    <link rel="manifest" href="{% static 'manifest.json' %}">
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Perfil - Profisabores</title>
+
+    <!-- CSS GERAL -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/perfil.css' %}"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'css/loading.css' %}"
+    >
+
+    <!-- FONT AWESOME -->
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+
+    <link rel="stylesheet" href="{% static 'css/tutorial.css' %}?v=20261017-1">
+</head>
+
+<body>
+
+    <!-- CABEÇALHO -->
+    <header>
+
+        <div class="header-text">
+            <img
+                src="{% static 'img/rofiteclaICON.png' %}"
+                alt="Logo Profisabores"
+            >
+        </div>
+
+        <div class="button-header">
+            <img
+                src="{% static 'img/chefe-de-cozinha.png' %}"
+                alt="Notificações"
+            >
+        </div>
+
+    </header>
+
+    <!-- CONTEÚDO DO PERFIL -->
+    <main class="perfil-page">
+
+        <!-- CARTÃO PRINCIPAL -->
+        <section class="perfil-card">
+
+            <div class="perfil-avatar">
+                <i class="fa-solid fa-user"></i>
+            </div>
+
+            <h1>
+                {% if request.user.is_authenticated %}
+                    {{ utilizador.first_name }}
+                {% else %}
+                    Visitante
+                {% endif %}
+            </h1>
+
+            <p>
+                {% if request.user.is_authenticated %}
+                    {{ utilizador.email }}
+                {% else %}
+                    Acesso sem conta
+                {% endif %}
+            </p>
+
+        </section>
+
+        <!-- INFORMAÇÕES DA CONTA -->
+        <section class="perfil-info">
+
+            <!-- NOME -->
+            <div class="perfil-item">
+
+                <span>
+                    <i class="fa-solid fa-user"></i>
+                </span>
+
+                <div>
+                    <small>Nome</small>
+
+                    <strong>
+                        {% if request.user.is_authenticated and perfil %}
+                            {{ perfil.nome_completo }}
+                        {% elif tipo_utilizador == "visitante" %}
+                            Visitante
+                        {% else %}
+                            Não definido
+                        {% endif %}
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- E-MAIL -->
+            <div class="perfil-item">
+
+                <span>
+                    <i class="fa-solid fa-envelope"></i>
+                </span>
+
+                <div>
+                    <small>E-mail</small>
+
+                    <strong>
+                        {% if request.user.is_authenticated %}
+                            {{ utilizador.email|default:"Não definido" }}
+                        {% else %}
+                            Não aplicável
+                        {% endif %}
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- TELEMÓVEL -->
+            <div class="perfil-item">
+
+                <span>
+                    <i class="fa-solid fa-phone"></i>
+                </span>
+
+                <div>
+                    <small>Telemóvel</small>
+
+                    <strong>
+                        {% if request.user.is_authenticated and perfil %}
+                            {{ perfil.telemovel|default:"Não definido" }}
+                        {% else %}
+                            Não associado a uma conta
+                        {% endif %}
+                    </strong>
+                </div>
+
+            </div>
+
+            <!-- TIPO DE CONTA -->
+            <div class="perfil-item">
+
+                <span>
+                    <i class="fa-solid fa-id-badge"></i>
+                </span>
+
+                <div>
+                    <small>Tipo de conta</small>
+
+                    <strong>
+                        {% if not request.user.is_authenticated %}
+                            Visitante
+                        {% elif perfil.tipo == "staff" %}
+                            Staff
+                        {% elif perfil %}
+                            Aluno
+                        {% else %}
+                            Não definido
+                        {% endif %}
+                    </strong>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- NOTIFICAÇÕES DO NAVEGADOR -->
+        <section class="webpush-card">
+            <div class="webpush-card-heading">
+                <span class="webpush-icon">
+                    <i class="fa-solid fa-bell"></i>
+                </span>
+                <div>
+                    <strong>Notificações</strong>
+                    <small>Recebe avisos de reservas e pagamentos, mesmo sem o site aberto.</small>
+                </div>
+            </div>
+
+            <button
+                type="button"
+                id="webPushButton"
+                class="webpush-button"
+                data-vapid-public-key="{{ webpush_vapid_public_key }}"
+            >
+                <i class="fa-solid fa-bell"></i>
+                Ativar notificações
+            </button>
+
+            <p id="webPushStatus" class="webpush-status" role="status" aria-live="polite">
+                As notificações do navegador ainda não foram verificadas.
+            </p>
+
+            <form id="webPushCsrfForm" hidden>
+                {% csrf_token %}
+            </form>
+        </section>
+
+        <!-- SOBRE O DESENVOLVEDOR -->
+        <button
+            type="button"
+            id="developerButton"
+            class="developer-button"
+        >
+
+            <span class="developer-button-icon">
+                <i class="fa-solid fa-code"></i>
+            </span>
+
+            <span class="developer-button-text">
+
+                <strong>Sobre o desenvolvedor</strong>
+
+                <small>
+                    Informações sobre o criador da aplicação
+                </small>
+
+            </span>
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </button>
+
+        <!-- TERMINAR SESSÃO: APENAS UTILIZADORES AUTENTICADOS -->
+        {% if request.user.is_authenticated %}
+
+            <button
+                type="button"
+                id="logoutButton"
+                class="logout-button"
+            >
+
+                <i class="fa-solid fa-right-from-bracket"></i>
+
+                Terminar sessão
+
+            </button>
+
+            <p
+                id="logoutMessage"
+                class="logout-message"
+            ></p>
+
+        {% endif %}
+
+    </main>
+
+    <!-- MODAL: SOBRE O DESENVOLVEDOR -->
+    <div
+        id="developerModal"
+        class="developer-modal"
+        aria-hidden="true"
+    >
+
+        <!-- FUNDO DA MODAL -->
+        <div
+            class="developer-modal-overlay"
+            id="developerModalOverlay"
+        ></div>
+
+        <!-- CARTÃO DA MODAL -->
+        <div
+            class="developer-modal-card"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="developerModalTitle"
+        >
+
+            <!-- BOTÃO FECHAR -->
+            <button
+                type="button"
+                id="closeDeveloperModal"
+                class="developer-modal-close"
+                aria-label="Fechar"
+            >
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <!-- ÍCONE -->
+            <div class="developer-modal-icon">
+                <i class="fa-solid fa-code"></i>
+            </div>
+
+            <!-- TÍTULO -->
+            <h2 id="developerModalTitle">
+                Sobre o desenvolvedor
+            </h2>
+
+            <!-- NOME -->
+            <div class="developer-info-item">
+
+                <i class="fa-solid fa-user"></i>
+
+                <div>
+                    <small>Desenvolvedor</small>
+                    <strong>Ifraim Lopes</strong>
+                </div>
+
+            </div>
+
+            <!-- CURSO -->
+            <div class="developer-info-item">
+
+                <i class="fa-solid fa-graduation-cap"></i>
+
+                <div>
+                    <small>Curso</small>
+                    <strong>Programador de Informática 2025</strong>
+                </div>
+
+            </div>
+
+            <!-- ESCOLA -->
+            <div class="developer-info-item">
+
+                <i class="fa-solid fa-school"></i>
+
+                <div>
+                    <small>Escola</small>
+                    <strong>Profitecla Guimarães</strong>
+                </div>
+
+            </div>
+
+            <!-- PROJETO -->
+            <div class="developer-info-item">
+
+                <i class="fa-solid fa-utensils"></i>
+
+                <div>
+                    <small>Projeto</small>
+                    <strong>Profisabores</strong>
+                </div>
+
+            </div>
+
+            <!-- DESCRIÇÃO -->
+            <p class="developer-description">
+                Aplicação desenvolvida para facilitar a consulta
+                do menu e a gestão de reservas do restaurante
+                pedagógico da Profitecla.
+            </p>
+
+            <!-- VERSÃO -->
+            <div class="developer-version">
+                Profisabores
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- NAVEGAÇÃO INFERIOR -->
+    <nav class="bottom-nav">
+
+        <!-- INÍCIO -->
+        <a
+            href="{% url 'home' %}"
+            class="nav-btn"
+        >
+            <span>⌂</span>
+            <small>Início</small>
+        </a>
+
+        <!-- MENU -->
+        <a
+            href="{% url 'menu' %}"
+            class="nav-btn"
+        >
+            <span>☷</span>
+            <small>Ementas</small>
+        </a>
+
+        <!-- RESERVAS -->
+        <a
+            href="{% url 'pagina_reservas' %}"
+            class="nav-btn"
+        >
+            <span>▣</span>
+            <small>Reservas</small>
+        </a>
+
+        <!-- PERFIL -->
+        <a
+            href="{% url 'perfil' %}"
+            class="nav-btn active"
+        >
+            <span>
+                <i
+                    class="fa fa-user"
+                    aria-hidden="true"
+                ></i>
+            </span>
+
+            <small>Perfil</small>
+        </a>
+
+    </nav>
+
+    <!-- JAVASCRIPT: LOGOUT APENAS PARA CONTAS AUTENTICADAS -->
+    {% if request.user.is_authenticated %}
+
+        <script>
+            const logoutButton =
+                document.getElementById("logoutButton");
+
+            const logoutMessage =
+                document.getElementById("logoutMessage");
+
+            if (logoutButton && logoutMessage) {
+
+                logoutButton.addEventListener(
+                    "click",
+                    async function () {
+
+                        logoutButton.disabled = true;
+
+                        logoutButton.innerHTML =
+                            '<i class="fa-solid fa-spinner fa-spin"></i> A terminar sessão...';
+
+                        try {
+
+                            const response = await fetch(
+                                "/utilizadores/api/logout/",
+                                {
+                                    method: "POST"
+                                }
+                            );
+
+                            const resultado = await response.json();
+
+                            if (!response.ok) {
+                                throw new Error(
+                                    resultado.erro ||
+                                    "Não foi possível terminar a sessão."
+                                );
+                            }
+
+                            window.location.href =
+                                resultado.redirect ||
+                                "/utilizadores/login/";
+
+                        } catch (erro) {
+
+                            logoutMessage.textContent =
+                                erro.message;
+
+                            logoutButton.disabled = false;
+
+                            logoutButton.innerHTML =
+                                '<i class="fa-solid fa-right-from-bracket"></i> Terminar sessão';
+
+                        }
+
+                    }
+                );
+
+            }
+        </script>
+
+    {% endif %}
+
+    <!-- JAVASCRIPT: MODAL DESENVOLVEDOR -->
+    <script>
+
+        const developerButton =
+            document.getElementById("developerButton");
+
+        const developerModal =
+            document.getElementById("developerModal");
+
+        const closeDeveloperModal =
+            document.getElementById("closeDeveloperModal");
+
+        const developerModalOverlay =
+            document.getElementById("developerModalOverlay");
+
+        function abrirModalDesenvolvedor() {
+
+            developerModal.classList.add(
+                "developer-modal-active"
+            );
+
+            developerModal.setAttribute(
+                "aria-hidden",
+                "false"
+            );
+
+            document.body.classList.add("modal-open");
+
+        }
+
+        function fecharModalDesenvolvedor() {
+
+            developerModal.classList.remove(
+                "developer-modal-active"
+            );
+
+            developerModal.setAttribute(
+                "aria-hidden",
+                "true"
+            );
+
+            document.body.classList.remove("modal-open");
+
+        }
+
+        developerButton.addEventListener(
+            "click",
+            abrirModalDesenvolvedor
+        );
+
+        closeDeveloperModal.addEventListener(
+            "click",
+            fecharModalDesenvolvedor
+        );
+
+        developerModalOverlay.addEventListener(
+            "click",
+            fecharModalDesenvolvedor
+        );
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape" &&
+                    developerModal.classList.contains(
+                        "developer-modal-active"
+                    )
+                ) {
+                    fecharModalDesenvolvedor();
+                }
+
+            }
+        );
+
+    </script>
+
+    <!-- JAVASCRIPT GERAL -->
+    <script
+        src="{% static 'js/script.js' %}?v=20261005"
+    ></script>
+
+    <!-- JAVASCRIPT: NOTIFICAÇÕES -->
+    <script
+        src="{% static 'js/notificacoes.js' %}"
+    ></script>
+
+    <!-- JAVASCRIPT: WEB PUSH DO NAVEGADOR -->
+    <script
+        src="{% static 'js/webpush.js' %}?v=20261018"
+    ></script>
+
+
+    <!-- Deteção do ambiente e tutorial de introdução -->
+    <script src="{% static 'js/deteccao-ambiente.js' %}?v=20261017-1"></script>
+    <script src="{% static 'js/tutorial.js' %}?v=20261017-1"></script>
+
+</body>
+</html>

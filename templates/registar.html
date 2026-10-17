@@ -1,0 +1,313 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta | Restaurante Profitecla</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px 16px;
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f1f7fd;
+            color: #17324d;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 28px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 28px rgba(30, 80, 130, 0.10);
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            text-align: center;
+            font-size: 26px;
+        }
+
+        .subtitle {
+            margin: 0 0 24px;
+            text-align: center;
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 7px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            font-size: 15px;
+            background: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #8bc2f5;
+            border-color: #398bd5;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: 0;
+            border-radius: 9px;
+            background: #287fc1;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .message {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .error {
+            display: block;
+            color: #991b1b;
+            background: #fee2e2;
+        }
+
+        .success {
+            display: block;
+            color: #166534;
+            background: #dcfce7;
+        }
+
+        .login-link {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #287fc1;
+            font-weight: bold;
+        }
+
+        @media (max-width: 420px) {
+            .container {
+                padding: 22px 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="container">
+        <h1>Criar conta</h1>
+        <p class="subtitle">Restaurante Profitecla</p>
+
+        <form id="formRegisto">
+            {% csrf_token %}
+
+            <label for="nome">Nome completo</label>
+            <input
+                type="text"
+                id="nome"
+                name="nome"
+                autocomplete="name"
+                required
+            >
+
+            <label for="email">Email</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">Palavra-passe</label>
+            <input
+                type="password"
+                id="password"
+                name="password"
+                autocomplete="new-password"
+                minlength="8"
+                required
+            >
+
+            <label for="telemovel">Telemóvel</label>
+            <input
+                type="tel"
+                id="telemovel"
+                name="telemovel"
+                autocomplete="tel"
+                required
+            >
+
+            <label for="sexo">Sexo</label>
+            <select id="sexo" name="sexo" required>
+                <option value="">Seleciona uma opção</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+             </select>
+
+
+             
+            <label for="data_nascimento">Data de nascimento</label>
+
+            <input
+                type="date"
+                id="data_nascimento"
+                name="data_nascimento"
+                required
+            >
+
+
+            <label for="tipo">Tipo de conta</label>
+            <select id="tipo" name="tipo" required>
+                <option value="">Seleciona uma opção</option>
+                <option value="aluno">Aluno</option>
+                <option value="staff">STAFF</option>
+            </select>
+
+            <div id="campoCurso" hidden>
+                <label for="curso">Curso</label>
+                <select id="curso" name="curso">
+                    <option value="">Seleciona o teu curso</option>
+                    {% for curso in cursos %}
+                        <option value="{{ curso.id }}">
+                            {{ curso.codigo }} — {{ curso.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" id="btnRegistar">
+                Criar conta
+            </button>
+
+            <div id="mensagem" class="message" role="alert"></div>
+        </form>
+
+        <p class="login-link">
+            Já tens conta?
+            <a href="/utilizadores/login/">Iniciar sessão</a>
+        </p>
+    </main>
+
+
+<script>
+    const form = document.getElementById("formRegisto");
+    const tipo = document.getElementById("tipo");
+    const campoCurso = document.getElementById("campoCurso");
+    const curso = document.getElementById("curso");
+    const mensagem = document.getElementById("mensagem");
+    const botao = document.getElementById("btnRegistar");
+
+    function atualizarCurso() {
+        const aluno = tipo.value === "aluno";
+
+        campoCurso.hidden = !aluno;
+        curso.required = aluno;
+
+        if (!aluno) {
+            curso.value = "";
+        }
+    }
+
+    tipo.addEventListener("change", atualizarCurso);
+    atualizarCurso();
+
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        mensagem.className = "message";
+        mensagem.textContent = "";
+
+        botao.disabled = true;
+        botao.textContent = "A criar conta...";
+
+        const dados = new FormData(form);
+
+        try {
+            const resposta = await fetch(
+                "/utilizadores/api/registar/",
+                {
+                    method: "POST",
+                    body: dados,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest"
+                    }
+                }
+            );
+
+            const resultado = await resposta.json();
+
+            if (!resposta.ok || !resultado.sucesso) {
+                throw new Error(
+                    resultado.erro ||
+                    resultado.mensagem ||
+                    "Não foi possível criar a conta."
+                );
+            }
+
+            mensagem.className = "message success";
+
+            mensagem.textContent =
+                resultado.mensagem ||
+                "Conta criada. Verifica o teu email para obter o PIN.";
+
+            if (resultado.email) {
+
+                sessionStorage.setItem(
+                    "email_registo",
+                    resultado.email
+                );
+
+                window.location.href =
+                    "/utilizadores/verificar-registo/";
+
+            }
+            
+
+        } catch (erro) {
+
+            mensagem.className = "message error";
+
+            mensagem.textContent =
+                erro.message ||
+                "Ocorreu um erro. Tenta novamente.";
+
+        } finally {
+
+            botao.disabled = false;
+            botao.textContent = "Criar conta";
+        }
+    });
+</script>
+
+
+</body>
+</html>

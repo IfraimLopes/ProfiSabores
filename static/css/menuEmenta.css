@@ -1,0 +1,427 @@
+
+/* ======================================================
+   PROFISABORES — MENU EMENTAS
+   Estilo exclusivo da página MenuEmentas
+====================================================== */
+
+.menu-ementas {
+    width: 100%;
+    max-width: 1000px;
+    margin: 24px auto;
+    padding: 0 16px 30px;
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+.menu-ementas *,
+.menu-ementas *::before,
+.menu-ementas *::after {
+    box-sizing: border-box;
+}
+
+/* CABEÇALHO DA PÁGINA */
+
+.menu-ementas__header {
+    margin-bottom: 24px;
+}
+
+.menu-ementas__header h1 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: clamp(23px, 4vw, 30px);
+    font-weight: 800;
+}
+
+.menu-ementas__header p {
+    margin: 0;
+    color: #bdbdbd;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+/* SECÇÕES DOS DIAS */
+
+.menu-ementas__dia {
+    margin-bottom: 30px;
+}
+
+.menu-ementas__dia-titulo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 14px;
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: 750;
+}
+
+.menu-ementas__dia-titulo i {
+    color: #8bc2f5;
+}
+
+/* GRELHA */
+
+.menu-ementas__grelha {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+}
+
+/* CARD */
+
+.menu-ementas__card {
+    width: 100%;
+    min-width: 0;
+    padding: 17px;
+    overflow: hidden;
+    background: #8bc2f5;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 17px;
+    color: #ffffff;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.10);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.menu-ementas__card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 9px 22px rgba(0, 0, 0, 0.15);
+}
+
+/* CABEÇALHO DO CARD */
+
+.menu-ementas__card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 13px;
+}
+
+.menu-ementas__etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    background: rgba(255, 255, 255, 0.78);
+    border-radius: 20px;
+    color: #214766;
+    font-size: 11px;
+    font-weight: 750;
+}
+
+.menu-ementas__card-header h3 {
+    margin: 9px 0 0;
+    color: #17324b;
+    font-size: 19px;
+    font-weight: 800;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.menu-ementas__descricao {
+    margin: 0 0 15px;
+    color: #25445e;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+/* ENTRADA E PRATO PRINCIPAL */
+
+.menu-ementas__item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+.menu-ementas__item:last-child {
+    margin-bottom: 0;
+}
+
+.menu-ementas__imagem {
+    display: block;
+    width: 100%;
+    height: 145px;
+    max-height: 160px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 11px;
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.menu-ementas__item-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.menu-ementas__tipo {
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.menu-ementas__item-conteudo h4 {
+    margin: 0;
+    color: #17324b;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.menu-ementas__item-conteudo p {
+    margin: 0;
+    color: #25445e;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* ALERGÉNIOS */
+
+.menu-ementas__alergenios {
+    margin-top: 5px !important;
+    color: #7b351d !important;
+    font-size: 11px !important;
+    line-height: 1.5;
+}
+
+/* EXTRAS */
+
+.menu-ementas__extras {
+    padding-top: 14px;
+}
+
+.menu-ementas__extras h4 {
+    margin: 0 0 11px;
+    color: #17324b;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.menu-ementas__extra {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 10px 8px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.23);
+    color: #17324b;
+    cursor: pointer;
+}
+
+.menu-ementas__extra input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: #26734d;
+}
+
+.menu-ementas__extra-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.menu-ementas__extra-info strong {
+    color: #17324b;
+    font-size: 12px;
+    overflow-wrap: anywhere;
+}
+
+.menu-ementas__extra-info small {
+    color: #25445e;
+    font-size: 11px;
+    line-height: 1.4;
+}
+
+.menu-ementas__extra-preco {
+    color: #17324b;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.menu-ementas__extra:has(input:checked) {
+    background: rgba(255, 255, 255, 0.75);
+    border-color: #26734d;
+}
+
+/* RODAPÉ DO CARD */
+
+.menu-ementas__rodape {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 15px;
+    margin-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.menu-ementas__preco {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.menu-ementas__preco span {
+    color: #25445e;
+    font-size: 11px;
+}
+
+.menu-ementas__preco strong {
+    color: #17324b;
+    font-size: 23px;
+    font-weight: 850;
+}
+
+.menu-ementas__preco small {
+    color: #25445e;
+    font-size: 10px;
+}
+
+/* BOTÃO RESERVAR */
+
+.menu-ementas__reservar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 11px 15px;
+    border: 0;
+    border-radius: 10px;
+    background: #286b4a;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 800;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.menu-ementas__reservar:hover {
+    background: #1f563b;
+}
+
+.menu-ementas__reservar:focus-visible,
+.menu-ementas__extra input:focus-visible {
+    outline: 3px solid #17324b;
+    outline-offset: 3px;
+}
+
+/* ESTADO VAZIO */
+
+.menu-ementas__vazio {
+    padding: 28px 18px;
+    background: #17232f;
+    border: 1px solid #34485a;
+    border-radius: 16px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.menu-ementas__vazio i {
+    color: #8bc2f5;
+    font-size: 30px;
+}
+
+.menu-ementas__vazio h3 {
+    margin: 12px 0 8px;
+    font-size: 17px;
+}
+
+.menu-ementas__vazio p {
+    margin: 0;
+    color: #d5e0ea;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* TABLETS E COMPUTADORES */
+
+@media (min-width: 650px) {
+    .menu-ementas {
+        padding-right: 20px;
+        padding-left: 20px;
+    }
+
+    .menu-ementas__card {
+        padding: 20px;
+    }
+
+    .menu-ementas__imagem {
+        height: 160px;
+        max-height: 180px;
+    }
+}
+
+/* TELEMÓVEIS */
+
+@media (max-width: 420px) {
+    .menu-ementas {
+        padding: 0 10px 24px;
+        margin-top: 16px;
+    }
+
+    .menu-ementas__card {
+        padding: 12px;
+        border-radius: 14px;
+    }
+
+    .menu-ementas__card-header h3 {
+        font-size: 16px;
+    }
+
+    .menu-ementas__imagem {
+        height: 120px;
+        max-height: 130px;
+    }
+
+    .menu-ementas__item-conteudo h4 {
+        font-size: 14px;
+    }
+
+    .menu-ementas__extra {
+        grid-template-columns: 17px minmax(0, 1fr) auto;
+        gap: 7px;
+        padding: 8px 6px;
+    }
+
+    .menu-ementas__extra-preco {
+        font-size: 11px;
+    }
+
+    .menu-ementas__rodape {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .menu-ementas__reservar {
+        width: 100%;
+    }
+}
+
+/* ACESSIBILIDADE */
+
+@media (prefers-reduced-motion: reduce) {
+    .menu-ementas__card,
+    .menu-ementas__reservar {
+        transition: none;
+    }
+}

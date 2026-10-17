@@ -1,0 +1,883 @@
+
+
+/* ======================================================
+   PROFISABORES — CARDS DE EMENTAS RESPONSIVOS
+   Imagens compactas, extras organizados e preço visível
+====================================================== */
+
+.ementas-section {
+    width: 100%;
+    max-width: 1000px;
+    margin: 24px auto;
+    padding: 0 16px;
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+.ementas-section *,
+.ementas-section *::before,
+.ementas-section *::after {
+    box-sizing: border-box;
+}
+
+    .ementas-heading {
+        margin-bottom: 16px;
+    }
+
+    .ementas-heading h2 {
+        margin: 0 0 5px;
+        font-size: clamp(19px, 2.5vw, 24px);
+        font-weight: 750;
+    }
+
+    .ementas-heading p {
+        margin: 0;
+        color: #bdbdbd;
+        font-size: 14px;
+    }
+
+/* GRELHA DE EMENTAS */
+
+.ementas-grid,
+.ementas-list {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 18px;
+    min-width: 0;
+}
+
+/* CARTÃO PRINCIPAL */
+
+.ementa-card {
+    width: 100%;
+    min-width: 0;
+    padding: 16px;
+    background: #8bc2f5;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    overflow: hidden;
+    color: white;
+    box-shadow: 0 5px 16px rgba(0, 0, 0, 0.10);
+}
+
+/* CABEÇALHO */
+
+.ementa-card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 12px;
+    min-width: 0;
+}
+
+.ementa-card-header > div {
+    min-width: 0;
+}
+
+.ementa-card-header h3,
+.ementa-data h3,
+.ementa-data strong {
+    margin: 5px 0 0;
+    font-size: clamp(16px, 2vw, 19px);
+    font-weight: 750;
+    line-height: 1.35;
+    overflow-wrap: anywhere;
+}
+
+.ementa-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.75);
+    color: #214766;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.ementa-data {
+    min-width: 0;
+}
+
+.ementa-data p {
+    margin: 4px 0 0;
+    color: #25445e;
+    font-size: 13px;
+}
+
+.ementa-status {
+    flex-shrink: 0;
+    padding: 5px 9px;
+    border-radius: 20px;
+    background: #ffffff;
+    color: #237344;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* DESCRIÇÃO DA EMENTA */
+
+.ementa-descricao {
+    margin: 0 0 12px;
+    color: #25445e;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* ENTRADA E PRATO PRINCIPAL */
+
+.ementa-itens {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-width: 0;
+}
+
+.ementa-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    padding: 0 0 13px;
+    margin: 0 0 13px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.65);
+}
+
+.ementa-item:last-child {
+    margin-bottom: 0;
+}
+
+/* IMAGENS COMPACTAS */
+
+.ementa-item-imagem {
+    display: block;
+    width: 100%;
+    height: 145px;
+    max-height: 160px;
+    margin: 0 0 10px;
+    border-radius: 10px;
+    object-fit: cover;
+    object-position: center;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* CONTEÚDO DOS PRATOS */
+
+.ementa-item-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    min-width: 0;
+}
+
+.ementa-item-tipo {
+    color: white;
+    font-size: 11px;
+    font-weight: 750;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.ementa-item-titulo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    min-width: 0;
+}
+
+.ementa-item-titulo h4,
+.ementa-item-conteudo h4 {
+    min-width: 0;
+    margin: 0;
+    color: white;
+    font-size: 15px;
+    font-weight: 750;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.ementa-incluido {
+    flex-shrink: 0;
+    color: #25445e;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+.ementa-item-conteudo p {
+    margin: 0;
+    color: #25445e;
+    font-size: 13px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+/* ALERGÉNIOS */
+
+.ementa-alergenios {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    margin-top: 3px;
+    color: white;
+    font-size: 11px !important;
+    line-height: 1.4;
+}
+
+.ementa-alergenios span {
+    padding: 4px 7px;
+    border: 1px solid rgba(115, 60, 25, 0.25);
+    border-radius: 6px;
+    color: white;
+    font-size: 10px;
+}
+
+/* EXTRAS */
+
+.ementa-extras {
+    padding-top: 13px;
+    min-width: 0;
+}
+
+.ementa-extras h4,
+.ementa-extras > h3 {
+    margin: 0 0 10px;
+    color: white;
+    font-size: 14px;
+    font-weight: 750;
+}
+
+.ementa-extras h4 i {
+    margin-right: 4px;
+}
+
+/* Cada extra fica numa linha compacta */
+
+.extra-item {
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    min-width: 0;
+    padding: 9px 8px;
+    margin: 0 0 7px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.20);
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+/* Checkbox dentro do label */
+
+.extra-item input[type="checkbox"],
+.ementa-extra-checkbox {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: #26734d;
+    cursor: pointer;
+}
+
+/* Texto do extra */
+
+.extra-conteudo,
+.extra-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.extra-conteudo strong,
+.extra-info h5,
+.extra-info strong {
+    display: block;
+    margin: 0;
+    color: #17324b;
+    font-size: 12px;
+    font-weight: 750;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.extra-conteudo small,
+.extra-info p {
+    margin: 0;
+    color: #25445e;
+    font-size: 11px;
+    line-height: 1.4;
+    overflow-wrap: anywhere;
+}
+
+.extra-preco {
+    justify-self: end;
+    white-space: nowrap;
+    color: #17324b;
+    font-size: 12px;
+    font-weight: 750;
+}
+
+.extra-item:has(input[type="checkbox"]:checked) {
+    border-color: #26734d;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+.extra-item:has(.ementa-extra-checkbox) {
+    cursor: pointer;
+}
+
+/* Compatibilidade com extras que tenham imagem */
+
+.extra-imagem {
+    display: block;
+    width: 48px;
+    height: 48px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+/* RODAPÉ: PREÇO E RESERVA */
+
+.ementa-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-top: 13px;
+    margin-top: 13px;
+    border-top: 1px solid rgba(255, 255, 255, 0.7);
+}
+
+.ementa-preco-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+.ementa-preco-label {
+    color: #25445e;
+    font-size: 11px;
+    font-weight: 650;
+}
+
+.ementa-preco {
+    color: #17324b;
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
+.ementa-preco-info small {
+    color: #25445e;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.ementa-card-footer button,
+.ementa-card-footer .btn-reservar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 40px;
+    max-width: 100%;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 9px;
+    background: #286b4a;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 750;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.ementa-card-footer button:hover,
+.ementa-card-footer .btn-reservar:hover {
+    background: #1f563b;
+}
+
+.ementa-card-footer button:focus-visible,
+.ementa-card-footer .btn-reservar:focus-visible,
+.extra-item input:focus-visible {
+    outline: 3px solid #17324b;
+    outline-offset: 3px;
+}
+
+/* NOTA INFORMATIVA */
+
+.ementa-nota {
+    margin: 10px 0 0;
+    color: #25445e;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+/* ESTADO SEM EMENTAS */
+
+.ementas-vazio,
+.ementas-vazias {
+    padding: 26px 16px;
+    border: 1px dashed rgba(255, 255, 255, 0.6);
+    border-radius: 14px;
+    color: #ffffff;
+    text-align: center;
+}
+
+.ementas-vazio i,
+.ementas-vazias i {
+    margin-bottom: 8px;
+    font-size: 24px;
+}
+
+.ementas-vazio h3,
+.ementas-vazias h3 {
+    margin: 0 0 7px;
+    font-size: 16px;
+}
+
+.ementas-vazio p,
+.ementas-vazias p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* TABLETS */
+
+@media (min-width: 600px) {
+    .ementas-section {
+        padding: 0 20px;
+    }
+
+    .ementa-card {
+        padding: 18px;
+    }
+
+    .ementa-item-imagem {
+        height: 155px;
+        max-height: 170px;
+    }
+
+    .extra-item {
+        gap: 10px;
+        padding: 10px;
+    }
+}
+
+/* ECRÃS GRANDES */
+
+@media (min-width: 900px) {
+    .ementas-section {
+        max-width: 900px;
+    }
+
+    .ementas-grid,
+    .ementas-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ementa-card {
+        padding: 20px;
+    }
+
+    .ementa-item-imagem {
+        height: 160px;
+        max-height: 180px;
+    }
+}
+
+/* TELEMÓVEIS */
+
+@media (max-width: 420px) {
+    .ementas-section {
+        padding: 0 10px;
+        margin-top: 16px;
+    }
+
+    .ementas-grid,
+    .ementas-list {
+        gap: 12px;
+    }
+
+    .ementa-card {
+        padding: 11px;
+        border-radius: 13px;
+    }
+
+    .ementa-card-header {
+        gap: 7px;
+        margin-bottom: 10px;
+    }
+
+    .ementa-card-header h3,
+    .ementa-data h3,
+    .ementa-data strong {
+        font-size: 15px;
+    }
+
+    .ementa-item {
+        padding-bottom: 11px;
+        margin-bottom: 11px;
+    }
+
+    .ementa-item-imagem {
+        height: 115px;
+        max-height: 125px;
+        margin-bottom: 8px;
+        border-radius: 8px;
+    }
+
+    .ementa-item-conteudo h4,
+    .ementa-item-titulo h4 {
+        font-size: 13px;
+    }
+
+    .ementa-item-conteudo p {
+        font-size: 12px;
+    }
+
+    .extra-item {
+        grid-template-columns: 18px minmax(0, 1fr) auto;
+        gap: 7px;
+        padding: 8px 6px;
+    }
+
+    .extra-item input[type="checkbox"],
+    .ementa-extra-checkbox {
+        width: 16px;
+        height: 16px;
+    }
+
+    .extra-conteudo strong,
+    .extra-info h5,
+    .extra-info strong {
+        font-size: 11px;
+    }
+
+    .extra-conteudo small,
+    .extra-info p {
+        font-size: 10px;
+    }
+
+    .extra-preco {
+        font-size: 11px;
+    }
+
+    .extra-imagem {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ementa-card-footer {
+        align-items: stretch;
+        gap: 10px;
+    }
+
+    .ementa-preco {
+        font-size: 19px;
+    }
+
+    .ementa-card-footer .btn-reservar,
+    .ementa-card-footer button {
+        width: 100%;
+        min-height: 42px;
+    }
+}
+
+/* REDUÇÃO DE ANIMAÇÕES */
+
+@media (prefers-reduced-motion: reduce) {
+    .ementa-card-footer button,
+    .ementa-card-footer .btn-reservar,
+    .extra-item {
+        transition: none;
+    }
+}
+
+
+
+/* ======================================================
+   MENSAGEM — SEM EMENTA DISPONÍVEL
+====================================================== */
+
+.ementas-vazio,
+.ementas-vazias {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    width: 100%;
+    min-height: 190px;
+    padding: 28px 20px;
+    margin: 18px 0;
+
+    background: #17232f;
+    border: 1px solid #34485a;
+    border-radius: 16px;
+
+    color: #ffffff;
+    text-align: center;
+
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+}
+
+.ementas-vazio i,
+.ementas-vazias i {
+    display: block;
+    margin-bottom: 4px;
+
+    color: #8bc2f5;
+    font-size: 30px;
+}
+
+.ementas-vazio h3,
+.ementas-vazias h3 {
+    margin: 0;
+
+    color: #ffffff;
+    font-size: 17px;
+    font-weight: 750;
+    line-height: 1.4;
+}
+
+.ementas-vazio p,
+.ementas-vazias p {
+    max-width: 380px;
+    margin: 0;
+
+    color: #d5e0ea;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+/* Telemóveis */
+
+@media (max-width: 420px) {
+    .ementas-vazio,
+    .ementas-vazias {
+        min-height: 165px;
+        padding: 22px 14px;
+        border-radius: 13px;
+    }
+
+    .ementas-vazio i,
+    .ementas-vazias i {
+        font-size: 26px;
+    }
+
+    .ementas-vazio h3,
+    .ementas-vazias h3 {
+        font-size: 15px;
+    }
+
+    .ementas-vazio p,
+    .ementas-vazias p {
+        font-size: 12px;
+    }
+}
+
+
+.ementas-heading h1{
+   color: #8bc2f5;
+}
+
+.ementas-heading h2{
+   color: #8bc2f5;
+   border-bottom: 1px solid #8bc2f5;
+}
+
+.ementas-heading h2 {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    flex-shrink: 0 !important;
+}
+
+.titulo-dia-teste {
+    display: block;
+    position: relative;
+    font-size: 24px;
+    line-height: 1.4;
+    color: #8bc2f5;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    transform: none;
+    animation: none;
+    clip-path: none;
+    opacity: 1;
+    visibility: visible;
+}
+/* Extras informativos nos cartões: sem coluna de checkbox */
+/* Extras informativos nos cartões: sem coluna de checkbox */
+/* Extras nos cartões: checkbox | nome | preço */
+.extra-item-card {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.extra-item-card input[type="checkbox"] {
+    display: block;
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: #26734d;
+    cursor: pointer;
+}
+
+.extra-item-card .extra-conteudo {
+    min-width: 0;
+}
+
+.extra-item-card .extra-preco {
+    justify-self: end;
+    align-self: center;
+    padding-left: 4px;
+    white-space: nowrap;
+}
+
+.extra-item-card:has(input[type="checkbox"]:checked) {
+    border-color: #26734d;
+    background: rgba(255, 255, 255, 0.65);
+}
+
+@media (max-width: 420px) {
+    .extra-item-card {
+        grid-template-columns: 16px minmax(0, 1fr) auto;
+        gap: 7px;
+        padding: 8px 6px;
+    }
+
+    .extra-item-card input[type="checkbox"] {
+        width: 16px;
+        height: 16px;
+    }
+}
+/* ======================================================
+   PROFISABORES — MELHORIAS VISUAIS DOS CARTÕES
+====================================================== */
+
+/* Cartões com profundidade e transições suaves */
+.ementa-card {
+    border: 1px solid rgba(23, 50, 75, 0.16);
+    box-shadow: 0 6px 18px rgba(23, 50, 75, 0.12);
+    transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.ementa-card:hover {
+    border-color: #b3daff;
+    box-shadow: 0 9px 24px rgba(23, 50, 75, 0.18);
+}
+
+/* Hierarquia visual dos pratos */
+.ementa-item-tipo {
+    color: #17324b;
+    letter-spacing: 0.7px;
+}
+
+.ementa-item-titulo h4,
+.ementa-item-conteudo h4 {
+    color: #17324b;
+}
+
+.ementa-incluido {
+    padding: 3px 7px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.55);
+}
+
+/* Alergénios mais legíveis */
+.ementa-alergenios {
+    color: #17324b;
+}
+
+.ementa-alergenios span {
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(23, 50, 75, 0.2);
+    color: #17324b;
+}
+
+/* Extras: linhas mais claras e fáceis de selecionar */
+.extra-item-card {
+    min-height: 44px;
+    border-color: rgba(23, 50, 75, 0.18);
+    background: rgba(255, 255, 255, 0.42);
+    transition: background 0.18s ease, border-color 0.18s ease,
+                box-shadow 0.18s ease;
+}
+
+.extra-item-card:hover {
+    border-color: #214766;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.extra-item-card:has(input[type="checkbox"]:checked) {
+    border-color: #26734d;
+    background: #ffffff;
+    box-shadow: inset 3px 0 0 #26734d;
+}
+
+.extra-item-card input[type="checkbox"] {
+    width: 19px;
+    height: 19px;
+    accent-color: #26734d;
+}
+
+/* Preços dos extras e da ementa */
+.extra-item-card .extra-preco {
+    color: #17324b;
+    font-size: 13px;
+    font-weight: 800;
+}
+
+.ementa-preco {
+    color: #17324b;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Botão de reserva */
+.ementa-card-footer .btn-reservar {
+    min-height: 44px;
+    padding: 11px 17px;
+    box-shadow: 0 3px 8px rgba(23, 50, 75, 0.14);
+}
+
+.ementa-card-footer .btn-reservar:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 5px 12px rgba(23, 50, 75, 0.2);
+}
+
+/* Acessibilidade: foco visível */
+.extra-item-card:focus-within {
+    outline: 2px solid #17324b;
+    outline-offset: 2px;
+}
+
+/* Respeitar a preferência por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .ementa-card,
+    .extra-item-card,
+    .ementa-card-footer .btn-reservar {
+        transition: none;
+        transform: none;
+    }
+}
+

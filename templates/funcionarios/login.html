@@ -1,0 +1,151 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Área de Funcionários</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(
+                135deg,
+                #8bc2f5,
+                #b3daff,
+                #ffffff
+            );
+        }
+
+        .login {
+            width: 90%;
+            max-width: 400px;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,.15);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .subtitulo {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            margin-bottom: 18px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 10px;
+            background: #8bc2f5;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .erro {
+            background: #ffe5e5;
+            color: #b00000;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login">
+
+        <img
+            src="{% static 'img/rofiteclaICON.png' %}"
+            alt="Logo do Restaurante Profitecla"
+            style="display: block; margin: 0 auto 10px; width: 80px;"
+        >   
+
+        <h1>Profisabores</h1>
+
+        <div class="subtitulo">
+            Supervisão
+        </div>
+
+        {% if erro %}
+            <div class="erro">
+                {{ erro }}
+            </div>
+        {% endif %}
+
+        <form method="post">
+
+            {% csrf_token %}
+
+            <label for="username">
+                Utilizador
+            </label>
+
+            <input
+                type="text"
+                id="username"
+                name="username"
+                placeholder="Nome de utilizador"
+                required
+            >
+
+            <label for="password">
+                Palavra-passe
+            </label>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Palavra-passe"
+                required
+            >
+
+            <button type="submit">
+                Entrar
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

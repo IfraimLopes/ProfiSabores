@@ -1,0 +1,20 @@
+{
+  "id": "/",
+  "name": "Profisabores",
+  "short_name": "Profisabores",
+  "description": "Consulta a ementa e gere as tuas reservas no Profisabores.",
+  "lang": "pt-PT",
+  "start_url": "/inicio/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#8bc2f5",
+  "icons": [
+    {
+      "src": "/static/img/profisabores-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

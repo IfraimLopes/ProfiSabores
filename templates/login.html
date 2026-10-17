@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+
+<title>Login - Restaurante Profitecla</title>
+
+<link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+>
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        min-height: 100vh;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(
+            180deg,
+            #b3daff 0%,
+            #ffffff 65%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .login-container {
+        width: 100%;
+        max-width: 420px;
+        background: #ffffff;
+        border-radius: 24px;
+        padding: 35px 28px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .logo {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 18px;
+    }
+
+    .logo img {
+        width: 75px;
+        height: 75px;
+        object-fit: contain;
+    }
+
+    .title {
+        text-align: center;
+        color: #222;
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        text-align: center;
+        color: #777;
+        font-size: 14px;
+        margin-bottom: 30px;
+    }
+
+    .input-group {
+        position: relative;
+        margin-bottom: 18px;
+    }
+
+    .input-group i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #8bc2f5;
+        font-size: 17px;
+    }
+
+    .input-group input {
+        width: 100%;
+        height: 54px;
+        border: 1px solid #ddd;
+        border-radius: 14px;
+        padding: 0 16px 0 48px;
+        font-size: 15px;
+        outline: none;
+        transition: 0.2s;
+    }
+
+    .input-group input:focus {
+        border-color: #8bc2f5;
+        box-shadow: 0 0 0 3px rgba(139, 194, 245, 0.18);
+    }
+
+    .password-toggle {
+        position: absolute;
+        right: 16px;
+        left: auto !important;
+        cursor: pointer;
+        color: #777 !important;
+    }
+
+    .forgot-password {
+        display: block;
+        text-align: right;
+        margin-top: -6px;
+        margin-bottom: 22px;
+        color: #2684d9;
+        font-size: 14px;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    .login-button {
+        width: 100%;
+        height: 54px;
+        border: none;
+        border-radius: 14px;
+        background: #8bc2f5;
+        color: #ffffff;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .login-button:hover {
+        background: #6eafe9;
+    }
+
+    .login-button:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    .message {
+        display: none;
+        margin-top: 18px;
+        padding: 12px 14px;
+        border-radius: 12px;
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .message.error {
+        display: block;
+        background: #ffe5e5;
+        color: #c62828;
+    }
+
+    .message.success {
+        display: block;
+        background: #e5f7e9;
+        color: #237a35;
+    }
+
+    .register-area {
+        text-align: center;
+        margin-top: 26px;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .register-area a {
+        color: #2684d9;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .footer {
+        text-align: center;
+        margin-top: 25px;
+        color: #aaa;
+        font-size: 11px;
+    }
+</style>
+
+
+</head>
+
+<body>
+
+<main class="login-container">
+
+    <div class="logo">
+        <img
+            src="/static/img/rofiteclaICON.png"
+            alt="Profitecla"
+        >
+    </div>
+
+    <h1 class="title">Bem-vindo</h1>
+
+    <p class="subtitle">
+        Entre na sua conta da PROFISABORES
+    </p>
+
+    <form id="loginForm">
+
+        <div class="input-group">
+            <i class="fa-solid fa-envelope"></i>
+
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="E-mail"
+                autocomplete="email"
+                required
+            >
+        </div>
+
+        <div class="input-group">
+            <i class="fa-solid fa-lock"></i>
+
+            <input
+                type="password"
+                id="password"
+                name="password"
+                placeholder="Palavra-passe"
+                autocomplete="current-password"
+                required
+            >
+
+            <i
+                class="fa-solid fa-eye password-toggle"
+                id="togglePassword"
+            ></i>
+        </div>
+
+        <a
+            href="/utilizadores/recuperar-password/"
+            class="forgot-password"
+        >
+            Esqueci-me da palavra-passe
+        </a>
+
+        <button
+            type="submit"
+            class="login-button"
+            id="loginButton"
+        >
+            Entrar
+        </button>
+
+        <div
+            id="message"
+            class="message"
+        ></div>
+
+    </form>
+
+    <div class="register-area">
+        Ainda não tem conta?
+        <a href="/utilizadores/registar/">
+            Criar conta
+        </a>
+    </div>
+
+    <div class="footer">
+        Restaurante Profitecla
+    </div>
+
+</main>
+
+<script>
+    const loginForm = document.getElementById("loginForm");
+    const loginButton = document.getElementById("loginButton");
+    const message = document.getElementById("message");
+
+    const passwordInput = document.getElementById("password");
+    const togglePassword = document.getElementById("togglePassword");
+
+    togglePassword.addEventListener("click", () => {
+
+        const isPassword =
+            passwordInput.type === "password";
+
+        passwordInput.type =
+            isPassword ? "text" : "password";
+
+        togglePassword.classList.toggle(
+            "fa-eye"
+        );
+
+        togglePassword.classList.toggle(
+            "fa-eye-slash"
+        );
+    });
+
+    loginForm.addEventListener("submit", async (event) => {
+
+        event.preventDefault();
+
+        message.className = "message";
+        message.textContent = "";
+
+        loginButton.disabled = true;
+        loginButton.textContent = "A entrar...";
+
+        const formData = new FormData();
+
+        formData.append(
+            "email",
+            document.getElementById("email").value.trim()
+        );
+
+        formData.append(
+            "password",
+            passwordInput.value
+        );
+
+        try {
+
+            const response = await fetch(
+                "/utilizadores/api/login/",
+                {
+                    method: "POST",
+                    body: formData
+                }
+            );
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(
+                    data.erro || "Não foi possível iniciar sessão."
+                );
+            }
+
+            sessionStorage.setItem(
+                "login_email",
+                data.email
+            );
+
+            message.className = "message success";
+
+            message.textContent =
+                "Código enviado para o seu e-mail.";
+
+            setTimeout(() => {
+
+                window.location.href =
+                    "/utilizadores/verificar-login/";
+
+            }, 700);
+
+        } catch (error) {
+
+            message.className = "message error";
+
+            message.textContent =
+                error.message;
+
+            loginButton.disabled = false;
+            loginButton.textContent = "Entrar";
+        }
+    });
+</script>
+
+</body>
+</html>

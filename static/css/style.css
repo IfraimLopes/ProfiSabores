@@ -1,0 +1,2878 @@
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   BODY
+========================================================= */
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background-color: #f5f5f5;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 5px 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+header img {
+    width: 110px;
+    height: 120px;
+    margin-left: -90px;
+    margin-bottom: -25px;
+    background-color: #0000;
+}
+
+header span {
+    color: #8bc2f5;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+}
+
+.header-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   HEADER BUTTON
+========================================================= */
+
+.button-header {
+    background-color: #b3daff;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    padding: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+.button-header img {
+    width: 50px;
+    height: 50px;
+    margin: 0;
+}
+
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20vh;
+}
+
+#home {
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   MENU HEADER
+========================================================= */
+
+.menu-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 85%;
+    max-width: 430px;
+    gap: 20px;
+    margin: 20px auto;
+    padding: 0 15px;
+}
+
+.menu-title {
+    font-size: 15px;
+    font-weight: bold;
+    color: #8bc2f5;
+}
+
+.menu-link {
+    text-decoration: none;
+    font-size: 14px;
+    color: #8bc2f5;
+}
+
+
+/* =========================================================
+   WELCOME CARD
+========================================================= */
+
+.welcome-card {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 372px;
+    height: 120px;
+    padding: 20px;
+    background-color: #8bc2f5;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+}
+
+.welcome-card h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.welcome-card p {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color: white;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PLATE ICON
+========================================================= */
+
+.plate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 54px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   CARDS DO CARDÁPIO
+========================================================= */
+
+.cardapio-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 430px;
+    margin: 20px auto 110px;
+    padding: 0 15px;
+}
+
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.cardapio {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 125px;
+    padding: 12px;
+    gap: 15px;
+    background-color: #8bc2f5;
+    border-radius: 25px 12px 25px 12px;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.cardapio:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   IMAGEM DO PRATO
+========================================================= */
+
+.imgcomida {
+    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.7);
+}
+
+.imgcomida img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.cardapio:hover .imgcomida img {
+    transform: scale(1.08);
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DO PRATO
+========================================================= */
+
+.info-cardapio {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    gap: 5px;
+    text-align: left;
+}
+
+.info-cardapio h1 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.info-cardapio p {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   PREÇO
+========================================================= */
+
+.preco {
+    margin-top: 2px;
+}
+
+.preco p {
+    font-size: 10px;
+}
+
+.preco span {
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   DISPONIBILIDADE
+========================================================= */
+
+.reserva {
+    margin-top: 1px;
+}
+
+.reserva p {
+    font-size: 10px;
+}
+
+.reserva span {
+    color: white;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   BOTÃO RESERVAR
+========================================================= */
+
+.reserva-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 85px;
+    height: 32px;
+    margin-top: 3px;
+    background-color: rgb(113, 194, 113);
+    color: white;
+    border: none;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.reserva-link:hover {
+    background-color: rgb(0, 79, 0);
+    transform: translateY(-1px);
+}
+
+.reserva-link:active {
+    transform: scale(0.96);
+}
+
+
+/* =========================================================
+   INFO CARD
+========================================================= */
+
+.infocard {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 350px;
+    padding: 15px;
+    background-color: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    color: rgba(0, 0, 0, 0.301);
+}
+
+.infocard p {
+    margin: 0;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   PÁGINAS INTERNAS
+========================================================= */
+
+main.pagina {
+    display: block;
+    height: auto;
+    min-height: calc(100vh - 100px);
+    padding: 25px 20px 110px;
+}
+
+
+/* =========================================================
+   CABEÇALHO DA PÁGINA
+========================================================= */
+
+.pagina-header {
+    margin-bottom: 25px;
+}
+
+.pagina-header > span {
+    font-size: 28px;
+}
+
+.pagina-header h1 {
+    margin-top: 8px;
+    color: #8bc2f5;
+    font-size: 22px;
+}
+
+.pagina-header p {
+    margin-top: 5px;
+    color: #777;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   MENU PAGE
+========================================================= */
+
+.menu-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 125px;
+    padding: 12px;
+    margin-bottom: 15px;
+    background-color: #8bc2f5;
+    border-radius: 25px 12px 25px 12px;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.menu-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.menu-card > div {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.menu-card h2 {
+    margin: 0;
+    font-size: 15px;
+}
+
+.menu-card p {
+    margin: 0;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.menu-card strong {
+    font-size: 13px;
+}
+
+.menu-card a {
+    width: fit-content;
+    padding: 7px 12px;
+    background-color: rgb(113, 194, 113);
+    border-radius: 6px;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.menu-card a:hover {
+    background-color: rgb(0, 79, 0);
+}
+
+
+/* =========================================================
+   IMAGEM DO MENU
+========================================================= */
+
+.menu-card-imagem {
+    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.7);
+}
+
+.menu-card-imagem img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.menu-card:hover .menu-card-imagem img {
+    transform: scale(1.08);
+}
+
+.menu-card .reserva-link {
+    padding: 6px 10px;
+    background-color: white;
+    border-radius: 7px;
+    color: #1479d1;
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.menu-card .reserva-link:hover {
+    background-color: white;
+    color: #1479d1;
+    transform: scale(1.04);
+}
+
+
+/* =========================================================
+   RESERVAS
+========================================================= */
+
+.reserva-card {
+    width: 100%;
+    max-width: 380px;
+    padding: 18px;
+    margin-bottom: 20px;
+    background-color: white;
+    border-radius: 15px;
+    border-left: 5px solid #8bc2f5;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =========================================================
+   PARTE DE CIMA
+========================================================= */
+
+.reserva-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.reserva-top h2 {
+    margin-top: 6px;
+    color: #333;
+    font-size: 16px;
+}
+
+.reserva-status {
+    padding: 5px 8px;
+    background-color: #e8f8e8;
+    border-radius: 5px;
+    color: rgb(0, 130, 0);
+    font-size: 9px;
+    font-weight: bold;
+}
+
+.reserva-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    background-color: #8bc2f5;
+    border-radius: 50%;
+    color: white;
+    font-weight: bold;
+}
+
+
+/* =========================================================
+   INFORMAÇÕES DA RESERVA
+========================================================= */
+
+.reserva-info {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px 0;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.reserva-info > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.reserva-info > div > span {
+    font-size: 18px;
+}
+
+.reserva-info small {
+    display: block;
+    margin-bottom: 3px;
+    color: #999;
+    font-size: 9px;
+}
+
+.reserva-info strong {
+    display: block;
+    color: #333;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   RODAPÉ DA RESERVA
+========================================================= */
+
+.reserva-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+.reserva-footer small {
+    color: #999;
+    font-size: 9px;
+}
+
+.cancelar-btn {
+    padding: 7px 10px;
+    background-color: #ffe5e5;
+    border: none;
+    border-radius: 6px;
+    color: #d60000;
+    font-size: 9px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.cancelar-btn:hover {
+    background-color: #ffcccc;
+}
+
+
+/* =========================================================
+   NOVA RESERVA
+========================================================= */
+
+.nova-reserva-btn {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    padding: 13px;
+    background-color: #8bc2f5;
+    border-radius: 10px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.nova-reserva-btn:hover {
+    background-color: #65a9e5;
+}
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+.bottom-nav {
+    position: fixed;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 430px;
+    height: 65px;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    background-color: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+}
+
+.bottom-nav a {
+    text-decoration: none;
+    color: #8a8a8a;
+}
+
+
+/* =========================================================
+   BOTÕES DA NAV
+========================================================= */
+
+.nav-btn {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    width: 70px;
+    height: 55px;
+    border: none;
+    background: transparent;
+    color: #8a8a8a;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+
+/* ÍCONE */
+
+.nav-btn span {
+    font-size: 22px;
+    line-height: 22px;
+}
+
+
+/* TEXTO */
+
+.nav-btn small {
+    font-size: 10px;
+    font-weight: 500;
+}
+
+
+/* ATIVO */
+
+.nav-btn.active {
+    color: #219221;
+}
+
+.nav-btn.active::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    width: 5px;
+    height: 5px;
+    background-color: #219221;
+    border-radius: 50%;
+}
+
+
+/* HOVER */
+
+.nav-btn:hover {
+    color: #219221;
+}
+
+
+/* CLIQUE */
+
+.nav-btn:active {
+    transform: scale(0.9);
+}
+
+
+/* =========================================================
+   MODAL DE RESERVA
+========================================================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 2000;
+}
+
+.modal.mostrar {
+    display: flex;
+}
+
+.modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.modal-content h2 {
+    margin-bottom: 5px;
+    color: #8bc2f5;
+    font-size: 22px;
+}
+
+.modal-subtitulo {
+    margin-bottom: 20px;
+    color: #888;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   FECHAR MODAL
+========================================================= */
+
+.fechar-modal {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    border: none;
+    background: transparent;
+    color: #777;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+
+/* =========================================================
+   FORMULÁRIO DE RESERVA
+========================================================= */
+
+#reservaForm {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+#reservaForm label {
+    margin-top: 5px;
+    color: #555;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+#reservaForm input,
+#reservaForm select {
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    outline: none;
+    font-size: 13px;
+}
+
+#reservaForm input:focus,
+#reservaForm select:focus {
+    border-color: #8bc2f5;
+}
+
+
+/* =========================================================
+   PRATO
+========================================================= */
+
+#prato {
+    background-color: #f5f5f5;
+    color: #555;
+}
+
+
+/* =========================================================
+   HORA E TOTAL
+========================================================= */
+
+.hora-reserva,
+.total-reserva {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    padding: 12px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+}
+
+.hora-reserva span,
+.total-reserva span {
+    color: #777;
+    font-size: 12px;
+}
+
+.hora-reserva strong {
+    font-size: 13px;
+}
+
+.total-reserva strong {
+    color: #8bc2f5;
+    font-size: 18px;
+}
+
+
+/* =========================================================
+   DATA DA RESERVA
+========================================================= */
+
+.prato-data {
+    margin-top: 8px;
+    color: #777;
+    font-size: 11px;
+}
+
+.prato-data strong {
+    color: #333;
+}
+
+
+/* =========================================================
+   CONFIRMAR RESERVA
+========================================================= */
+
+.confirmar-reserva {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background-color: rgb(113, 194, 113);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.confirmar-reserva:hover {
+    background-color: rgb(0, 79, 0);
+}
+
+
+/* =========================================================
+   MENSAGENS
+========================================================= */
+
+#mensagem {
+    margin-top: 8px;
+    text-align: center;
+    font-size: 12px;
+}
+
+#mensagem.sucesso {
+    color: green;
+}
+
+#mensagem.erro {
+    color: red;
+}
+
+
+/* =========================================================
+   CARROSSÉIS DE BANNERS
+========================================================= */
+
+.banner-carousel {
+    width: 88%;
+    max-width: 500px;
+    margin: 20px auto;
+}
+
+.banner-slides {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    overflow: hidden;
+    border-radius: 18px;
+}
+
+.banner-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(20px);
+    transition:
+        opacity 0.45s ease,
+        transform 0.45s ease;
+}
+
+.banner-slide.ativo {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+}
+
+.banner-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+
+/* =========================================================
+   BOLINHAS
+========================================================= */
+
+.banner-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.banner-dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #b3daff;
+    cursor: pointer;
+    transition:
+        width 0.25s ease,
+        height 0.25s ease,
+        background 0.25s ease,
+        transform 0.25s ease;
+}
+
+.banner-dot.ativo {
+    width: 10px;
+    height: 10px;
+    background: #1479d1;
+    transform: scale(1.1);
+}
+
+
+/* =========================================================
+   BANNER INFERIOR
+========================================================= */
+
+#bannerFim {
+    margin-top: 300px;
+    margin-bottom: 10px;
+}
+
+
+/* =========================================================
+   RESPONSIVO
+========================================================= */
+
+@media screen and (max-width: 600px) {
+
+    body {
+        width: 100%;
+        overflow-x: hidden;
+    }
+
+
+    /* =========================
+       HEADER
+    ========================= */
+
+    header {
+        width: 100%;
+        padding: 5px 15px;
+        gap: 10px;
+    }
+
+    header img {
+        width: 75px;
+        height: 75px;
+        margin-left: -20px;
+        margin-bottom: -20px;
+    }
+
+    .header-text  img {
+           width: 70px;
+        height: 55px;
+        margin-left: 8px;
+        margin-bottom: -15px;
+    }
+
+    .header-text {
+        margin-bottom: 5px;
+    }
+
+    .button-header {
+        width: 40px;
+        height: 40px;
+        padding: 7px;
+        margin-right: 5px;
+        margin-top: 10px;
+    }
+
+    .button-header img {
+        width: 25px;
+        height: 25px;
+    }
+
+
+    /* =========================
+       MAIN
+    ========================= */
+
+    main {
+        width: 100%;
+        height: auto;
+    }
+
+
+    /* =========================
+       WELCOME
+    ========================= */
+
+    .welcome-card {
+        width: calc(100% - 30px);
+        max-width: 372px;
+        min-height: 120px;
+        height: auto;
+        margin: 20px auto;
+        padding: 18px;
+        gap: 12px;
+    }
+
+    .welcome-card h2 {
+        font-size: 17px;
+    }
+
+    .welcome-card p {
+        font-size: 12px;
+    }
+
+    .plate {
+        font-size: 45px;
+    }
+
+
+    /* =========================
+       MENU HEADER
+    ========================= */
+
+    .menu-container {
+        width: calc(100% - 30px);
+        max-width: 372px;
+        margin: 20px auto;
+        padding: 0;
+        gap: 0;
+    }
+
+    .menu-title {
+        margin-left: 0;
+        font-size: 15px;
+    }
+
+    .menu-link {
+        font-size: 12px;
+    }
+
+
+    /* =========================
+       CARDS
+    ========================= */
+
+    .cardapio-container {
+        width: 100%;
+        max-width: 430px;
+        margin: 20px auto 40px;
+        padding: 0 15px;
+        gap: 15px;
+    }
+
+    .cardapio {
+        width: 100%;
+        max-width: 350px;
+        min-height: 125px;
+        padding: 12px;
+        gap: 14px;
+    }
+
+    .imgcomida {
+        width: 78px;
+        height: 78px;
+        border-width: 3px;
+    }
+
+    .info-cardapio {
+        gap: 4px;
+    }
+
+    .info-cardapio h1 {
+        font-size: 14px;
+    }
+
+    .info-cardapio p {
+        font-size: 10px;
+    }
+
+    .preco span {
+        font-size: 10px;
+    }
+
+    .reserva-link {
+        width: 82px;
+        height: 31px;
+        font-size: 10px;
+    }
+
+
+    /* =========================
+       MENU CARDS
+    ========================= */
+
+    .menu-card {
+        width: 100%;
+        max-width: 350px;
+        min-height: 125px;
+        padding: 12px;
+        gap: 14px;
+    }
+
+    .menu-card-imagem {
+        width: 78px;
+        height: 78px;
+        border-width: 3px;
+    }
+
+    .menu-card h2 {
+        font-size: 14px;
+    }
+
+    .menu-card p {
+        font-size: 10px;
+    }
+
+    .menu-card strong {
+        font-size: 11px;
+    }
+
+
+    /* =========================
+       INFO CARD
+    ========================= */
+
+    .infocard {
+        width: 100%;
+        max-width: 430px;
+        margin: 0 auto;
+        padding: 10px;
+    }
+
+    .infocard p {
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+
+    /* =========================
+       PÁGINAS INTERNAS
+    ========================= */
+
+    main.pagina {
+        padding: 25px 15px 110px;
+        min-height: calc(100vh - 100px);
+    }
+
+
+    /* =========================
+       BOTTOM NAV
+    ========================= */
+
+    .bottom-nav {
+        width: calc(100% - 30px);
+        max-width: 430px;
+        height: 62px;
+        bottom: 10px;
+        margin-bottom: 0;
+    }
+
+    .nav-btn {
+        width: 65px;
+        height: 52px;
+    }
+
+    .nav-btn span {
+        font-size: 21px;
+    }
+
+    .nav-btn small {
+        font-size: 9px;
+    }
+
+
+    /* =========================
+       MODAL
+    ========================= */
+
+    .modal {
+        padding: 15px;
+    }
+
+    .modal-content {
+        width: 100%;
+        max-width: 380px;
+        max-height: 90vh;
+        padding: 20px;
+        border-radius: 18px;
+    }
+
+    .modal-content h2 {
+        font-size: 20px;
+    }
+
+
+    /* =========================
+       FORM
+    ========================= */
+
+    #reservaForm input,
+    #reservaForm select {
+        height: 40px;
+        font-size: 12px;
+    }
+
+
+    /* =========================
+       BANNERS
+    ========================= */
+
+    .banner-carousel {
+        width: 88%;
+        max-width: 500px;
+        margin: 20px auto;
+    }
+
+    .banner-slides {
+        height: 170px;
+        border-radius: 16px;
+    }
+
+    .banner-slide img {
+        border-radius: 16px;
+    }
+
+
+    /* =========================
+       BANNER INFERIOR
+    ========================= */
+
+    #bannerFim {
+        margin-top: 30px;
+        margin-bottom: 120px;
+    }
+}
+
+
+/* =========================================================
+   TELAS MUITO PEQUENAS
+========================================================= */
+
+@media screen and (max-width: 380px) {
+
+    header {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    header img {
+        width: 68px;
+        height: 68px;
+    }
+
+
+    /* =========================
+       WELCOME
+    ========================= */
+
+    .welcome-card {
+        padding: 15px;
+    }
+
+    .welcome-card h2 {
+        font-size: 15px;
+    }
+
+    .welcome-card p {
+        font-size: 11px;
+    }
+
+    .plate {
+        font-size: 38px;
+    }
+
+
+    /* =========================
+       CARDS
+    ========================= */
+
+    .cardapio {
+        max-width: 330px;
+        min-height: 115px;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .imgcomida {
+        width: 68px;
+        height: 68px;
+    }
+
+    .info-cardapio h1 {
+        font-size: 12px;
+    }
+
+    .info-cardapio p {
+        font-size: 9px;
+    }
+
+    .reserva-link {
+        width: 75px;
+        height: 29px;
+        font-size: 9px;
+    }
+
+
+    /* =========================
+       MENU
+    ========================= */
+
+    .menu-title {
+        font-size: 14px;
+    }
+
+    .menu-link {
+        font-size: 11px;
+    }
+
+
+    /* =========================
+       BANNER
+    ========================= */
+
+    .banner-carousel {
+        width: 90%;
+    }
+
+    .banner-slides {
+        height: 155px;
+        border-radius: 15px;
+    }
+
+    .banner-slide img {
+        border-radius: 15px;
+    }
+
+
+    /* =========================
+       BANNER INFERIOR
+    ========================= */
+
+    #bannerFim {
+        margin-bottom: 120px;
+    }
+}
+
+
+/* =========================================================
+   SOBREMESAS
+========================================================= */
+
+.sobremesas-section {
+    width: 88%;
+    max-width: 500px;
+    margin: 20px auto 40px;
+    padding-bottom: 60px;
+    padding-top: 5px;
+}
+
+.sobremesas-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.sobremesas-header h2 {
+    margin-top: 5px;
+    color: #333;
+    font-size: 18px;
+}
+
+.sobremesas-header a {
+    color: #8bc2f5;
+    font-size: 11px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.sobremesas-tag {
+    color: #1479d1;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+}
+
+
+/* =========================================================
+   LISTA
+========================================================= */
+
+.sobremesas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+/* =========================================================
+   CARD DA SOBREMESA
+========================================================= */
+
+.sobremesa-card {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    max-width: 350px;
+    margin-left: auto;
+    margin-right: auto;
+    min-height: 125px;
+    padding: 12px;
+    gap: 15px;
+    background-color: #8bc2f5;
+    border-radius: 25px 12px 25px 12px;
+    color: white;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+.sobremesa-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+
+/* =========================================================
+   IMAGEM
+========================================================= */
+
+.sobremesa-imagem {
+    flex-shrink: 0;
+    width: 90px;
+    height: 90px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 4px solid rgba(255, 255, 255, 0.7);
+}
+
+.sobremesa-imagem img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.sobremesa-card:hover .sobremesa-imagem img {
+    transform: scale(1.08);
+}
+
+
+/* =========================================================
+   INFORMAÇÕES
+========================================================= */
+
+.sobremesa-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+}
+
+.sobremesa-label {
+    width: fit-content;
+    padding: 3px 7px;
+    background-color: rgba(255, 255, 255, 0.25);
+    border-radius: 20px;
+    font-size: 8px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.sobremesa-info h3 {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.sobremesa-info p {
+    margin: 0;
+    font-size: 9px;
+    line-height: 1.35;
+    opacity: 0.9;
+}
+
+
+/* =========================================================
+   PREÇO + RESERVAR
+========================================================= */
+
+.sobremesa-bottom {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-top: 5px;
+}
+
+.sobremesa-bottom strong {
+    font-size: 13px;
+}
+
+.sobremesa-reserva {
+    padding: 6px 10px;
+    background-color: white;
+    border-radius: 7px;
+    color: #1479d1;
+    font-size: 9px;
+    font-weight: bold;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.sobremesa-reserva:hover {
+    transform: scale(1.04);
+}
+
+
+/* =========================================================
+   SEM SOBREMESAS
+========================================================= */
+
+.sem-sobremesas {
+    color: #999;
+    font-size: 11px;
+    text-align: center;
+}
+
+
+/* =========================================================
+   MOBILE SOBREMESAS
+========================================================= */
+
+@media screen and (max-width: 600px) {
+
+    .sobremesas-section {
+        width: 88%;
+        margin-top: 30px;
+    }
+
+    .sobremesa-card {
+        width: 100%;
+        max-width: 350px;
+        min-height: 115px;
+        padding: 10px;
+        gap: 12px;
+        border-radius: 22px 10px 22px 10px;
+    }
+
+    .sobremesa-imagem {
+        width: 78px;
+        height: 78px;
+        border-width: 3px;
+    }
+
+    .sobremesa-info h3 {
+        font-size: 13px;
+    }
+
+    .sobremesa-info p {
+        font-size: 8px;
+    }
+
+    .sobremesa-bottom strong {
+        font-size: 11px;
+    }
+
+    .sobremesa-reserva {
+        padding: 5px 8px;
+        font-size: 8px;
+    }
+}
+
+/* ==========================================
+   LOADING SCREEN
+   ========================================== */
+
+#loading-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #ffffff;
+
+    opacity: 1;
+    visibility: visible;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+}
+
+#loading-screen.loading-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.loading-logo {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}
+/* =========================================================
+FOOTER - DESENVOLVEDOR
+========================================================= */
+.footer-dev {
+width: 100%;
+margin-top: 35px;
+margin-bottom: 90px;
+padding: 15px 10px;
+
+text-align: center;
+
+font-size: 11px;
+color: #777;
+
+}
+
+.footer-dev strong {
+color: #123b5d;
+font-weight: 600;
+}
+
+.ementas-heading h1, p {
+   color: #8bc2f5;
+}
+/* =========================================================
+   PROFISABORES — NOVO DESIGN DO MODAL DE RESERVA
+========================================================= */
+
+#reservaModal {
+    padding: 16px;
+    background: rgba(7, 17, 29, 0.78);
+    backdrop-filter: blur(5px);
+}
+
+#reservaModal .modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 25px;
+    background: #172b40;
+    color: #ffffff;
+    border: 1px solid #34485a;
+    border-radius: 20px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    scrollbar-width: thin;
+    scrollbar-color: #50677d #172b40;
+}
+
+#reservaModal .modal-content h2 {
+    margin: 0 38px 5px 0;
+    color: #ffffff;
+    font-size: 23px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+#reservaModal .modal-subtitulo {
+    margin: 0 0 20px;
+    color: #b8c9d9;
+    font-size: 12px;
+}
+
+#reservaModal .fechar-modal {
+    top: 17px;
+    right: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid #40566b;
+    border-radius: 10px;
+    background: #203950;
+    color: #ffffff;
+    font-size: 24px;
+    transition: background 0.2s ease;
+}
+
+#reservaModal .fechar-modal:hover {
+    background: #344f68;
+}
+
+#reservaModal #reservaForm {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+#reservaModal #reservaForm label {
+    margin: 7px 0 0;
+    color: #dce8f3;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+#reservaModal #reservaForm input:not([type="checkbox"]),
+#reservaModal #reservaForm select,
+#reservaModal #reservaForm textarea {
+    width: 100%;
+    min-width: 0;
+    min-height: 43px;
+    padding: 11px 12px;
+    border: 1px solid #40566b;
+    border-radius: 10px;
+    outline: none;
+    background: #203950;
+    color: #ffffff;
+    font: inherit;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+#reservaModal #reservaForm input[readonly] {
+    opacity: 0.85;
+    cursor: default;
+}
+
+#reservaModal #reservaForm input::placeholder,
+#reservaModal #reservaForm textarea::placeholder {
+    color: #91a7ba;
+}
+
+#reservaModal #reservaForm input:focus,
+#reservaModal #reservaForm select:focus,
+#reservaModal #reservaForm textarea:focus {
+    border-color: #8bc2f5;
+    box-shadow: 0 0 0 3px rgba(139, 194, 245, 0.12);
+}
+
+#reservaModal #reservaForm textarea {
+    min-height: 78px;
+    resize: vertical;
+}
+
+#reservaModal .resumo-refeicao {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    margin: 8px 0;
+    padding: 15px;
+    border: 1px solid #344f68;
+    border-radius: 13px;
+    background: #203950;
+}
+
+#reservaModal .resumo-refeicao h3,
+#reservaModal .modal-extras h3 {
+    margin: 0 0 4px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 750;
+}
+
+#reservaModal .resumo-refeicao p {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    margin: 0;
+    color: #c5d4e1;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#reservaModal .resumo-refeicao p strong {
+    color: #8bc2f5;
+    font-size: 11px;
+}
+
+#reservaModal .modal-extras {
+    min-width: 0;
+    margin: 8px 0;
+}
+
+#reservaModal .extras-ajuda {
+    margin: 4px 0 12px;
+    color: #b8c9d9;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+#reservaModal #extrasLista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+#reservaModal #extrasLista > p {
+    margin: 0;
+    padding: 12px;
+    border: 1px dashed #50677d;
+    border-radius: 10px;
+    color: #b8c9d9;
+    font-size: 12px;
+}
+
+#reservaModal .hora-reserva {
+    margin-top: 5px;
+    padding: 12px 14px;
+    border: 1px solid #344f68;
+    border-radius: 10px;
+    background: #203950;
+}
+
+#reservaModal .hora-reserva span {
+    color: #b8c9d9;
+    font-size: 12px;
+}
+
+#reservaModal .hora-reserva strong {
+    color: #ffffff;
+    font-size: 13px;
+}
+
+#reservaModal .alergias-ajuda {
+    margin-top: -4px;
+    color: #91a7ba;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+#reservaModal .total-reserva {
+    margin-top: 10px;
+    padding: 16px;
+    border: 1px solid #40566b;
+    border-radius: 13px;
+    background: #203950;
+}
+
+#reservaModal .total-reserva span {
+    color: #dce8f3;
+    font-size: 12px;
+}
+
+#reservaModal .total-reserva strong {
+    color: #8bc2f5;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+#reservaModal .confirmar-reserva {
+    min-height: 46px;
+    margin-top: 5px;
+    padding: 13px 16px;
+    border-radius: 10px;
+    background: #286b4a;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 750;
+}
+
+#reservaModal .confirmar-reserva:hover {
+    background: #34865e;
+}
+
+#reservaModal #mensagem {
+    color: #dce8f3;
+    line-height: 1.5;
+}
+
+#reservaModal #mensagem.sucesso {
+    color: #86e3ae;
+}
+
+#reservaModal #mensagem.erro {
+    color: #ff9e9e;
+}
+
+@media (max-width: 480px) {
+    #reservaModal {
+        align-items: center;
+        padding: 10px;
+    }
+
+    #reservaModal .modal-content {
+        max-height: 94vh;
+        padding: 19px 15px;
+        border-radius: 16px;
+    }
+
+    #reservaModal .modal-content h2 {
+        font-size: 21px;
+    }
+
+    #reservaModal .total-reserva strong {
+        font-size: 22px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #reservaModal .fechar-modal,
+    #reservaModal .confirmar-reserva {
+        transition: none;
+    }
+}
+
+
+/* =========================================================
+   PROFISABORES — NOVO MODAL DE RESERVA
+========================================================= */
+
+#reservaModal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    background: rgba(7, 17, 29, 0.80);
+    backdrop-filter: blur(5px);
+}
+
+#reservaModal.mostrar {
+    display: flex;
+}
+
+#reservaModal,
+#reservaModal * {
+    box-sizing: border-box;
+}
+
+#reservaModal .modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 460px;
+    max-height: 92vh;
+    overflow-y: auto;
+    padding: 24px;
+    background: #172b40;
+    color: #ffffff;
+    border: 1px solid #34485a;
+    border-radius: 20px;
+    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+    scrollbar-width: thin;
+    scrollbar-color: #50677d #172b40;
+}
+
+/* CABEÇALHO */
+
+#reservaModal .modal-cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+#reservaModal .modal-titulo-grupo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+#reservaModal .modal-icone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: #8bc2f5;
+    color: #17324b;
+    font-size: 19px;
+}
+
+#reservaModal .modal-cabecalho h2 {
+    margin: 0 0 4px;
+    color: #ffffff;
+    font-size: 21px;
+    font-weight: 800;
+    line-height: 1.3;
+}
+
+#reservaModal .modal-subtitulo {
+    margin: 0;
+    color: #b8c9d9;
+    font-size: 12px;
+}
+
+#reservaModal .fechar-modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: 1px solid #40566b;
+    border-radius: 10px;
+    background: #203950;
+    color: #ffffff;
+    font-size: 25px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#reservaModal .fechar-modal:hover {
+    background: #344f68;
+}
+
+/* FORMULÁRIO */
+
+#reservaModal #reservaForm {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+#reservaModal .modal-campo {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    min-width: 0;
+}
+
+#reservaModal .modal-campo label {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin: 0;
+    color: #dce8f3;
+    font-size: 12px;
+    font-weight: 650;
+}
+
+#reservaModal .campo-opcional {
+    color: #91a7ba;
+    font-size: 10px;
+    font-weight: 400;
+}
+
+#reservaModal #reservaForm input:not([type="checkbox"]),
+#reservaModal #reservaForm select,
+#reservaModal #reservaForm textarea {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    min-height: 43px;
+    margin: 0;
+    padding: 11px 12px;
+    border: 1px solid #40566b;
+    border-radius: 10px;
+    outline: none;
+    background: #203950;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    box-sizing: border-box;
+}
+
+#reservaModal #reservaForm input[readonly] {
+    opacity: 0.9;
+    cursor: default;
+}
+
+#reservaModal #reservaForm input::placeholder,
+#reservaModal #reservaForm textarea::placeholder {
+    color: #91a7ba;
+}
+
+#reservaModal #reservaForm input:focus,
+#reservaModal #reservaForm select:focus,
+#reservaModal #reservaForm textarea:focus {
+    border-color: #8bc2f5;
+    box-shadow: 0 0 0 3px rgba(139, 194, 245, 0.12);
+}
+
+#reservaModal #reservaForm textarea {
+    min-height: 76px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+#reservaModal #prato {
+    font-weight: 700;
+}
+
+/* RESUMO DA EMENTA */
+
+#reservaModal .resumo-refeicao {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+    padding: 15px;
+    border: 1px solid #344f68;
+    border-radius: 13px;
+    background: #203950;
+}
+
+#reservaModal .modal-etiqueta {
+    color: #8bc2f5;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.8px;
+}
+
+#reservaModal .resumo-pratos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#reservaModal .resumo-pratos p {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+    margin: 0;
+    color: #dce8f3;
+    font-size: 12px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#reservaModal .resumo-pratos p strong {
+    color: #8bc2f5;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+/* EXTRAS */
+
+#reservaModal .modal-extras {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+}
+
+#reservaModal .modal-seccao-cabecalho h3 {
+    margin: 0 0 4px;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 750;
+}
+
+#reservaModal .modal-seccao-cabecalho p {
+    margin: 0;
+    color: #b8c9d9;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+#reservaModal #extrasLista {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+}
+
+#reservaModal #extrasLista > p {
+    margin: 0;
+    padding: 12px;
+    border: 1px dashed #50677d;
+    border-radius: 10px;
+    color: #b8c9d9;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* Compatibilidade com diferentes estruturas geradas pelo JavaScript */
+
+#reservaModal #extrasLista .extra-item,
+#reservaModal #extrasLista .extra-opcao,
+#reservaModal #extrasLista label {
+    min-width: 0;
+}
+
+#reservaModal #extrasLista .extra-item {
+    display: grid;
+    grid-template-columns: 18px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    margin: 0;
+    padding: 11px;
+    border: 1px solid #40566b;
+    border-radius: 10px;
+    background: #203950;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#reservaModal #extrasLista input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    min-height: 0;
+    margin: 0;
+    padding: 0;
+    accent-color: #8bc2f5;
+    cursor: pointer;
+}
+
+#reservaModal #extrasLista .extra-conteudo,
+#reservaModal #extrasLista .extra-info {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+}
+
+#reservaModal #extrasLista .extra-conteudo strong,
+#reservaModal #extrasLista .extra-info strong,
+#reservaModal #extrasLista .extra-info h5 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+#reservaModal #extrasLista .extra-conteudo small,
+#reservaModal #extrasLista .extra-info p {
+    margin: 0;
+    color: #b8c9d9;
+    font-size: 10px;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+#reservaModal #extrasLista .extra-preco {
+    justify-self: end;
+    color: #8bc2f5;
+    font-size: 12px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+#reservaModal #extrasLista .extra-item:has(input[type="checkbox"]:checked) {
+    border-color: #8bc2f5;
+    background: #294963;
+}
+
+/* HORA */
+
+#reservaModal .hora-reserva {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 12px 14px;
+    border: 1px solid #344f68;
+    border-radius: 10px;
+    background: #203950;
+}
+
+#reservaModal .hora-reserva span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #b8c9d9;
+    font-size: 12px;
+}
+
+#reservaModal .hora-reserva span i {
+    color: #8bc2f5;
+}
+
+#reservaModal .hora-reserva strong {
+    color: #ffffff;
+    font-size: 13px;
+}
+
+/* AJUDA DAS ALERGIAS */
+
+#reservaModal .alergias-ajuda {
+    margin-top: -9px;
+    color: #91a7ba;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+/* TOTAL */
+
+#reservaModal .total-reserva {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 16px;
+    border: 1px solid #40566b;
+    border-radius: 13px;
+    background: #203950;
+}
+
+#reservaModal .total-reserva > div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+#reservaModal .total-reserva span {
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#reservaModal .total-reserva small {
+    color: #91a7ba;
+    font-size: 10px;
+}
+
+#reservaModal .total-reserva strong {
+    color: #8bc2f5;
+    font-size: 24px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+/* BOTÃO DE CONFIRMAÇÃO */
+
+#reservaModal .confirmar-reserva {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    width: 100%;
+    min-height: 47px;
+    margin: 0;
+    padding: 13px 16px;
+    border: none;
+    border-radius: 10px;
+    background: #286b4a;
+    color: #ffffff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+#reservaModal .confirmar-reserva:hover {
+    background: #34865e;
+}
+
+#reservaModal .confirmar-reserva:focus-visible,
+#reservaModal .fechar-modal:focus-visible {
+    outline: 3px solid #8bc2f5;
+    outline-offset: 3px;
+}
+
+/* MENSAGENS */
+
+#reservaModal #mensagem {
+    margin: 0;
+    color: #dce8f3;
+    font-size: 12px;
+    line-height: 1.5;
+    text-align: center;
+}
+
+#reservaModal #mensagem.sucesso {
+    color: #86e3ae;
+}
+
+#reservaModal #mensagem.erro {
+    color: #ff9e9e;
+}
+
+/* TELEMÓVEIS */
+
+@media (max-width: 480px) {
+    #reservaModal {
+        padding: 10px;
+    }
+
+    #reservaModal .modal-content {
+        max-height: 94vh;
+        padding: 19px 15px;
+        border-radius: 16px;
+    }
+
+    #reservaModal .modal-cabecalho h2 {
+        font-size: 19px;
+    }
+
+    #reservaModal .modal-icone {
+        width: 41px;
+        height: 41px;
+        border-radius: 11px;
+    }
+
+    #reservaModal #extrasLista .extra-item {
+        grid-template-columns: 17px minmax(0, 1fr) auto;
+        gap: 7px;
+        padding: 9px 8px;
+    }
+
+    #reservaModal .total-reserva strong {
+        font-size: 21px;
+    }
+}
+
+/* ACESSIBILIDADE */
+
+@media (prefers-reduced-motion: reduce) {
+    #reservaModal .fechar-modal,
+    #reservaModal .confirmar-reserva,
+    #reservaModal #extrasLista .extra-item {
+        transition: none;
+    }
+}
+
+
+/* =========================================================
+   PROFISABORES — CORES ORIGINAIS DO PROGRAMA
+========================================================= */
+
+#reservaModal {
+    background: rgba(23, 50, 75, 0.55);
+}
+
+#reservaModal .modal-content {
+    background: #ffffff;
+    color: #17324b;
+    border: 1px solid #b3daff;
+    box-shadow: 0 18px 55px rgba(23, 50, 75, 0.22);
+    scrollbar-color: #8bc2f5 #f1f7fd;
+}
+
+#reservaModal .modal-cabecalho h2 {
+    color: #17324b;
+}
+
+#reservaModal .modal-subtitulo {
+    color: #58738b;
+}
+
+#reservaModal .modal-icone {
+    background: #b3daff;
+    color: #17324b;
+}
+
+#reservaModal .fechar-modal {
+    background: #f1f7fd;
+    border-color: #d4e8fa;
+    color: #17324b;
+}
+
+#reservaModal .fechar-modal:hover {
+    background: #b3daff;
+}
+
+#reservaModal #reservaForm input:not([type="checkbox"]),
+#reservaModal #reservaForm select,
+#reservaModal #reservaForm textarea {
+    background: #f5faff;
+    border-color: #c9e1f7;
+    color: #17324b;
+}
+
+#reservaModal #reservaForm input::placeholder,
+#reservaModal #reservaForm textarea::placeholder {
+    color: #718ba1;
+}
+
+#reservaModal #reservaForm input:focus,
+#reservaModal #reservaForm select:focus,
+#reservaModal #reservaForm textarea:focus {
+    border-color: #8bc2f5;
+    box-shadow: 0 0 0 3px rgba(139, 194, 245, 0.22);
+}
+
+#reservaModal .resumo-refeicao {
+    background: #f1f7fd;
+    border-color: #c9e1f7;
+}
+
+#reservaModal .modal-etiqueta {
+    color: #397eaf;
+}
+
+#reservaModal .resumo-pratos p {
+    color: #25445e;
+}
+
+#reservaModal .resumo-pratos p strong {
+    color: #397eaf;
+}
+
+#reservaModal .modal-seccao-cabecalho h3 {
+    color: #17324b;
+}
+
+#reservaModal .modal-seccao-cabecalho p {
+    color: #58738b;
+}
+
+#reservaModal #extrasLista > p {
+    border-color: #b3daff;
+    color: #58738b;
+    background: #f8fbff;
+}
+
+#reservaModal #extrasLista .extra-item {
+    background: #f1f7fd;
+    border-color: #c9e1f7;
+}
+
+#reservaModal #extrasLista input[type="checkbox"] {
+    accent-color: #286b4a;
+}
+
+#reservaModal #extrasLista .extra-conteudo strong,
+#reservaModal #extrasLista .extra-info strong,
+#reservaModal #extrasLista .extra-info h5 {
+    color: #17324b;
+}
+
+#reservaModal #extrasLista .extra-conteudo small,
+#reservaModal #extrasLista .extra-info p {
+    color: #58738b;
+}
+
+#reservaModal #extrasLista .extra-preco {
+    color: #286b4a;
+}
+
+#reservaModal #extrasLista .extra-item:has(input[type="checkbox"]:checked) {
+    background: #e4f3e9;
+    border-color: #286b4a;
+}
+
+#reservaModal .hora-reserva {
+    background: #f1f7fd;
+    border-color: #c9e1f7;
+}
+
+#reservaModal .hora-reserva span {
+    color: #58738b;
+}
+
+#reservaModal .hora-reserva span i {
+    color: #397eaf;
+}
+
+#reservaModal .hora-reserva strong {
+    color: #17324b;
+}
+
+#reservaModal .modal-campo label {
+    color: #25445e;
+}
+
+#reservaModal .campo-opcional,
+#reservaModal .alergias-ajuda {
+    color: #718ba1;
+}
+
+#reservaModal .total-reserva {
+    background: #eaf5ff;
+    border-color: #b3daff;
+}
+
+#reservaModal .total-reserva span {
+    color: #17324b;
+}
+
+#reservaModal .total-reserva small {
+    color: #58738b;
+}
+
+#reservaModal .total-reserva strong {
+    color: #286b4a;
+}
+
+#reservaModal .confirmar-reserva {
+    background: #286b4a;
+    color: #ffffff;
+}
+
+#reservaModal .confirmar-reserva:hover {
+    background: #1f563b;
+}
+
+#reservaModal #mensagem {
+    color: #25445e;
+}
+
+#reservaModal #mensagem.sucesso {
+    color: #237344;
+}
+
+#reservaModal #mensagem.erro {
+    color: #b42318;
+}
+
+#reservaModal .confirmar-reserva:focus-visible,
+#reservaModal .fechar-modal:focus-visible {
+    outline-color: #397eaf;
+}
+
+
+
+/* PROFISABORES — SELEÇÃO MÚLTIPLA DE RESERVAS */
+
+.barra-selecao-reservas {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto 20px;
+    padding: 18px;
+    box-sizing: border-box;
+    background: #b3daff;
+    color: #17324d;
+    border: 1px solid #8bc2f5;
+    border-radius: 16px;
+    box-shadow: 0 4px 14px rgba(23, 50, 77, 0.10);
+}
+
+.barra-selecao-reservas[hidden] {
+    display: none !important;
+}
+
+.selecionar-todas-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.selecionar-todas-label input,
+.reserva-selecionar-checkbox {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    accent-color: #176b45;
+    cursor: pointer;
+}
+
+#contadorReservasSelecionadas {
+    margin: 12px 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+#cancelarReservasSelecionadas:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.reserva-selecao {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 12px;
+    color: #17324d;
+    font-weight: 600;
+}
+
+.reserva-card.reserva-selecionada {
+    outline: 2px solid #176b45;
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .barra-selecao-reservas {
+        padding: 14px;
+        border-radius: 12px;
+    }
+
+    #cancelarReservasSelecionadas {
+        width: 100%;
+    }
+}
+
+
+/* PROFISABORES — CARTÕES DE RESERVAS ATUALIZADOS */
+
+.reserva-extras {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: #f0f7ff;
+    border: 1px solid #d5e9fc;
+    border-radius: 10px;
+    color: #17324d;
+    font-size: 12px;
+}
+
+.reserva-extras > strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #245985;
+    font-size: 13px;
+}
+
+.reserva-extras ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.reserva-extras li {
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+.reserva-alergias {
+    margin-top: 12px;
+}
+
+.reserva-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.reserva-footer .cancelar-btn,
+.reserva-footer .apagar-cartao-btn {
+    min-height: 38px;
+    padding: 9px 13px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.reserva-footer .cancelar-btn {
+    background: #ffe5e5;
+    color: #b42318;
+}
+
+.reserva-footer .cancelar-btn:hover {
+    background: #ffcccc;
+}
+
+.reserva-footer .apagar-cartao-btn {
+    background: #b3daff;
+    border: 1px solid #8bc2f5;
+    color: #17324d;
+}
+
+.reserva-footer .apagar-cartao-btn:hover {
+    background: #8bc2f5;
+}
+
+.reserva-footer button:focus-visible {
+    outline: 3px solid #245985;
+    outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+    .reserva-footer {
+        justify-content: stretch;
+    }
+
+    .reserva-footer .cancelar-btn,
+    .reserva-footer .apagar-cartao-btn {
+        flex: 1 1 130px;
+    }
+}
