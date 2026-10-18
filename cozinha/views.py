@@ -33,7 +33,6 @@ def painel_cozinha(request):
         Reserva.objects.filter(
             data=data_atual,
             estado="confirmada",
-            pagamento="pago",
             ementa__isnull=False,
         )
         .select_related(

@@ -251,6 +251,16 @@
             color: #7c3aed;
         }
 
+        .tipo-visitante {
+            background: #e8f8ed;
+            color: #187444;
+        }
+
+        .tipo-sem-perfil {
+            background: #f3f4f6;
+            color: #4b5563;
+        }
+
         .curso {
             display: inline-block;
             padding: 5px 9px;
@@ -366,7 +376,7 @@
     <header class="header">
         <div>
             <h1>🍳 Painel da Cozinha</h1>
-            <p>Consulta das reservas de refeições confirmadas e pagas.</p>
+            <p>Consulta das reservas confirmadas com ementa, independentemente do pagamento.</p>
         </div>
 
         <div class="badge">
@@ -480,7 +490,7 @@
                         <tr>
                             <th>Hora</th>
                             <th>Nome</th>
-                            <th>Tipo</th>
+                            <th>Tipo de conta</th>
                             <th>Curso</th>
                             <th>Ementa e extras</th>
                             <th>Alergénios e alergias indicadas</th>
@@ -494,10 +504,18 @@
                                 <td class="nome">{{ reserva.nome }}</td>
 
                                 <td>
-                                    {% if reserva.utilizador and reserva.utilizador.perfil.tipo == "staff" %}
-                                        <span class="tipo-utilizador tipo-staff">Staff</span>
+                                    {% if reserva.utilizador %}
+                                        {% if reserva.utilizador.perfil %}
+                                            {% if reserva.utilizador.perfil.tipo == "staff" %}
+                                                <span class="tipo-utilizador tipo-staff">Staff</span>
+                                            {% else %}
+                                                <span class="tipo-utilizador tipo-aluno">Aluno</span>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="tipo-utilizador tipo-sem-perfil">Conta sem perfil</span>
+                                        {% endif %}
                                     {% else %}
-                                        <span class="tipo-utilizador tipo-aluno">Aluno</span>
+                                        <span class="tipo-utilizador tipo-visitante">Visitante</span>
                                     {% endif %}
                                 </td>
 
@@ -595,7 +613,7 @@
             <div class="sem-reservas">
                 <div class="sem-reservas-icon">📭</div>
                 <h3>Nenhuma reserva encontrada</h3>
-                <p>Não existem reservas confirmadas e pagas para hoje.</p>
+                <p>Não existem reservas confirmadas com ementa para hoje.</p>
             </div>
         {% endif %}
     </section>
@@ -607,4 +625,4 @@
     }, 5000);
 </script>
 </body>
-</html> 
+</html>
