@@ -252,10 +252,19 @@ MAILERS = {
 
 
 # Web Push — notificações do navegador
+
 WEBPUSH_VAPID_PUBLIC_KEY = (
-    "BMXfH1FkpNTCbB9FwvOa5-u-riSWf1Lh_GS3yBLs6g2RjUfSGlGotChv5jdljUNXfyNjZGZ3-owBFhDbuFVR7_U"
+    "BFuv64OJEM840lwvFNSUI2yhIE6jOJxUhPxZmL77y4gixRlOsD37oyQj7C4ZP-CCSWCCogtB4If_jXPoGNPp_jE"
 )
-WEBPUSH_VAPID_PRIVATE_KEY_PATH = BASE_DIR / "private" / "vapid_private.pem"
+
+
+WEBPUSH_VAPID_PRIVATE_KEY_PATH = Path(
+    os.environ.get(
+        "WEBPUSH_VAPID_PRIVATE_KEY_PATH",
+        str(BASE_DIR / "private" / "vapid_private.pem")
+    )
+)
+
 WEBPUSH_VAPID_SUBJECT = "mailto:0325065@alunos.profitecla.pt"
 
 
