@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     "cozinha",
     "utilizadores",
     "secretaria",
+    "cloudinary_storage",
+    "cloudinary",
 ]
 
 
@@ -203,7 +205,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 STORAGES = {
     "default": {
-        "BACKEND": "django.core.files.storage.FileSystemStorage",
+        "BACKEND": (
+            "cloudinary_storage.storage.MediaCloudinaryStorage"
+            if os.environ.get("CLOUDINARY_CLOUD_NAME")
+            and os.environ.get("CLOUDINARY_API_KEY")
+            and os.environ.get("CLOUDINARY_API_SECRET")
+            else "django.core.files.storage.FileSystemStorage"
+        ),
     },
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
