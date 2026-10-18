@@ -267,7 +267,5 @@ WEBPUSH_VAPID_PRIVATE_KEY_PATH = Path(
 
 WEBPUSH_VAPID_SUBJECT = "mailto:0325065@alunos.profitecla.pt"
 
-
-CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.environ.get("CSRF_TRUSTED_ORIGINS", 'https://metres-aerial-translation-scanners.trycloudflare.com,https://cleveland-human-jewish-balance.trycloudflare.com').split(",") if o.strip()]
-
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in os.environ.get("CSRF_TRUSTED_ORIGINS", 'https://metres-aerial-translation-scanners.trycloudflare.com,https://cleveland-human-jewish-balance.trycloudflare.com,https://profisabores-web.onrender.com').split(",") if o.strip()]
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
