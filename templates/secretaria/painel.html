@@ -540,19 +540,15 @@
                                 </td>
 
                                 <td>
-                                   <td>
                                     {% if reserva.utilizador %}
                                         {% if reserva.utilizador.perfil %}
                                             {{ reserva.utilizador.perfil.get_tipo_display }}
                                         {% else %}
                                             Conta sem perfil
                                         {% endif %}
-                                    {% elif reserva.visitante_token %}
-                                        Visitante
                                     {% else %}
                                         Visitante
                                     {% endif %}
-                                </td>
                                 </td>
 
                                 <td>
