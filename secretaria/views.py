@@ -61,6 +61,7 @@ def painel_secretaria(request):
             "prato",
             "sobremesa",
             "utilizador",
+            "utilizador__perfil",
         )
         .order_by(
             "hora",
