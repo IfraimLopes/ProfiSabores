@@ -62,7 +62,6 @@ def login_funcionarios(request):
         {"erro": erro}
     )
 
-
 def logout_funcionarios(request):
     logout(request)
-    return redirect("/funcionarios/login/")
+    return redirect("/")

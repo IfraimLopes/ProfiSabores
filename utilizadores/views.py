@@ -727,7 +727,7 @@ def logout_utilizador(request):
         {
             "sucesso": True,
             "mensagem": "Sessão terminada com sucesso.",
-            "redirect": "/utilizadores/login/"
+            "redirect": "/"
         },
         status=200
     )
