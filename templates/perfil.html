@@ -241,7 +241,7 @@
 
         </button>
 
-        <!-- TERMINAR SESSÃO: APENAS UTILIZADORES AUTENTICADOS -->
+        <!-- SAIR DA CONTA OU DO MODO VISITANTE -->
         {% if request.user.is_authenticated %}
 
             <button
@@ -249,16 +249,31 @@
                 id="logoutButton"
                 class="logout-button"
             >
-
                 <i class="fa-solid fa-right-from-bracket"></i>
-
                 Terminar sessão
-
             </button>
 
             <p
                 id="logoutMessage"
                 class="logout-message"
+            ></p>
+
+        {% else %}
+
+            <button
+                type="button"
+                id="logoutVisitanteButton"
+                class="logout-button"
+            >
+                <i class="fa-solid fa-right-from-bracket"></i>
+                Sair do modo visitante
+            </button>
+
+            <p
+                id="logoutVisitanteMessage"
+                class="logout-message"
+                role="status"
+                aria-live="polite"
             ></p>
 
         {% endif %}
@@ -479,6 +494,27 @@
         </script>
 
     {% endif %}
+
+
+{% if not request.user.is_authenticated %}
+    <script>
+        const logoutVisitanteButton = document.getElementById("logoutVisitanteButton");
+        const logoutVisitanteMessage = document.getElementById("logoutVisitanteMessage");
+
+        if (logoutVisitanteButton && logoutVisitanteMessage) {
+            logoutVisitanteButton.addEventListener("click", function () {
+                logoutVisitanteButton.disabled = true;
+                logoutVisitanteButton.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin"></i> A sair do modo visitante...';
+
+                // Não apagar a sessão nem o cookie:
+                // são necessários para consultar reservas anteriores.
+                window.location.href = "/";
+            });
+        }
+    </script>
+{% endif %}
+
 
     <!-- JAVASCRIPT: MODAL DESENVOLVEDOR -->
     <script>
