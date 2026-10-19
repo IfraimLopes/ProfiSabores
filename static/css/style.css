@@ -2876,3 +2876,77 @@ font-weight: 600;
         flex: 1 1 130px;
     }
 }
+
+/* =========================================================
+   RESPONSIVIDADE GLOBAL E MODAL DE RESERVA
+========================================================= */
+
+/* Ocultar visualmente a barra da página sem desativar o scroll */
+html,
+body {
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+    display: none;
+    width: 0;
+}
+
+/* Modal adaptado à altura real do ecrã */
+#reservaModal {
+    height: 100vh;
+    height: 100dvh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+#reservaModal::-webkit-scrollbar {
+    display: none;
+    width: 0;
+}
+
+/* Conteúdo do modal */
+#reservaModal .modal-content {
+    width: 100%;
+    max-width: 460px;
+    max-height: calc(100vh - 32px);
+    max-height: calc(100dvh - 32px);
+    min-width: 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+#reservaModal .modal-content::-webkit-scrollbar {
+    display: none;
+    width: 0;
+}
+
+#reservaModal #reservaForm,
+#reservaModal .resumo-refeicao,
+#reservaModal .modal-extras {
+    min-width: 0;
+    max-width: 100%;
+}
+
+@media (max-width: 480px) {
+    #reservaModal {
+        padding: 12px;
+        align-items: center;
+    }
+
+    #reservaModal .modal-content {
+        width: 100%;
+        max-width: 100%;
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
+        padding: 18px 14px;
+        border-radius: 16px;
+    }
+}

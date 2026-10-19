@@ -55,6 +55,14 @@ document.addEventListener("DOMContentLoaded", () => {
     let idItemAtual = null;
     let extrasSelecionados = [];
 
+    // Controlar o modal e o scroll da página de fundo.
+    const alternarModalReserva = (aberto) => {
+        if (!modal) return;
+
+        modal.classList.toggle("mostrar", aberto);
+        document.body.classList.toggle("modal-reserva-aberto", aberto);
+    };
+
 
     // ==========================================
     // ABRIR MODAL DE RESERVA
@@ -202,7 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
             atualizarTotal();
 
             if (modal) {
-                modal.classList.add("mostrar");
+                alternarModalReserva(true);
             }
         });
     });
@@ -215,7 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (fecharModal) {
         fecharModal.addEventListener("click", () => {
             if (modal) {
-                modal.classList.remove("mostrar");
+                alternarModalReserva(false);
             }
         });
     }
@@ -223,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (modal) {
         modal.addEventListener("click", (event) => {
             if (event.target === modal) {
-                modal.classList.remove("mostrar");
+                alternarModalReserva(false);
             }
         });
     }
@@ -621,7 +629,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => {
 
                     if (modal) {
-                        modal.classList.remove("mostrar");
+                        alternarModalReserva(false);
                     }
 
                     form.reset();
