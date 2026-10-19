@@ -8,7 +8,47 @@ from reservas.models import Dispositivo, SubscricaoWebPush
 from reservas.firebase_admin import enviar_notificacao
 
 
+def verificar_chaves_vapid():
+    """Verifica a correspondência das chaves sem revelar material secreto."""
+    import base64
+    from cryptography.hazmat.primitives.serialization import (
+        Encoding,
+        PublicFormat,
+        load_pem_private_key,
+    )
+
+    try:
+        caminho = settings.WEBPUSH_VAPID_PRIVATE_KEY_PATH
+        chave_privada = load_pem_private_key(
+            caminho.read_bytes(),
+            password=None,
+        )
+        chave_publica_derivada = chave_privada.public_key().public_bytes(
+            Encoding.X962,
+            PublicFormat.UncompressedPoint,
+        )
+        chave_publica_derivada_b64 = base64.urlsafe_b64encode(
+            chave_publica_derivada
+        ).rstrip(b"=").decode("ascii")
+
+        corresponde = (
+            chave_publica_derivada_b64
+            == settings.WEBPUSH_VAPID_PUBLIC_KEY
+        )
+        print(
+            "Profisabores VAPID DIAGNÓSTICO — "
+            f"ficheiro existe: {caminho.is_file()} | "
+            f"chaves correspondem: {corresponde}"
+        )
+    except Exception as erro:
+        print(
+            "Profisabores VAPID DIAGNÓSTICO — "
+            f"falha na verificação: {type(erro).__name__}"
+        )
+
+
 def enviar_webpush(subscricoes, titulo, mensagem, url="/"):
+    verificar_chaves_vapid()
     enviados = 0
 
     for subscricao in subscricoes:

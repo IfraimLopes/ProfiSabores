@@ -140,11 +140,31 @@
             await navigator.serviceWorker.ready;
 
             let subscricao = await registo.pushManager.getSubscription();
+            const chavePublicaAtual = converterChaveBase64Url(chavePublica);
+
+            if (subscricao) {
+                const chaveExistente = subscricao.options.applicationServerKey;
+                const bytesExistentes = chaveExistente
+                    ? new Uint8Array(chaveExistente)
+                    : null;
+
+                const chavesCorrespondem =
+                    bytesExistentes !== null &&
+                    bytesExistentes.length === chavePublicaAtual.length &&
+                    bytesExistentes.every(
+                        (byte, indice) => byte === chavePublicaAtual[indice]
+                    );
+
+                if (!chavesCorrespondem) {
+                    await subscricao.unsubscribe();
+                    subscricao = null;
+                }
+            }
 
             if (!subscricao) {
                 subscricao = await registo.pushManager.subscribe({
                     userVisibleOnly: true,
-                    applicationServerKey: converterChaveBase64Url(chavePublica)
+                    applicationServerKey: chavePublicaAtual
                 });
             }
 
