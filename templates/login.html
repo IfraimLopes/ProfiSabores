@@ -178,6 +178,28 @@
         font-weight: 600;
     }
 
+    .back-home-area {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .back-home-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: #2684d9;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: color 0.2s ease;
+    }
+
+    .back-home-link:hover {
+        color: #1765ad;
+        text-decoration: underline;
+    }
+
     .footer {
         text-align: center;
         margin-top: 25px;
@@ -265,6 +287,18 @@
         Ainda não tem conta?
         <a href="/utilizadores/registar/">
             Criar conta
+        </a>
+    </div>
+
+    <div class="back-home-area">
+        <a href="/inicio/" class="back-home-link">
+            <i class="fa-solid fa-user"></i>
+            Entrar como visitante
+        </a>
+        <br><br>
+        <a href="/" class="back-home-link">
+            <i class="fa-solid fa-arrow-left"></i>
+            Voltar à página principal
         </a>
     </div>
 
