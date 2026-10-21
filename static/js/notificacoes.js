@@ -1,9 +1,8 @@
 // ==========================================
 // PROFISABORES — NOTIFICAÇÕES PUSH
 // ==========================================
-
 console.log("PROFISABORES: notificacoes.js FOI CARREGADO");
-const { LocalNotifications } = Capacitor.Plugins;
+
 document.addEventListener("DOMContentLoaded", async () => {
 
     // Verificar se estamos dentro do Capacitor
@@ -15,9 +14,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-
-        const { PushNotifications } =
-            Capacitor.Plugins;
+        
+        
+        const { PushNotifications, LocalNotifications } =
+        window.Capacitor.Plugins;
 
 
         if (!PushNotifications) {
