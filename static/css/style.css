@@ -41,11 +41,10 @@ header img {
     margin-bottom: -25px;
 }
 
-.header-text > img {
+.header .header-text > img,
+header .header-text > img {
     width: 20px;
     height: 20px;
-    margin-left: -90px;
-    margin-bottom: -25px;
 }
 
 header span {
