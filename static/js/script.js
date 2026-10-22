@@ -38,6 +38,41 @@ document.addEventListener("DOMContentLoaded", () => {
     const telemovelReserva = document.getElementById("telemovelReserva");
     const dadosVisitante = document.getElementById("dadosVisitante");
 
+
+    // Seletor internacional de telemóvel para reservas de visitantes.
+    let seletorTelemovel = null;
+
+    if (
+        telemovelReserva &&
+        typeof window.intlTelInput === "function"
+    ) {
+        seletorTelemovel = window.intlTelInput(
+            telemovelReserva,
+            {
+                initialCountry: "pt",
+                separateDialCode: true,
+                nationalMode: true,
+                onlyCountries: [
+                    "al", "de", "ad", "am", "at", "az",
+                    "be", "by", "ba", "bg", "cz", "cy",
+                    "hr", "dk", "sk", "si", "es", "ee",
+                    "fi", "fr", "ge", "gr", "hu", "ie",
+                    "is", "it", "lv", "li", "lt", "lu",
+                    "mk", "mt", "md", "mc", "me", "no",
+                    "nl", "pl", "pt", "gb", "ro", "ru",
+                    "sm", "rs", "se", "ch", "tr", "ua",
+                    "va", "xk"
+                ],
+
+                loadUtils: () =>
+                    import(
+                        "https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.1/build/js/utils.js"
+                    )
+            }
+        );
+    }
+
+
     const pratoInput = document.getElementById("prato");
     const precoReserva = document.getElementById("precoReserva");
     const totalElement = document.getElementById("total");
@@ -472,24 +507,56 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                // Validar o telemóvel: números e separadores comuns.
-                const digitosTelemovel = telemovel.replace(/\D/g, "");
-
-                const telemovelValido =
-                    /^\d{9}$/.test(digitosTelemovel) &&
-                    /^[0-9\s()\-]+$/.test(telemovel);
-
-
-                if (!telemovelValido) {
+                // Validar o número internacional selecionado.
+                if (!seletorTelemovel) {
                     mostrarErro(
-                        "O telemóvel só pode conter números e os símbolos +, espaços, parênteses ou hífen."
+                        "O seletor de país não foi carregado. "
+                        + "Atualiza a página e tenta novamente."
+                    );
+                    return;
+                }
+
+                try {
+                    if (seletorTelemovel.promise) {
+                        await seletorTelemovel.promise;
+                    }
+                } catch (erro) {
+                    console.error(
+                        "Erro ao carregar a validação telefónica:",
+                        erro
+                    );
+                    mostrarErro(
+                        "Não foi possível validar o telemóvel. "
+                        + "Verifica a ligação à Internet."
+                    );
+                    return;
+                }
+
+                if (!seletorTelemovel.isValidNumber()) {
+                    mostrarErro(
+                        "Introduz um número de telemóvel válido "
+                        + "para o país selecionado."
+                    );
+                    return;
+                }
+
+                const telemovelInternacional =
+                    seletorTelemovel.getNumber();
+
+                if (
+                    !/^\+[1-9]\d{6,14}$/.test(
+                        telemovelInternacional
+                    )
+                ) {
+                    mostrarErro(
+                        "O número de telemóvel internacional é inválido."
                     );
                     return;
                 }
 
                 if (
                     nome.length > 100 ||
-                    telemovel.length > 20
+                    telemovelInternacional.length > 20
                 ) {
                     mostrarErro(
                         "O nome ou o telemóvel excede o tamanho permitido."
@@ -498,7 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
 
                 dados.append("nome", nome);
-                dados.append("telemovel", telemovel);
+                dados.append("telemovel", telemovelInternacional);
             }
 
             // ----------------------------------

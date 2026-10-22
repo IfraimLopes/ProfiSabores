@@ -3008,3 +3008,12 @@ body::-webkit-scrollbar {
         transition: none;
     }
 }
+
+/* Seletor internacional de telemóvel nas reservas de visitantes. */
+.iti {
+    width: 100%;
+}
+
+.iti input {
+    width: 100%;
+}

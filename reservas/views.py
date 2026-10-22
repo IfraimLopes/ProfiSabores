@@ -137,21 +137,17 @@ def criar_reserva(request):
                 status=400
             )
 
-        # O telemóvel aceita apenas números e separadores comuns.
-        digitos_telemovel = re.sub(r"\D", "", telemovel_reserva)
-
+        # Validar o número internacional no formato E.164.
+        # Exemplo: +351912345678.
         telemovel_valido = re.fullmatch(
-            r"[0-9\s()\-]+",
+            r"\+[1-9]\d{6,14}",
             telemovel_reserva
         )
 
-        if (
-            not telemovel_valido
-            or len(digitos_telemovel) != 9
-        ):
+        if not telemovel_valido:
             return JsonResponse(
                 {
-                    "erro": "O telemóvel deve conter exatamente 9 algarismos e não pode incluir letras."
+                    "erro": "Introduz um número de telemóvel internacional válido, incluindo o indicativo do país."
                 },
                 status=400
             )
