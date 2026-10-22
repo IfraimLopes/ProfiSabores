@@ -534,8 +534,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             aEnviarReserva = true;
 
-            if (botaoEnviar) {
+            if(botaoEnviar) {
                 botaoEnviar.disabled = true;
+                botaoEnviar.classList.add("Processando reserva");
+                botaoEnviar.setAttribute("aria-busy", "true");
             }
 
             let reservaCriada = false;
@@ -660,10 +662,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
                     aEnviarReserva = false;
 
-                    if (botaoEnviar) {
-                        botaoEnviar.disabled =
-                            estadoOriginalBotao;
-                    }
+                   if (botaoEnviar) {
+                botaoEnviar.disabled = estadoOriginalBotao;
+                botaoEnviar.classList.remove("carregando");
+                botaoEnviar.removeAttribute("aria-busy");
+                     }
                 }
             }
         });

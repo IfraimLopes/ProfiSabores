@@ -2955,3 +2955,56 @@ body::-webkit-scrollbar {
         border-radius: 16px;
     }
 }
+
+
+
+/* Animação do botão de confirmação */
+.confirmar-reserva {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.confirmar-reserva:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+.confirmar-reserva:disabled {
+    cursor: wait;
+    opacity: 0.8;
+}
+
+.loading-botao {
+    display: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: girar-botao 0.7s linear infinite;
+}
+
+.confirmar-reserva.carregando .loading-botao {
+    display: inline-block;
+}
+
+.confirmar-reserva.carregando .texto-botao {
+    display: none;
+}
+
+@keyframes girar-botao {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .confirmar-reserva,
+    .loading-botao {
+        animation-duration: 1.5s;
+        transition: none;
+    }
+}
