@@ -557,8 +557,11 @@ data-extras="{{ ementa.extras_json|escape }}"
             <button
                 type="submit"
                 class="confirmar-reserva">
-                <i class="fa-solid fa-check"></i>
-                Confirmar reserva
+                <span class="texto-botao">
+                    <i class="fa-solid fa-check"></i>
+                    Confirmar reserva
+                </span>
+                <span class="loading-botao" aria-hidden="true"></span>
             </button>
 
             <p id="mensagem" role="status" aria-live="polite"></p>

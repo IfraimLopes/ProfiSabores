@@ -536,7 +536,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if(botaoEnviar) {
                 botaoEnviar.disabled = true;
-                botaoEnviar.classList.add("Processando reserva");
+                botaoEnviar.classList.add("carregando");
                 botaoEnviar.setAttribute("aria-busy", "true");
             }
 
@@ -652,26 +652,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Não foi possível contactar o servidor. " +
                     "Verifica se a reserva foi criada antes de tentar novamente."
                 );
-
             } finally {
 
                 // Em caso de falha, permitir nova tentativa.
                 // Em caso de sucesso, manter o bloqueio
                 // até ao redirecionamento.
                 if (!reservaCriada) {
-
                     aEnviarReserva = false;
 
-                   if (botaoEnviar) {
-                botaoEnviar.disabled = estadoOriginalBotao;
-                botaoEnviar.classList.remove("carregando");
-                botaoEnviar.removeAttribute("aria-busy");
-                     }
+                    if (botaoEnviar) {
+                        botaoEnviar.disabled = estadoOriginalBotao;
+                        botaoEnviar.classList.remove("carregando");
+                        botaoEnviar.removeAttribute("aria-busy");
+                    }
                 }
             }
         });
     }
-
 
 
     // ==========================================
