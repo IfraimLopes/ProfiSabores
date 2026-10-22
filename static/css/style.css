@@ -3018,28 +3018,16 @@ body::-webkit-scrollbar {
     width: 100%;
 }
 
-/* Corrige a sobreposição do seletor internacional no modal. */
-body > .iti--container {
+/* Lista de países acima do modal, adaptada ao ecrã móvel. */
+.iti--container {
     z-index: 10001 !important;
 }
 
-body > .iti--container .iti__dropdown-content {
-    z-index: 10002 !important;
-    position: relative;
-    max-height: 260px;
-    overflow-y: auto;
-}
-
-/* Corrige a sobreposição do seletor internacional no modal. */
-body > .iti--container {
-    z-index: 10001 !important;
-}
-
-body > .iti--container .iti__dropdown-content {
-    z-index: 10002 !important;
-    position: relative;
-    max-height: 260px;
-    overflow-y: auto;
+.iti__dropdown-content {
+    max-height: 40dvh !important;
+    max-height: 40vh !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* Evita o zoom automático do Safari nos campos de reserva. */
