@@ -3017,3 +3017,34 @@ body::-webkit-scrollbar {
 .iti input {
     width: 100%;
 }
+
+/* Corrige a sobreposição do seletor internacional no modal. */
+body > .iti--container {
+    z-index: 10001 !important;
+}
+
+body > .iti--container .iti__dropdown-content {
+    z-index: 10002 !important;
+    position: relative;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+/* Corrige a sobreposição do seletor internacional no modal. */
+body > .iti--container {
+    z-index: 10001 !important;
+}
+
+body > .iti--container .iti__dropdown-content {
+    z-index: 10002 !important;
+    position: relative;
+    max-height: 260px;
+    overflow-y: auto;
+}
+
+/* Evita o zoom automático do Safari nos campos de reserva. */
+#reservaModal input,
+#reservaModal select,
+#reservaModal textarea {
+    font-size: 16px !important;
+}

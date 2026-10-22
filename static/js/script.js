@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 initialCountry: "pt",
                 separateDialCode: true,
                 nationalMode: true,
+                dropdownContainer: document.body,
                 onlyCountries: [
                     "al", "de", "ad", "am", "at", "az",
                     "be", "by", "ba", "bg", "cz", "cy",
