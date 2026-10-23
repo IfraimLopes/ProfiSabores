@@ -31,10 +31,24 @@ def obter_tipo_utilizador(request):
 def obter_preco_ementa(ementa, tipo_utilizador):
     """Devolve o preço-base adequado ao perfil."""
 
-    if tipo_utilizador in ("staff", "visitante"):
+    if tipo_utilizador == "visitante":
+        return ementa.preco_base_visitante
+    if tipo_utilizador == "staff":
         return ementa.preco_base_staff
 
     return ementa.preco_base_aluno
+
+
+
+def obter_preco_extra(extra, tipo_utilizador):
+    """Devolve o preço do extra adequado ao perfil."""
+
+    if tipo_utilizador == "visitante":
+        return extra.preco_visitante
+    if tipo_utilizador == "staff":
+        return extra.preco_staff
+
+    return extra.preco_aluno
 
 
 def obter_ementas_do_dia(data, tipo_utilizador):
@@ -60,11 +74,7 @@ def obter_ementas_do_dia(data, tipo_utilizador):
 
         
         for extra in ementa.extras.all():
-            extra.preco_exibicao = (
-                extra.preco_staff
-                if tipo_utilizador in ("staff", "visitante")
-                else extra.preco_aluno
-            )
+            extra.preco_exibicao = obter_preco_extra(extra, tipo_utilizador)
 
           
             if extra.ativo:
@@ -197,11 +207,7 @@ def api_menu(request):
         extras = []
 
         for extra in ementa.extras.all():
-            preco_extra = (
-               extra.preco_staff
-                if tipo_utilizador in ("staff", "visitante")
-                else extra.preco_aluno
-            )
+            preco_extra = obter_preco_extra(extra, tipo_utilizador)
 
             extras.append(
                 {

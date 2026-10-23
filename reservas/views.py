@@ -211,8 +211,9 @@ def criar_reserva(request):
                 status=404
             )
 
-        # Visitantes pagam o mesmo preço que os funcionários.
-        if tipo_utilizador in ("staff", "visitante"):
+        if tipo_utilizador == "visitante":
+            preco = ementa.preco_base_visitante
+        elif tipo_utilizador == "staff":
             preco = ementa.preco_base_staff
         else:
             preco = ementa.preco_base_aluno
@@ -317,7 +318,9 @@ def criar_reserva(request):
 
     for extra in extras:
 
-        if tipo_utilizador in ("staff", "visitante"):
+        if tipo_utilizador == "visitante":
+            preco_extra = extra.preco_visitante
+        elif tipo_utilizador == "staff":
             preco_extra = extra.preco_staff
         else:
             preco_extra = extra.preco_aluno

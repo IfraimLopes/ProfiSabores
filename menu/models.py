@@ -92,6 +92,11 @@ class Ementa(models.Model):
         decimal_places=2
     )
 
+    preco_base_visitante = models.DecimalField(
+        max_digits=6,
+        decimal_places=2
+    )
+
     publicada = models.BooleanField(
         default=False
     )
@@ -160,6 +165,11 @@ class Extra(models.Model):
     )
 
     preco_staff = models.DecimalField(
+        max_digits=6,
+        decimal_places=2
+    )
+
+    preco_visitante = models.DecimalField(
         max_digits=6,
         decimal_places=2
     )

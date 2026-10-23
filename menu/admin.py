@@ -61,6 +61,7 @@ class EmentaAdmin(admin.ModelAdmin):
         "prato_principal",
         "preco_base_aluno",
         "preco_base_staff",
+        "preco_base_visitante",
         "publicada",
         "ativa",
     )
@@ -102,6 +103,7 @@ class ExtraAdmin(admin.ModelAdmin):
         "ementa",
         "preco_aluno",
         "preco_staff",
+        "preco_visitante",
         "ativo",
     )
 
