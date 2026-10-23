@@ -63,10 +63,7 @@ def painel_secretaria(request):
             "utilizador",
             "utilizador__perfil",
         )
-        .order_by(
-            "hora",
-            "nome",
-        )
+        .order_by("criada_em", "pk")
     )
 
     if pagamento_filtro in ["pago", "pendente"]:

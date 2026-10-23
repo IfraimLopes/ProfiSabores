@@ -46,11 +46,7 @@ def painel_cozinha(request):
         .prefetch_related(
             "extras__extra",
         )
-        .order_by(
-            "hora",
-            "curso__codigo",
-            "nome",
-        )
+        .order_by("criada_em", "pk")
     )
 
     entradas_contagem = Counter()

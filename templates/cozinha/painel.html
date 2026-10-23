@@ -488,7 +488,8 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>Hora</th>
+                            <th>Hora da reserva</th>
+                            <th>Hora da refeição</th>
                             <th>Nome</th>
                             <th>Tipo de conta</th>
                             <th>Curso</th>
@@ -499,6 +500,7 @@
                     <tbody>
                         {% for reserva in reservas %}
                             <tr>
+                                <td class="hora">{{ reserva.criada_em|date:"H:i" }}</td>
                                 <td class="hora">{{ reserva.hora|time:"H:i" }}</td>
 
                                 <td class="nome">{{ reserva.nome }}</td>
