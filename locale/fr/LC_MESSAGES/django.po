@@ -1,0 +1,317 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Profisabores\n"
+"Language: fr\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Visitante"
+msgstr "Visiteur"
+
+msgid "Acesso sem conta"
+msgstr "Accès sans compte"
+
+msgid "Idioma da aplicação"
+msgstr "Langue de l’application"
+
+msgid "Nome"
+msgstr "Nom"
+
+msgid "Não definido"
+msgstr "Non défini"
+
+msgid "Não aplicável"
+msgstr "Non applicable"
+
+msgid "Telemóvel"
+msgstr "Téléphone"
+
+msgid "Tipo de conta"
+msgstr "Type de compte"
+
+msgid "Notificações"
+msgstr "Notifications"
+
+msgid "Ativar notificações"
+msgstr "Activer les notifications"
+
+msgid "Sobre o desenvolvedor"
+msgstr "À propos du développeur"
+
+msgid "Informações sobre o criador da aplicação"
+msgstr "Informations sur le créateur de l’application"
+
+msgid "Terminar sessão"
+msgstr "Se déconnecter"
+
+msgid "Sair do modo visitante"
+msgstr "Quitter le mode visiteur"
+
+msgid "Fechar"
+msgstr "Fermer"
+
+msgid "Olá 👋"
+msgstr "Bonjour 👋"
+
+msgid "O que vais comer hoje?"
+msgstr "Que vas-tu manger aujourd’hui ?"
+
+msgid "Consulta a ementa e faz a tua reserva sem papel."
+msgstr "Consulte le menu et réserve ton repas sans papier."
+
+msgid "Sem filas desnecessárias"
+msgstr "Pas de files d’attente inutiles"
+
+msgid "Alergénios:"
+msgstr "Allergènes :"
+
+msgid "As nossas ementas 🍽️"
+msgstr "Nos menus 🍽️"
+
+msgid "Descobre o que podes comer hoje e nos próximos dias."
+msgstr ""
+"Découvre ce que tu peux manger aujourd’hui et dans les prochains jours."
+
+msgid "Ementa disponível"
+msgstr "Menu disponible"
+
+msgid "Disponível"
+msgstr "Disponible"
+
+msgid "Ementa indisponível"
+msgstr "Menu indisponible"
+
+msgid "Não existem dias disponíveis"
+msgstr "Aucun jour disponible"
+
+msgid "Volta a consultar o menu mais tarde."
+msgstr "Consulte à nouveau le menu plus tard."
+
+msgid "Minhas Reservas"
+msgstr "Mes réservations"
+
+msgid "Consulta as tuas reservas no restaurante."
+msgstr "Consulte tes réservations au restaurant."
+
+msgid "Selecionar todas as reservas confirmadas"
+msgstr "Sélectionner toutes les réservations confirmées"
+
+msgid "Cancelar selecionadas"
+msgstr "Annuler la sélection"
+
+msgid "A carregar reservas..."
+msgstr "Chargement des réservations..."
+
+msgid "Aguarda um momento."
+msgstr "Patiente un instant."
+
+msgid "Não foi possível carregar as reservas."
+msgstr "Impossible de charger les réservations."
+
+msgid "Ainda não tens reservas"
+msgstr "Tu n’as pas encore de réservations"
+
+msgid "Escolhe um prato no menu e faz a tua primeira reserva."
+msgstr "Choisis un plat du menu et effectue ta première réservation."
+
+msgid "Item não definido"
+msgstr "Élément non défini"
+
+msgid "Confirmada"
+msgstr "Confirmée"
+
+msgid "Cancelada"
+msgstr "Annulée"
+
+msgid "Extras"
+msgstr "Suppléments"
+
+msgid "Extras:"
+msgstr "Suppléments :"
+
+msgid "Sem extras"
+msgstr "Sans suppléments"
+
+msgid "Apagar cartão"
+msgstr "Supprimer la carte"
+
+msgid "Data"
+msgstr "Date"
+
+msgid "Hora"
+msgstr "Heure"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Não foi possível identificar esta reserva."
+msgstr "Impossible d’identifier cette réservation."
+
+msgid "Tens a certeza que queres cancelar esta reserva?"
+msgstr "Veux-tu vraiment annuler cette réservation ?"
+
+msgid "A cancelar..."
+msgstr "Annulation..."
+
+msgid "Não foi possível cancelar a reserva."
+msgstr "Impossible d’annuler la réservation."
+
+msgid "Cancelar"
+msgstr "Annuler"
+
+msgid ""
+"Queres ocultar este cartão? A reserva e o histórico continuarão guardados."
+msgstr ""
+"Veux-tu masquer cette carte ? La réservation et l’historique resteront "
+"enregistrés."
+
+msgid "Não foi possível guardar a ocultação neste navegador."
+msgstr "Impossible d’enregistrer ce masquage dans ce navigateur."
+
+msgid "Não foi possível carregar as reservas"
+msgstr "Impossible de charger les réservations"
+
+msgid "Início"
+msgstr "Accueil"
+
+msgid "Ementas"
+msgstr "Menus"
+
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Reservas"
+msgstr "Réservations"
+
+msgid "Perfil"
+msgstr "Profil"
+
+msgid "Ementa do dia"
+msgstr "Menu du jour"
+
+msgid "Ementa de"
+msgstr "Menu du"
+
+msgid "Entrada"
+msgstr "Entrée"
+
+msgid "Prato principal"
+msgstr "Plat principal"
+
+msgid "Reservar ementa"
+msgstr "Réserver ce menu"
+
+msgid "Não há ementa disponível para hoje"
+msgstr "Aucun menu disponible aujourd'hui"
+
+msgid "Consulta novamente mais tarde para veres se foi publicada"
+msgstr "Reviens plus tard pour voir si un nouveau menu a été publié"
+
+msgid "uma nova ementa."
+msgstr "un nouveau menu."
+
+msgid "Reserva antes de ires ao restaurante e ajuda a cozinha"
+msgstr "Réserve avant d'aller au restaurant et aide la cuisine"
+
+msgid "a preparar a quantidade certa."
+msgstr "à préparer la bonne quantité."
+
+msgid "Confirmar reserva"
+msgstr "Confirmer la réservation"
+
+msgid "Restaurante Pedagógico"
+msgstr "Restaurant pédagogique"
+
+msgid "Fechar modal"
+msgstr "Fermer la fenêtre"
+
+msgid "EMENTA SELECIONADA"
+msgstr "MENU SÉLECTIONNÉ"
+
+msgid "Ementa selecionada"
+msgstr "Menu sélectionné"
+
+msgid "Adicionar extras"
+msgstr "Ajouter des suppléments"
+
+msgid "Escolhe os extras que pretendes."
+msgstr "Choisis les suppléments que tu souhaites."
+
+msgid "Seleciona uma ementa para ver os extras."
+msgstr "Sélectionne un menu pour voir les suppléments."
+
+msgid "Nome completo"
+msgstr "Nom complet"
+
+msgid "O teu nome completo"
+msgstr "Ton nom complet"
+
+msgid "Número de telemóvel"
+msgstr "Numéro de téléphone portable"
+
+msgid "Data da reserva"
+msgstr "Date de réservation"
+
+msgid "Hora da refeição"
+msgstr "Heure du repas"
+
+msgid "Alergias ou restrições"
+msgstr "Allergies ou restrictions alimentaires"
+
+msgid "Opcional"
+msgstr "Facultatif"
+
+msgid "Ex.: frutos secos, lactose..."
+msgstr "Ex. : fruits à coque, lactose..."
+
+msgid "Total da reserva"
+msgstr "Total de la réservation"
+
+msgid "Inclui os extras selecionados"
+msgstr "Suppléments sélectionnés inclus"
+
+msgid "Fechar imagem"
+msgstr "Fermer l’image"
+
+msgid "Recebe avisos de reservas e pagamentos, mesmo sem o site aberto."
+msgstr ""
+"Recevez des notifications de réservation et de paiement, même lorsque le "
+"site est fermé."
+
+msgid "Desenvolvedor"
+msgstr "Développeur"
+
+msgid "Curso"
+msgstr "Formation"
+
+msgid "Escola"
+msgstr "École"
+
+msgid "Projeto"
+msgstr "Projet"
+
+msgid ""
+"Aplicação desenvolvida para facilitar a consulta do menu e a gestão de "
+"reservas do restaurante pedagógico da Profitecla."
+msgstr ""
+"Application développée pour faciliter la consultation du menu et la gestion "
+"des réservations du restaurant pédagogique de Profitecla."
+
+msgid "Hoje"
+msgstr "Aujourd’hui"
+
+msgid "Amanhã"
+msgstr "Demain"
+
+msgid "Depois de amanhã"
+msgstr "Après-demain"
+
+msgid "Ainda não existe uma ementa publicada para hoje."
+msgstr "Aucun menu n’a encore été publié pour aujourd’hui."
+
+msgid "Ainda não existe uma ementa publicada para amanhã."
+msgstr "Aucun menu n’a encore été publié pour demain."
+
+msgid "Ainda não existe uma ementa publicada para depois de amanhã."
+msgstr "Aucun menu n’a encore été publié pour après-demain."

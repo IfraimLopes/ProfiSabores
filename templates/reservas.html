@@ -1,8 +1,8 @@
-{% load static %}
+{% load static i18n %}
 
 <!DOCTYPE html>
 
-<html lang="pt">
+<html lang="{{ request.LANGUAGE_CODE|default:'pt-pt' }}">
 
 <head>
     <link rel="manifest" href="{% static 'manifest.json' %}">
@@ -91,11 +91,11 @@
     <div class="pagina-header">
 
         <h1>
-            Minhas Reservas
+            {% trans "Minhas Reservas" %}
         </h1>
 
         <p>
-            Consulta as tuas reservas no restaurante.
+            {% trans "Consulta as tuas reservas no restaurante." %}
         </p>
 
     </div>
@@ -106,7 +106,7 @@
     <section id="barraSelecaoReservas" class="barra-selecao-reservas" hidden>
         <label class="selecionar-todas-label">
             <input type="checkbox" id="selecionarTodasReservas">
-            Selecionar todas as reservas confirmadas
+            {% trans "Selecionar todas as reservas confirmadas" %}
         </label>
 
         <p id="contadorReservasSelecionadas" aria-live="polite">
@@ -119,7 +119,7 @@
             class="cancelar-btn"
             disabled
         >
-            Cancelar selecionadas
+            {% trans "Cancelar selecionadas" %}
         </button>
     </section>
 
@@ -137,11 +137,11 @@
             <div>
 
                 <strong>
-                    A carregar reservas...
+                    {% trans "A carregar reservas..." %}
                 </strong>
 
                 <p>
-                    Aguarda um momento.
+                    {% trans "Aguarda um momento." %}
                 </p>
 
             </div>
@@ -179,7 +179,7 @@
         </span>
 
         <small>
-            Início
+            {% trans "Início" %}
         </small>
 
     </a>
@@ -195,7 +195,7 @@
         </span>
 
         <small>
-            Menu
+            {% trans "Ementas" %}
         </small>
 
     </a>
@@ -211,7 +211,7 @@
         </span>
 
         <small>
-            Reservas
+            {% trans "Reservas" %}
         </small>
 
     </a>
@@ -227,7 +227,7 @@
         </span>
 
         <small>
-            Perfil
+            {% trans "Perfil" %}
         </small>
 
     </a>
@@ -254,6 +254,30 @@ document.addEventListener(
     carregarReservas
 );
 
+
+const TRADUCOES = {
+    erroCarregarSemPonto: "{% trans 'Não foi possível carregar as reservas' %}",
+    erroCarregar: "{% trans 'Não foi possível carregar as reservas.' %}",
+    semReservas: "{% trans 'Ainda não tens reservas' %}",
+    primeiraReserva: "{% trans 'Escolhe um prato no menu e faz a tua primeira reserva.' %}",
+    itemNaoDefinido: "{% trans 'Item não definido' %}",
+    confirmada: "{% trans 'Confirmada' %}",
+    cancelada: "{% trans 'Cancelada' %}",
+    extras: "{% trans 'Extras' %}",
+    extrasSemDoisPontos: "{% trans 'Extras:' %}",
+    semExtras: "{% trans 'Sem extras' %}",
+    apagarCartao: "{% trans 'Apagar cartão' %}",
+    data: "{% trans 'Data' %}",
+    hora: "{% trans 'Hora' %}",
+    total: "{% trans 'Total' %}",
+    erroIdentificar: "{% trans 'Não foi possível identificar esta reserva.' %}",
+    confirmarCancelar: "{% trans 'Tens a certeza que queres cancelar esta reserva?' %}",
+    aCancelar: "{% trans 'A cancelar...' %}",
+    erroCancelar: "{% trans 'Não foi possível cancelar a reserva.' %}",
+    cancelar: "{% trans 'Cancelar' %}",
+    confirmarOcultar: "{% trans 'Queres ocultar este cartão? A reserva e o histórico continuarão guardados.' %}",
+    erroGuardarOcultacao: "{% trans 'Não foi possível guardar a ocultação neste navegador.' %}"
+};
 
 async function carregarReservas() {
 
@@ -291,7 +315,7 @@ async function carregarReservas() {
 
             throw new Error(
                 dados.erro ||
-                "Não foi possível carregar as reservas."
+                TRADUCOES.erroCarregar
             );
 
         }
@@ -314,11 +338,11 @@ async function carregarReservas() {
                     <div>
 
                         <strong>
-                            Ainda não tens reservas
+                            ${TRADUCOES.semReservas}
                         </strong>
 
                         <p>
-                            Escolhe um prato no menu e faz a tua primeira reserva.
+                            ${TRADUCOES.primeiraReserva}
                         </p>
 
                     </div>
@@ -342,13 +366,13 @@ async function carregarReservas() {
                     reserva.ementa?.descricao ||
                     reserva.prato ||
                     reserva.sobremesa ||
-                    "Item não definido";
+                    TRADUCOES.itemNaoDefinido;
 
 
                 const estado =
                     reserva.estado === "confirmada"
-                        ? "Confirmada"
-                        : "Cancelada";
+                        ? TRADUCOES.confirmada
+                        : TRADUCOES.cancelada;
 
 
                 const estadoClasse =
@@ -361,7 +385,7 @@ async function carregarReservas() {
                     Array.isArray(reserva.extras) && reserva.extras.length
                         ? `
                             <div class="reserva-extras">
-                                <strong>🍽️ Extras</strong>
+                                <strong>🍽️ ${TRADUCOES.extras}</strong>
                                 <ul>
                                     ${reserva.extras.map(extra => `
                                         <li>
@@ -375,7 +399,7 @@ async function carregarReservas() {
                           `
                         : `
                             <div class="reserva-extras">
-                                <strong>🍽️ Extras:</strong> Sem extras
+                                <strong>🍽️ ${TRADUCOES.extrasSemDoisPontos}</strong> ${TRADUCOES.semExtras}
                             </div>
                           `;
 
@@ -385,9 +409,9 @@ async function carregarReservas() {
                         <button
                             type="button"
                             class="apagar-cartao-btn"
-                            aria-label="Apagar cartão da reserva ${reserva.id}"
+                            aria-label="${TRADUCOES.apagarCartao} da reserva ${reserva.id}"
                         >
-                            Apagar cartão
+                            ${TRADUCOES.apagarCartao}
                         </button>
                     `;
 
@@ -414,7 +438,7 @@ async function carregarReservas() {
                                 class="cancelar-btn"
                                 data-reserva-id="${reserva.id}"
                             >
-                                Cancelar
+                                ${TRADUCOES.cancelar}
                             </button>
                           `
                         : "";
@@ -482,7 +506,7 @@ async function carregarReservas() {
                             <div>
 
                                 <small>
-                                    Data
+                                    ${TRADUCOES.data}
                                 </small>
 
                                 <strong>
@@ -503,7 +527,7 @@ async function carregarReservas() {
                             <div>
 
                                 <small>
-                                    Hora
+                                    ${TRADUCOES.hora}
                                 </small>
 
                                 <strong>
@@ -527,7 +551,7 @@ ${extrasHtml}
                             <div>
 
                                 <small>
-                                    Total
+                                    ${TRADUCOES.total}
                                 </small>
 
                                 <strong>
@@ -587,7 +611,7 @@ ${extrasHtml}
                 <div>
 
                     <strong>
-                        Não foi possível carregar as reservas
+                        ${TRADUCOES.erroCarregarSemPonto}
                     </strong>
 
                     <p>
@@ -628,7 +652,7 @@ function adicionarEventosCancelar() {
 
                     const confirmar =
                         confirm(
-                            "Tens a certeza que queres cancelar esta reserva?"
+                            TRADUCOES.confirmarCancelar
                         );
 
 
@@ -640,7 +664,7 @@ function adicionarEventosCancelar() {
                     this.disabled = true;
 
                     this.textContent =
-                        "A cancelar...";
+                        TRADUCOES.aCancelar;
 
 
                     try {
@@ -662,7 +686,7 @@ function adicionarEventosCancelar() {
 
                             throw new Error(
                                 dados.erro ||
-                                "Não foi possível cancelar a reserva."
+                                TRADUCOES.erroCancelar
                             );
 
                         }
@@ -681,7 +705,7 @@ function adicionarEventosCancelar() {
                         this.disabled = false;
 
                         this.textContent =
-                            "Cancelar";
+                            TRADUCOES.cancelar;
 
                     }
 
@@ -742,13 +766,12 @@ function adicionarEventosApagarCartao() {
                 ?.match(/reserva\s+(\d+)/i)?.[1];
 
             if (!id) {
-                alert("Não foi possível identificar esta reserva.");
+                alert(TRADUCOES.erroIdentificar);
                 return;
             }
 
             const confirmar = confirm(
-                "Queres ocultar este cartão? " +
-                "A reserva e o histórico continuarão guardados."
+                TRADUCOES.confirmarOcultar
             );
 
             if (!confirmar) {
@@ -768,7 +791,7 @@ function adicionarEventosApagarCartao() {
                 card.remove();
             } catch (erro) {
                 alert(
-                    "Não foi possível guardar a ocultação neste navegador."
+                    TRADUCOES.erroGuardarOcultacao
                 );
             }
         });

@@ -29,6 +29,18 @@ class Perfil(models.Model):
         max_length=20,
         choices=TIPOS_UTILIZADOR
     )
+    IDIOMAS = [
+    ("pt-pt", "Português"),
+    ("en", "English"),
+    ("es", "Español"),
+    ("fr", "Français"),
+]
+
+    idioma = models.CharField(
+        max_length=10,
+        choices=IDIOMAS,
+        default="pt-pt",
+    )
 
     telemovel = models.CharField(
         max_length=20

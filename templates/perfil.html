@@ -1,8 +1,8 @@
 
-{% load static %}
+{% load static i18n %}
 
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="{{ request.LANGUAGE_CODE|default:'pt-pt' }}">
 
 <head>
     <link rel="manifest" href="{% static 'manifest.json' %}">
@@ -14,7 +14,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Perfil - Profisabores</title>
+    <title>{% trans "Perfil" %} - Profisabores</title>
 
     <!-- CSS GERAL -->
     <link
@@ -77,7 +77,7 @@
                 {% if request.user.is_authenticated %}
                     {{ utilizador.first_name }}
                 {% else %}
-                    Visitante
+                    {% trans "Visitante" %}
                 {% endif %}
             </h1>
 
@@ -85,10 +85,38 @@
                 {% if request.user.is_authenticated %}
                     {{ utilizador.email }}
                 {% else %}
-                    Acesso sem conta
+                    {% trans "Acesso sem conta" %}
                 {% endif %}
             </p>
 
+        </section>
+
+        <!-- SELEÇÃO DO IDIOMA -->
+        <section class="perfil-idioma">
+            <form method="post" action="{% url 'alterar_idioma' %}">
+                {% csrf_token %}
+
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ request.get_full_path }}"
+                >
+
+                <label for="idioma">{% trans "Idioma da aplicação" %}</label>
+
+                <select
+                    id="idioma"
+                    name="idioma"
+                    onchange="this.form.submit()"
+                >
+                    {% for codigo, nome in idiomas_disponiveis %}
+                        <option
+                            value="{{ codigo }}"
+                            {% if codigo == idioma_atual %}selected{% endif %}
+                        >{{ nome }}</option>
+                    {% endfor %}
+                </select>
+            </form>
         </section>
 
         <!-- INFORMAÇÕES DA CONTA -->
@@ -102,15 +130,15 @@
                 </span>
 
                 <div>
-                    <small>Nome</small>
+                    <small>{% trans "Nome" %}</small>
 
                     <strong>
                         {% if request.user.is_authenticated and perfil %}
                             {{ perfil.nome_completo }}
                         {% elif tipo_utilizador == "visitante" %}
-                            Visitante
+                            {% trans "Visitante" %}
                         {% else %}
-                            Não definido
+                            {% trans "Não definido" %}
                         {% endif %}
                     </strong>
                 </div>
@@ -125,13 +153,13 @@
                 </span>
 
                 <div>
-                    <small>E-mail</small>
+                    <small>{% trans "E-mail" %}</small>
 
                     <strong>
                         {% if request.user.is_authenticated %}
                             {{ utilizador.email|default:"Não definido" }}
                         {% else %}
-                            Não aplicável
+                            {% trans "Não aplicável" %}
                         {% endif %}
                     </strong>
                 </div>
@@ -146,7 +174,7 @@
                 </span>
 
                 <div>
-                    <small>Telemóvel</small>
+                    <small>{% trans "Telemóvel" %}</small>
 
                     <strong>
                         {% if request.user.is_authenticated and perfil %}
@@ -167,17 +195,17 @@
                 </span>
 
                 <div>
-                    <small>Tipo de conta</small>
+                    <small>{% trans "Tipo de conta" %}</small>
 
                     <strong>
                         {% if not request.user.is_authenticated %}
-                            Visitante
+                            {% trans "Visitante" %}
                         {% elif perfil.tipo == "staff" %}
                             Staff
                         {% elif perfil %}
                             Aluno
                         {% else %}
-                            Não definido
+                            {% trans "Não definido" %}
                         {% endif %}
                     </strong>
                 </div>
@@ -193,8 +221,8 @@
                     <i class="fa-solid fa-bell"></i>
                 </span>
                 <div>
-                    <strong>Notificações</strong>
-                    <small>Recebe avisos de reservas e pagamentos, mesmo sem o site aberto.</small>
+                    <strong>{% trans "Notificações" %}</strong>
+                    <small>{% trans "Recebe avisos de reservas e pagamentos, mesmo sem o site aberto." %}</small>
                 </div>
             </div>
 
@@ -205,7 +233,7 @@
                 data-vapid-public-key="{{ webpush_vapid_public_key }}"
             >
                 <i class="fa-solid fa-bell"></i>
-                Ativar notificações
+                {% trans "Ativar notificações" %}
             </button>
 
             <p id="webPushStatus" class="webpush-status" role="status" aria-live="polite">
@@ -230,10 +258,10 @@
 
             <span class="developer-button-text">
 
-                <strong>Sobre o desenvolvedor</strong>
+                <strong>{% trans "Sobre o desenvolvedor" %}</strong>
 
                 <small>
-                    Informações sobre o criador da aplicação
+                    {% trans "Informações sobre o criador da aplicação" %}
                 </small>
 
             </span>
@@ -251,7 +279,7 @@
                 class="logout-button"
             >
                 <i class="fa-solid fa-right-from-bracket"></i>
-                Terminar sessão
+                {% trans "Terminar sessão" %}
             </button>
 
             <p
@@ -267,7 +295,7 @@
                 class="logout-button"
             >
                 <i class="fa-solid fa-right-from-bracket"></i>
-                Sair do modo visitante
+                {% trans "Sair do modo visitante" %}
             </button>
 
             <p
@@ -307,7 +335,7 @@
                 type="button"
                 id="closeDeveloperModal"
                 class="developer-modal-close"
-                aria-label="Fechar"
+                aria-label="{% trans "Fechar" %}"
             >
                 <i class="fa-solid fa-xmark"></i>
             </button>
@@ -319,7 +347,7 @@
 
             <!-- TÍTULO -->
             <h2 id="developerModalTitle">
-                Sobre o desenvolvedor
+                {% trans "Sobre o desenvolvedor" %}
             </h2>
 
             <!-- NOME -->
@@ -328,7 +356,7 @@
                 <i class="fa-solid fa-user"></i>
 
                 <div>
-                    <small>Desenvolvedor</small>
+                    <small>{% trans "Desenvolvedor" %}</small>
                     <strong>Ifraim Lopes</strong>
                 </div>
 
@@ -340,7 +368,7 @@
                 <i class="fa-solid fa-graduation-cap"></i>
 
                 <div>
-                    <small>Curso</small>
+                    <small>{% trans "Curso" %}</small>
                     <strong>Programador de Informática 2025</strong>
                 </div>
 
@@ -352,7 +380,7 @@
                 <i class="fa-solid fa-school"></i>
 
                 <div>
-                    <small>Escola</small>
+                    <small>{% trans "Escola" %}</small>
                     <strong>Profitecla Guimarães</strong>
                 </div>
 
@@ -364,7 +392,7 @@
                 <i class="fa-solid fa-utensils"></i>
 
                 <div>
-                    <small>Projeto</small>
+                    <small>{% trans "Projeto" %}</small>
                     <strong>Profisabores</strong>
                 </div>
 
@@ -372,9 +400,7 @@
 
             <!-- DESCRIÇÃO -->
             <p class="developer-description">
-                Aplicação desenvolvida para facilitar a consulta
-                do menu e a gestão de reservas do restaurante
-                pedagógico da Profitecla.
+                {% trans "Aplicação desenvolvida para facilitar a consulta do menu e a gestão de reservas do restaurante pedagógico da Profitecla." %}
             </p>
 
             <!-- VERSÃO -->
@@ -395,7 +421,7 @@
             class="nav-btn"
         >
             <span>⌂</span>
-            <small>Início</small>
+            <small>{% trans "Início" %}</small>
         </a>
 
         <!-- MENU -->
@@ -404,7 +430,7 @@
             class="nav-btn"
         >
             <span>☷</span>
-            <small>Ementas</small>
+            <small>{% trans "Ementas" %}</small>
         </a>
 
         <!-- RESERVAS -->
@@ -413,7 +439,7 @@
             class="nav-btn"
         >
             <span>▣</span>
-            <small>Reservas</small>
+            <small>{% trans "Reservas" %}</small>
         </a>
 
         <!-- PERFIL -->
@@ -428,7 +454,7 @@
                 ></i>
             </span>
 
-            <small>Perfil</small>
+            <small>{% trans "Perfil" %}</small>
         </a>
 
     </nav>

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-
+from django.conf.urls.i18n import set_language
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -14,7 +14,7 @@ urlpatterns = [
 
     path("", pagina_entrada, name="entrada"),
     path("inicio/", home, name="home"),
-
+    path("i18n/set-language/", set_language, name="set_language"),
     path("menu/", menu, name="menu"),
     path("utilizadores/", include("utilizadores.urls")),
     path("reservas/", include("reservas.urls")),

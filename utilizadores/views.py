@@ -7,10 +7,47 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.conf import settings
+from django.utils import translation
 
 from menu.models import Curso
 from .models import Perfil, CodigoVerificacao
 
+@require_POST
+def alterar_idioma(request):
+    idioma = request.POST.get("idioma", "").strip()
+
+    idiomas_validos = dict(settings.LANGUAGES)
+
+    if idioma not in idiomas_validos:
+        return redirect("perfil")
+
+    if request.user.is_authenticated:
+        try:
+            perfil = request.user.perfil
+            perfil.idioma = idioma
+            perfil.save(update_fields=["idioma"])
+        except Perfil.DoesNotExist:
+            pass
+
+    translation.activate(idioma)
+    request.session["django_language"] = idioma
+
+    destino = request.POST.get("next", "").strip()
+
+    if not destino.startswith("/") or destino.startswith("//"):
+        destino = "/utilizadores/perfil/"
+
+    resposta = redirect(destino)
+
+    resposta.set_cookie(
+        settings.LANGUAGE_COOKIE_NAME,
+        idioma,
+        max_age=60 * 60 * 24 * 365,
+        samesite="Lax",
+    )
+
+    return resposta
 
 @csrf_exempt
 @require_POST
@@ -684,36 +721,42 @@ def pagina_registar(request):
 def pagina_perfil(request):
     from django.conf import settings
 
-    # Visitante sem conta: abrir o perfil sem exigir login.
-    if not request.user.is_authenticated:
-        return render(
-            request,
-            "perfil.html",
-            {
-                "utilizador": None,
-                "perfil": None,
-                "tipo_utilizador": "visitante",
-                "webpush_vapid_public_key": settings.WEBPUSH_VAPID_PUBLIC_KEY,
-            }
-        )
+    perfil = None
+    utilizador = None
+    tipo_utilizador = "visitante"
 
-    # Alunos e funcionários mantêm o perfil atual.
-    try:
-        perfil = request.user.perfil
-    except Perfil.DoesNotExist:
-        perfil = None
+    if request.user.is_authenticated:
+        utilizador = request.user
+
+        try:
+            perfil = request.user.perfil
+        except Perfil.DoesNotExist:
+            perfil = None
+
+        if perfil:
+            tipo_utilizador = perfil.tipo
+
+    idioma_atual = request.COOKIES.get(
+        settings.LANGUAGE_COOKIE_NAME,
+        settings.LANGUAGE_CODE,
+    )
+
+    if perfil and perfil.idioma:
+        idioma_atual = perfil.idioma
 
     return render(
         request,
         "perfil.html",
         {
-            "utilizador": request.user,
-            "webpush_vapid_public_key": settings.WEBPUSH_VAPID_PUBLIC_KEY,
+            "utilizador": utilizador,
             "perfil": perfil,
-            "tipo_utilizador": (
-                perfil.tipo if perfil else None
+            "tipo_utilizador": tipo_utilizador,
+            "idiomas_disponiveis": settings.LANGUAGES,
+            "idioma_atual": idioma_atual,
+            "webpush_vapid_public_key": (
+                settings.WEBPUSH_VAPID_PUBLIC_KEY
             ),
-        }
+        },
     )
 
 

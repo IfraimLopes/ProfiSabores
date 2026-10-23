@@ -1,7 +1,7 @@
 
-{% load static %}
+{% load static i18n %}
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="{{ request.LANGUAGE_CODE|default:'pt-pt' }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,22 +59,22 @@
             <div class="welcome-card">
                 <div>
                     <span class="muted">
-                        Olá 👋
+                        {% trans "Olá 👋" %}
                            {% if request.user.is_authenticated %}
             {% firstof request.user.perfil.nome_completo request.user.first_name request.user.username %}
         {% else %}
-            Visitante
+            {% trans "Visitante" %}
         {% endif %}
         !
     </strong>
                     </span>
 
                     <h2>
-                        <strong>O que vais comer hoje?</strong>
+                        <strong>{% trans "O que vais comer hoje?" %}</strong>
                     </h2>
 
                     <p>
-                        Consulta a ementa e faz a tua reserva sem papel.
+                        {% trans "Consulta a ementa e faz a tua reserva sem papel." %}
                     </p>
                 </div>
 
@@ -133,11 +133,11 @@
                         <div>
                             <span class="ementa-tag">
                                 <i class="fa-solid fa-utensils"></i>
-                                Ementa do dia
+                                {% trans "Ementa do dia" %}
                             </span>
 
                             <h3>
-                                Ementa de
+                                {% trans "Ementa de" %}
                                 {{ ementa.data_refeicao|date:"d/m/Y" }}
                             </h3>
                         </div>
@@ -170,7 +170,7 @@
                             <div class="ementa-item-conteudo">
 
                                 <span class="ementa-item-tipo">
-                                    Entrada
+                                    {% trans "Entrada" %}
                                 </span>
 
                                 <h4>
@@ -186,7 +186,7 @@
                                 {% if ementa.entrada.alergenios %}
                                     <p class="ementa-alergenios">
                                         <i class="fa-solid fa-triangle-exclamation"></i>
-                                        Alergénios:
+                                        {% trans "Alergénios:" %}
                                         {{ ementa.entrada.alergenios }}
                                     </p>
                                 {% endif %}
@@ -215,7 +215,7 @@
                             <div class="ementa-item-conteudo">
 
                                 <span class="ementa-item-tipo">
-                                    Prato principal
+                                    {% trans "Prato principal" %}
                                 </span>
 
                                 <h4>
@@ -231,7 +231,7 @@
                                 {% if ementa.prato_principal.alergenios %}
                                     <p class="ementa-alergenios">
                                         <i class="fa-solid fa-triangle-exclamation"></i>
-                                        Alergénios:
+                                        {% trans "Alergénios:" %}
                                         {{ ementa.prato_principal.alergenios }}
                                     </p>
                                 {% endif %}
@@ -297,7 +297,7 @@
 
                             {% if extra.alergenios %}
                                 <small class="ementa-alergenios">
-                                    Alergénios: {{ extra.alergenios }}
+                                    {% trans "Alergénios:" %} {{ extra.alergenios }}
                                 </small>
                             {% endif %}
                         </span>
@@ -332,7 +332,7 @@ data-extras="{{ ementa.extras_json|escape }}"
                                 class="fa-solid fa-calendar-check"
                                 aria-hidden="true"
                             ></i>
-                            Reservar ementa
+                            {% trans "Reservar ementa" %}
                         </button>
 
                     </div>
@@ -349,7 +349,7 @@ data-extras="{{ ementa.extras_json|escape }}"
 
             <i class="fa-solid fa-calendar-xmark"></i>
 
-            <h3>Não há ementa disponível para hoje</h3>
+            <h3>{% trans "Não há ementa disponível para hoje" %}</h3>
 
             <p>
                 Consulta novamente mais tarde para veres se foi publicada
@@ -369,7 +369,7 @@ data-extras="{{ ementa.extras_json|escape }}"
             <span class="info-icon">💡</span>
 
             <div>
-                <strong>Sem filas desnecessárias</strong>
+                <strong>{% trans "Sem filas desnecessárias" %}</strong>
                 <p>
                     Reserva antes de ires ao restaurante e ajuda a cozinha
                     a preparar a quantidade certa.
@@ -383,22 +383,22 @@ data-extras="{{ ementa.extras_json|escape }}"
 
         <a href="{% url 'home' %}" class="nav-btn active">
             <span>⌂</span>
-            <small>Início</small>
+            <small>{% trans "Início" %}</small>
         </a>
 
         <a href="{% url 'menu' %}" class="nav-btn">
             <span>☷</span>
-            <small>Ementas</small>
+            <small>{% trans "Ementas" %}</small>
         </a>
 
         <a href="{% url 'pagina_reservas' %}" class="nav-btn">
             <span>▣</span>
-            <small>Reservas</small>
+            <small>{% trans "Reservas" %}</small>
         </a>
 
         <a href="{% url 'perfil' %}" class="nav-btn">
             <span><i class="fa fa-user" aria-hidden="true"></i></span>
-            <small>Perfil</small>
+            <small>{% trans "Perfil" %}</small>
         </a>
 
     </nav>
@@ -416,9 +416,9 @@ data-extras="{{ ementa.extras_json|escape }}"
                 </span>
 
                 <div>
-                    <h2>Confirmar reserva</h2>
+                    <h2>{% trans "Confirmar reserva" %}</h2>
                     <p class="modal-subtitulo">
-                        Restaurante Pedagógico
+                        {% trans "Restaurante Pedagógico" %}
                     </p>
                 </div>
             </div>
@@ -427,7 +427,7 @@ data-extras="{{ ementa.extras_json|escape }}"
                 type="button"
                 id="fecharModal"
                 class="fechar-modal"
-                aria-label="Fechar modal">
+                aria-label="{% trans "Fechar modal" %}">
                 &times;
             </button>
         </header>
@@ -439,13 +439,13 @@ data-extras="{{ ementa.extras_json|escape }}"
 
             <!-- EMENTA SELECIONADA -->
             <section class="resumo-refeicao">
-                <span class="modal-etiqueta">EMENTA SELECIONADA</span>
+                <span class="modal-etiqueta">{% trans "EMENTA SELECIONADA" %}</span>
 
                 <input
                     type="text"
                     id="prato"
                     name="prato"
-                    aria-label="Ementa selecionada"
+                    aria-label="{% trans "Ementa selecionada" %}"
                     readonly
                 >
 
@@ -457,12 +457,12 @@ data-extras="{{ ementa.extras_json|escape }}"
 
                 <div class="resumo-pratos">
                     <p>
-                        <strong>Entrada</strong>
+                        <strong>{% trans "Entrada" %}</strong>
                         <span id="modalEntrada">—</span>
                     </p>
 
                     <p>
-                        <strong>Prato principal</strong>
+                        <strong>{% trans "Prato principal" %}</strong>
                         <span id="modalPratoPrincipal">—</span>
                     </p>
                 </div>
@@ -471,12 +471,12 @@ data-extras="{{ ementa.extras_json|escape }}"
             <!-- EXTRAS -->
             <section class="modal-extras">
                 <div class="modal-seccao-cabecalho">
-                    <h3>Adicionar extras</h3>
-                    <p>Escolhe os extras que pretendes.</p>
+                    <h3>{% trans "Adicionar extras" %}</h3>
+                    <p>{% trans "Escolhe os extras que pretendes." %}</p>
                 </div>
 
                 <div id="extrasLista">
-                    <p>Seleciona uma ementa para ver os extras.</p>
+                    <p>{% trans "Seleciona uma ementa para ver os extras." %}</p>
                 </div>
             </section>
 
@@ -485,19 +485,19 @@ data-extras="{{ ementa.extras_json|escape }}"
 <div id="dadosVisitante" style="display: none;">
 
     <div class="modal-campo">
-        <label for="nomeReserva">Nome completo</label>
+        <label for="nomeReserva">{% trans "Nome completo" %}</label>
         <input
             type="text"
             id="nomeReserva"
             name="nome"
             maxlength="100"
             autocomplete="name"
-            placeholder="O teu nome completo"
+            placeholder="{% trans "O teu nome completo" %}"
         >
     </div>
 
     <div class="modal-campo">
-    <label for="telemovelReserva">Telemóvel</label>
+    <label for="telemovelReserva">{% trans "Telemóvel" %}</label>
     <input
         type="tel"
         id="telemovelReserva"
@@ -505,7 +505,7 @@ data-extras="{{ ementa.extras_json|escape }}"
         maxlength="20"
         autocomplete="tel"
         inputmode="tel"
-        placeholder="Número de telemóvel"
+        placeholder="{% trans "Número de telemóvel" %}"
     >
 </div>
 
@@ -514,7 +514,7 @@ data-extras="{{ ementa.extras_json|escape }}"
 
             <!-- DATA -->
             <div class="modal-campo">
-                <label for="dataPrato">Data da reserva</label>
+                <label for="dataPrato">{% trans "Data da reserva" %}</label>
 
                 <input
                     type="date"
@@ -528,7 +528,7 @@ data-extras="{{ ementa.extras_json|escape }}"
             <div class="hora-reserva">
                 <span>
                     <i class="fa-regular fa-clock"></i>
-                    Hora da refeição
+                    {% trans "Hora da refeição" %}
                 </span>
 
                 <strong>13:00</strong>
@@ -537,23 +537,23 @@ data-extras="{{ ementa.extras_json|escape }}"
             <!-- ALERGIAS -->
             <div class="modal-campo">
                 <label for="alergias">
-                    Alergias ou restrições
-                    <span class="campo-opcional">Opcional</span>
+                    {% trans "Alergias ou restrições" %}
+                    <span class="campo-opcional">{% trans "Opcional" %}</span>
                 </label>
 
                 <textarea
                     id="alergias"
                     name="alergias"
                     rows="3"
-                    placeholder="Ex.: frutos secos, lactose..."
+                    placeholder="{% trans "Ex.: frutos secos, lactose..." %}"
                 ></textarea>
             </div>
 
             <!-- TOTAL -->
             <div class="total-reserva">
                 <div>
-                    <span>Total da reserva</span>
-                    <small>Inclui os extras selecionados</small>
+                    <span>{% trans "Total da reserva" %}</span>
+                    <small>{% trans "Inclui os extras selecionados" %}</small>
                 </div>
 
                 <strong id="total">0,00 €</strong>
@@ -565,7 +565,7 @@ data-extras="{{ ementa.extras_json|escape }}"
                 class="confirmar-reserva">
                 <span class="texto-botao">
                     <i class="fa-solid fa-check"></i>
-                    Confirmar reserva
+                    {% trans "Confirmar reserva" %}
                 </span>
                 <span class="loading-botao" aria-hidden="true"></span>
             </button>

@@ -951,3 +951,72 @@ body.modal-open {
     line-height: 1.5;
     overflow-wrap: anywhere;
 }
+
+/* =========================================================
+   SELETOR DE IDIOMA
+========================================================= */
+
+.perfil-idioma {
+    width: 100%;
+    padding: 18px;
+    box-sizing: border-box;
+
+    background: #ffffff;
+    border: 1px solid #e1edf7;
+    border-radius: 18px;
+
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.06);
+}
+
+.perfil-idioma form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.perfil-idioma label {
+    color: #31566f;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.perfil-idioma select {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 42px 12px 14px;
+
+    box-sizing: border-box;
+    border: 1px solid #b9d6ee;
+    border-radius: 12px;
+
+    background-color: #f7fbff;
+    color: #12344d;
+
+    font: inherit;
+    font-size: 15px;
+
+    cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.perfil-idioma select:focus {
+    outline: none;
+    border-color: #5b9bd5;
+    box-shadow: 0 0 0 3px rgba(91, 155, 213, 0.2);
+}
+
+.perfil-idioma select:focus-visible {
+    outline: 2px solid #5b9bd5;
+    outline-offset: 2px;
+}
+
+@media (max-width: 480px) {
+    .perfil-idioma {
+        padding: 15px;
+    }
+
+    .perfil-idioma select {
+        min-height: 50px;
+        font-size: 16px;
+    }
+}

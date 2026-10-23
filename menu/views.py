@@ -1,5 +1,5 @@
 import logging
-
+from django.utils.translation import gettext_lazy as _
 logger = logging.getLogger(__name__)
 
 import json
@@ -126,18 +126,24 @@ def menu(request):
 
     dias = [
         {
+            "chave": "hoje",
             "data": hoje,
-            "titulo": "Hoje",
+            "titulo": _("Hoje"),
+            "mensagem_vazia": _("Ainda não existe uma ementa publicada para hoje."),
             "ementas": [],
         },
         {
+            "chave": "amanha",
             "data": hoje + timedelta(days=1),
-            "titulo": "Amanhã",
+            "titulo": _("Amanhã"),
+            "mensagem_vazia": _("Ainda não existe uma ementa publicada para amanhã."),
             "ementas": [],
         },
         {
+            "chave": "depois_de_amanha",
             "data": hoje + timedelta(days=2),
-            "titulo": "Depois de amanhã",
+            "titulo": _("Depois de amanhã"),
+            "mensagem_vazia": _("Ainda não existe uma ementa publicada para depois de amanhã."),
             "ementas": [],
         },
     ]
