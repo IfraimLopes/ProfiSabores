@@ -614,6 +614,7 @@ def minhas_reservas(request):
             "preco_unitario": str(reserva.preco_unitario),
             "total": str(reserva.total),
             "estado": reserva.estado,
+            "estado_preparacao": reserva.estado_preparacao,
             "criada_em": (
                 reserva.criada_em.isoformat()
                 if reserva.criada_em else None
