@@ -495,6 +495,7 @@
                             <th>Curso</th>
                             <th>Ementa e extras</th>
                             <th>Alergénios e alergias indicadas</th>
+                            <th>Estado da preparação</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -605,6 +606,36 @@
                                             {% endwith %}
                                         {% endif %}
                                     {% endif %}
+                                </td>
+
+                                <td>
+                                    <strong>
+                                        {% if reserva.estado_preparacao == "feito" %}
+                                            Feito
+                                        {% else %}
+                                            Em processo
+                                        {% endif %}
+                                    </strong>
+
+                                    <form method="post"
+                                          action="{% url 'atualizar_estado_preparacao' reserva.id %}">
+                                        {% csrf_token %}
+                                        {% if reserva.estado_preparacao == "feito" %}
+                                            <input type="hidden"
+                                                   name="estado_preparacao"
+                                                   value="em_processo">
+                                            <button type="submit">
+                                                Voltar a Em processo
+                                            </button>
+                                        {% else %}
+                                            <input type="hidden"
+                                                   name="estado_preparacao"
+                                                   value="feito">
+                                            <button type="submit">
+                                                Marcar como Feito
+                                            </button>
+                                        {% endif %}
+                                    </form>
                                 </td>
                             </tr>
                         {% endfor %}

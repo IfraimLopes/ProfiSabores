@@ -3,6 +3,8 @@ from collections import Counter
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
+from django.shortcuts import get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -100,3 +102,19 @@ def painel_cozinha(request):
         "cozinha/painel.html",
         contexto,
     )
+
+@cozinha_required
+@require_POST
+def atualizar_estado_preparacao(request, reserva_id):
+    estado = request.POST.get("estado_preparacao", "")
+
+    estados_validos = dict(Reserva.ESTADOS_PREPARACAO)
+    if estado not in estados_validos:
+        return HttpResponseForbidden("Estado de preparação inválido.")
+
+    reserva = get_object_or_404(Reserva, pk=reserva_id)
+
+    reserva.estado_preparacao = estado
+    reserva.save(update_fields=["estado_preparacao"])
+
+    return redirect("painel_cozinha")

@@ -483,6 +483,7 @@ def criar_reserva(request):
                 "preco_unitario": str(reserva.preco_unitario),
                 "total": str(reserva.total),
                 "estado": reserva.estado,
+                "estado_preparacao": reserva.estado_preparacao,
                 "tipo_utilizador": tipo_utilizador,
             }
         }
@@ -692,6 +693,27 @@ def cancelar_reserva(request, reserva_id):
             {"erro": "Reserva não encontrada."},
             status=404
         )
+
+    if reserva.estado_preparacao == "feito":
+        resposta = JsonResponse(
+            {
+                "erro": (
+                    "A refeição já está feita. "
+                    "Não é possível cancelar esta reserva."
+                ),
+                "estado_preparacao": reserva.estado_preparacao,
+            },
+            status=400
+        )
+
+        if not request.user.is_authenticated:
+            definir_cookie_visitante(
+                resposta,
+                token_visitante,
+                request
+            )
+
+        return resposta
 
     if reserva.estado == "cancelada":
         resposta = JsonResponse(

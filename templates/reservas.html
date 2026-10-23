@@ -251,7 +251,10 @@
 
 document.addEventListener(
     "DOMContentLoaded",
-    carregarReservas
+    () => {
+        carregarReservas();
+        setInterval(carregarReservas, 15000);
+    }
 );
 
 
@@ -430,9 +433,25 @@ async function carregarReservas() {
                         : "";
 
 
+                const estadoPreparacao =
+                    reserva.estado_preparacao === "feito"
+                        ? "Feito"
+                        : "Em processo";
+
                 const botaoCancelar =
                     reserva.estado === "confirmada"
-                        ? `
+                        ? reserva.estado_preparacao === "feito"
+                            ? `
+                                <button
+                                    type="button"
+                                    class="cancelar-btn"
+                                    disabled
+                                    title="A refeição já está feita."
+                                >
+                                    Refeição feita — sem cancelamento
+                                </button>
+                              `
+                            : `
                             <button
                                 type="button"
                                 class="cancelar-btn"
@@ -480,6 +499,10 @@ async function carregarReservas() {
                             >
                                 ${estado}
                             </span>
+
+                            <p class="estado-preparacao">
+                                🍽️ Preparação: <strong>${estadoPreparacao}</strong>
+                            </p>
 
                             <h2>
                                 ${escapeHtml(item)}

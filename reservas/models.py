@@ -11,6 +11,17 @@ class Reserva(models.Model):
         ("cancelada", "Cancelada"),
     ]
 
+       # ==============================
+    # ESTADO DA PREPARAÇÃO
+    # ==============================
+
+
+    ESTADOS_PREPARACAO = [
+        ("em_processo", "Em processo"),
+        ("feito", "Feito"),
+    ]
+
+
     PAGAMENTOS = [
         ("pendente", "Pendente"),
         ("pago", "Pago"),
@@ -120,6 +131,16 @@ class Reserva(models.Model):
         max_length=20,
         choices=ESTADOS,
         default="confirmada"
+    )
+
+    # ==============================
+    # ESTADO DA PREPARAÇÃO
+    # ==============================
+
+    estado_preparacao = models.CharField(
+        max_length=20,
+        choices=ESTADOS_PREPARACAO,
+        default="em_processo"
     )
 
     # ==============================
