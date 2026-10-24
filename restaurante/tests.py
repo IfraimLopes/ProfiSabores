@@ -70,7 +70,7 @@ class PainelRestauranteTests(TestCase):
         self.assertEqual(pagamento.pago_por, self.utilizador)
         self.assertIsNotNone(pagamento.pago_em)
 
-    def test_segundo_pedido_nao_altera_registo_original_do_pagamento(self):
+    def test_segundo_pedido_reverte_pagamento_para_pendente(self):
         url = reverse(
             "marcar_pagamento_restaurante",
             args=[self.reserva.pk],
@@ -80,8 +80,7 @@ class PainelRestauranteTests(TestCase):
         self.assertEqual(primeira_resposta.status_code, 302)
 
         self.reserva.refresh_from_db()
-        data_original = self.reserva.pago_em
-        responsavel_original = self.reserva.pago_por
+        self.assertEqual(self.reserva.pagamento, "pago")
 
         outro_utilizador = User.objects.create_user(
             username="outro_funcionario",
@@ -92,17 +91,18 @@ class PainelRestauranteTests(TestCase):
         self.client.force_login(outro_utilizador)
 
         segunda_resposta = self.client.post(url)
-        self.assertEqual(segunda_resposta.status_code, 403)
+        self.assertEqual(segunda_resposta.status_code, 302)
 
         self.reserva.refresh_from_db()
         pagamento = Pagamento.objects.get(reserva=self.reserva)
 
-        self.assertEqual(self.reserva.pago_em, data_original)
-        self.assertEqual(self.reserva.pago_por, responsavel_original)
-        self.assertEqual(pagamento.pago_em, data_original)
-        self.assertEqual(pagamento.pago_por, responsavel_original)
+        self.assertEqual(self.reserva.pagamento, "pendente")
+        self.assertIsNone(self.reserva.pago_em)
+        self.assertIsNone(self.reserva.pago_por_id)
+        self.assertEqual(pagamento.estado, "pendente")
+        self.assertIsNone(pagamento.pago_em)
+        self.assertIsNone(pagamento.pago_por_id)
         self.assertEqual(pagamento.valor, Decimal("9.25"))
-        self.assertEqual(pagamento.estado, "pago")
 
     def test_nao_permite_pagar_reserva_cancelada(self):
         self.reserva.estado = "cancelada"

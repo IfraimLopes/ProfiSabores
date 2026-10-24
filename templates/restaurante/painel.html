@@ -513,7 +513,6 @@
                         <td>
                             <strong>{{ reserva.nome }}</strong><br>
                             {{ reserva.telemovel }}<br>
-                            Reserva #{{ reserva.id }}
                         </td>
                         <td>{{ reserva.criada_em|date:"H:i" }}</td>
                         <td>
@@ -557,10 +556,22 @@
                         </td>
                         <td class="total">€ {{ reserva.total|floatformat:2 }}</td>
                         <td>
-                            {% if reserva.pagamento == "pago" %}
+                            {% if reserva.estado == "cancelada" %}
+                                {% if reserva.pagamento == "pago" %}
+                                    <span class="estado-pago">✓ Reserva paga</span>
+                                {% else %}
+                                    <span class="estado-pendente">Não pago</span>
+                                {% endif %}
+                            {% elif reserva.pagamento == "pago" %}
                                 <span class="estado-pago">✓ Reserva paga</span>
-                            {% elif reserva.estado == "cancelada" %}
-                                <span class="estado-pendente">Não pago</span>
+                                <form method="post"
+                                      action="{% url 'marcar_pagamento_restaurante' reserva.id %}"
+                                      onsubmit="return confirm('Queres reverter o pagamento desta reserva para pendente?');">
+                                    {% csrf_token %}
+                                    <button class="pago" type="submit">
+                                        Reverter pagamento
+                                    </button>
+                                </form>
                             {% else %}
                                 <span class="estado-pendente">Pendente</span>
                                 <form method="post"

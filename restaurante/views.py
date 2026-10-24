@@ -127,39 +127,53 @@ def marcar_pagamento(request, reserva_id):
         )
 
         if reserva.pagamento == "pago":
-            return HttpResponseForbidden(
-                "Esta reserva já está paga. O pagamento não pode ser revertido."
+            pagamento.estado = "pendente"
+            pagamento.pago_em = None
+            pagamento.pago_por = None
+            pagamento.save(
+                update_fields=[
+                    "estado",
+                    "pago_em",
+                    "pago_por",
+                    "atualizado_em",
+                ]
             )
 
-        # Registar o pagamento.
-        pagamento, _ = Pagamento.objects.get_or_create(
-            reserva=reserva,
-            defaults={
-                "valor": reserva.total,
-                "estado": "pendente",
-            },
-        )
+            reserva.pagamento = "pendente"
+            reserva.pago_em = None
+            reserva.pago_por = None
+            reserva.save(
+                update_fields=[
+                    "pagamento",
+                    "pago_em",
+                    "pago_por",
+                ]
+            )
+        else:
+            pagamento.valor = reserva.total
+            pagamento.estado = "pago"
+            pagamento.pago_em = timezone.now()
+            pagamento.pago_por = request.user
+            pagamento.save(
+                update_fields=[
+                    "valor",
+                    "estado",
+                    "pago_em",
+                    "pago_por",
+                    "atualizado_em",
+                ]
+            )
 
-        pagamento.valor = reserva.total
-        pagamento.estado = "pago"
-        pagamento.pago_em = timezone.now()
-        pagamento.pago_por = request.user
-        pagamento.save(
-            update_fields=[
-                "valor",
-                "estado",
-                "pago_em",
-                "pago_por",
-                "atualizado_em",
-            ]
-        )
-
-        reserva.pagamento = "pago"
-        reserva.pago_em = pagamento.pago_em
-        reserva.pago_por = request.user
-        reserva.save(
-            update_fields=["pagamento", "pago_em", "pago_por"]
-        )
+            reserva.pagamento = "pago"
+            reserva.pago_em = pagamento.pago_em
+            reserva.pago_por = request.user
+            reserva.save(
+                update_fields=[
+                    "pagamento",
+                    "pago_em",
+                    "pago_por",
+                ]
+            )
 
     return redirect(
         f"/restaurante/?data={reserva.data.isoformat()}"
