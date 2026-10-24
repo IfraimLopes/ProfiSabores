@@ -92,7 +92,7 @@ class PainelRestauranteTests(TestCase):
         self.client.force_login(outro_utilizador)
 
         segunda_resposta = self.client.post(url)
-        self.assertEqual(segunda_resposta.status_code, 302)
+        self.assertEqual(segunda_resposta.status_code, 403)
 
         self.reserva.refresh_from_db()
         pagamento = Pagamento.objects.get(reserva=self.reserva)

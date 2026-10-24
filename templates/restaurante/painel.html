@@ -321,6 +321,30 @@
             border: 1px solid #efd7ad;
         }
 
+        .estado-confirmada,
+        .estado-cancelada {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            font-weight: 800;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+
+        .estado-confirmada {
+            color: #176638;
+            background: var(--verde-claro);
+            border: 1px solid #b7dfc3;
+        }
+
+        .estado-cancelada {
+            color: #9b2525;
+            background: #fdeaea;
+            border: 1px solid #efbcbc;
+        }
+
         .total {
             color: var(--azul-escuro);
             font-size: 1rem;
@@ -478,6 +502,7 @@
                         <th>Conta</th>
                         <th>Refeição e extras</th>
                         <th>Preparação</th>
+                        <th>Estado da reserva</th>
                         <th>Total</th>
                         <th>Pagamento</th>
                     </tr>
@@ -523,37 +548,34 @@
                             {% endfor %}
                         </td>
                         <td>{{ reserva.get_estado_preparacao_display }}</td>
+                        <td>
+                            {% if reserva.estado == "cancelada" %}
+                                <span class="estado-cancelada">✕ Cancelada</span>
+                            {% else %}
+                                <span class="estado-confirmada">✓ Confirmada</span>
+                            {% endif %}
+                        </td>
                         <td class="total">€ {{ reserva.total|floatformat:2 }}</td>
                         <td>
                             {% if reserva.pagamento == "pago" %}
-                                <span class="estado-pago">Pago</span>
-                                {% if reserva.estado != "cancelada" %}
-                                    <form method="post"
-                                          action="{% url 'marcar_pagamento_restaurante' reserva.id %}"
-                                          onsubmit="return confirm('Atenção: queres mesmo reverter o pagamento de € {{ reserva.total|floatformat:2 }} e marcar esta reserva como não paga?');">
-                                        {% csrf_token %}
-                                        <button class="desativar" type="submit">
-                                            Marcar como não pago
-                                        </button>
-                                    </form>
-                                {% endif %}
+                                <span class="estado-pago">✓ Reserva paga</span>
+                            {% elif reserva.estado == "cancelada" %}
+                                <span class="estado-pendente">Não pago</span>
                             {% else %}
                                 <span class="estado-pendente">Pendente</span>
-                                {% if reserva.estado != "cancelada" %}
-                                    <form method="post"
-                                          action="{% url 'marcar_pagamento_restaurante' reserva.id %}"
-                                          onsubmit="return confirm('Confirmas que recebeste € {{ reserva.total|floatformat:2 }} desta reserva?');">
-                                        {% csrf_token %}
-                                        <button class="pago" type="submit">
-                                            Marcar como pago
-                                        </button>
-                                    </form>
-                                {% endif %}
+                                <form method="post"
+                                      action="{% url 'marcar_pagamento_restaurante' reserva.id %}"
+                                      onsubmit="return confirm('Confirmas que recebeste € {{ reserva.total|floatformat:2 }} desta reserva?');">
+                                    {% csrf_token %}
+                                    <button class="pago" type="submit">
+                                        Marcar como pago
+                                    </button>
+                                </form>
                             {% endif %}
                         </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="7">Não existem reservas para esta data.</td></tr>
+                    <tr><td colspan="8">Não existem reservas para esta data.</td></tr>
                 {% endfor %}
                 </tbody>
             </table>

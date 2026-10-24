@@ -698,6 +698,27 @@ def cancelar_reserva(request, reserva_id):
             status=404
         )
 
+    # Uma reserva paga não pode ser cancelada.
+    if reserva.pagamento == "pago":
+        resposta = JsonResponse(
+            {
+                "erro": (
+                    "Esta reserva já está paga e não pode ser cancelada."
+                ),
+                "pagamento": reserva.pagamento,
+            },
+            status=400
+        )
+
+        if not request.user.is_authenticated:
+            definir_cookie_visitante(
+                resposta,
+                token_visitante,
+                request
+            )
+
+        return resposta
+
     if reserva.estado_preparacao == "feito":
         resposta = JsonResponse(
             {
