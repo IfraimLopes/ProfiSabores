@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "cozinha",
     "utilizadores",
     "secretaria",
+    "restaurante",
     "cloudinary_storage",
     "cloudinary",
 ]

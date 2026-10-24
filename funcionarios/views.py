@@ -3,63 +3,62 @@ from django.shortcuts import render, redirect
 
 
 def login_funcionarios(request):
-
     if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect("/admin/")
+
         if request.user.groups.filter(name="Secretaria").exists():
             return redirect("/secretaria/")
 
         if request.user.groups.filter(name="Cozinha").exists():
             return redirect("/cozinha/")
 
-        if request.user.is_superuser:
-            return redirect("/admin/")
+        if request.user.groups.filter(name="Restaurante").exists():
+            return redirect("/restaurante/")
 
     erro = None
 
     if request.method == "POST":
-
         username = request.POST.get("username", "").strip()
         password = request.POST.get("password", "")
 
         utilizador = authenticate(
             request,
             username=username,
-            password=password
+            password=password,
         )
 
         if utilizador is not None:
-
-            if (
+            tem_acesso = (
                 utilizador.is_superuser
                 or utilizador.groups.filter(
-                    name__in=["Secretaria", "Cozinha"]
+                    name__in=["Secretaria", "Cozinha", "Restaurante"]
                 ).exists()
-            ):
+            )
+
+            if tem_acesso:
                 login(request, utilizador)
 
                 if utilizador.is_superuser:
                     return redirect("/admin/")
 
-                if utilizador.groups.filter(
-                    name="Secretaria"
-                ).exists():
+                if utilizador.groups.filter(name="Secretaria").exists():
                     return redirect("/secretaria/")
 
-                if utilizador.groups.filter(
-                    name="Cozinha"
-                ).exists():
+                if utilizador.groups.filter(name="Cozinha").exists():
                     return redirect("/cozinha/")
 
+                if utilizador.groups.filter(name="Restaurante").exists():
+                    return redirect("/restaurante/")
             else:
                 erro = "Esta conta não tem acesso às áreas de funcionários."
-
         else:
             erro = "Utilizador ou palavra-passe incorretos."
 
     return render(
         request,
         "funcionarios/login.html",
-        {"erro": erro}
+        {"erro": erro},
     )
 
 def logout_funcionarios(request):

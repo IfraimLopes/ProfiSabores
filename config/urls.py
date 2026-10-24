@@ -11,7 +11,7 @@ from reservas.views import servir_service_worker
 urlpatterns = [
     path("sw.js", servir_service_worker, name="service_worker"),
     path("admin/", admin.site.urls),
-
+    path("restaurante/", include("restaurante.urls")),
     path("", pagina_entrada, name="entrada"),
     path("inicio/", home, name="home"),
     path("i18n/set-language/", set_language, name="set_language"),

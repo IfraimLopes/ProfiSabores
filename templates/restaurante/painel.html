@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Painel do Restaurante | Profisabores</title>
+    <style>
+        :root {
+            --azul: #b3daff;
+            --azul-escuro: #315b7d;
+            --azul-claro: #eef7ff;
+            --verde: #26834a;
+            --verde-escuro: #176638;
+            --verde-claro: #e8f6ec;
+            --verde-borda: #9bcfac;
+            --fundo: #ffffff;
+            --branco: #ffffff;
+            --texto: #233449;
+            --texto-suave: #66778a;
+            --borda: #dce6ed;
+            --laranja: #a85d0b;
+            --laranja-claro: #fff3df;
+            --vermelho: #a52e35;
+            --sombra: 0 8px 28px rgba(20, 58, 85, .065);
+            --raio: 18px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            padding: 30px 22px 50px;
+            font-family: Inter, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", Arial, sans-serif;
+            background:
+                radial-gradient(ellipse at top left, #e3f0fb 0, transparent 38%),
+                var(--fundo);
+            color: var(--texto);
+            line-height: 1.55;
+        }
+
+        main {
+            width: 100%;
+            max-width: 1500px;
+            margin: 0 auto;
+        }
+
+        section {
+            min-width: 0;
+            margin-bottom: 24px;
+            padding: 26px;
+            background: var(--branco);
+            border: 1px solid var(--verde-borda);
+            border-radius: var(--raio);
+            box-shadow: var(--sombra);
+        }
+
+        section:first-child {
+            position: relative;
+            overflow: hidden;
+            padding: 34px;
+            color: white;
+            background: linear-gradient(125deg, #b3daff, #ffffff);
+            border: 1px solid #3b805e;
+        }
+
+        section:first-child::after {
+            content: "";
+            position: absolute;
+            width: 230px;
+            height: 230px;
+            right: -65px;
+            top: -110px;
+            border: 35px solid rgba(174, 225, 190, .12);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        h1, h2, h3 {
+            margin-top: 0;
+            line-height: 1.25;
+            letter-spacing: -.025em;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            font-size: clamp(1.65rem, 3vw, 2.35rem);
+            font-weight: 800;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: var(--azul-escuro);
+            font-size: clamp(1.15rem, 2vw, 1.45rem);
+            font-weight: 750;
+        }
+
+        section:first-child p {
+            margin: 0 0 18px;
+            color: #315b7d;
+        }
+
+        section:first-child a {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 15px;
+            color: white;
+            text-decoration: none;
+            font-size: .9rem;
+            font-weight: 700;
+            background: rgba(255, 255, 255, .10);
+            border: 1px solid rgba(255, 255, 255, .35);
+            border-radius: 10px;
+            transition: background .2s, transform .2s;
+        }
+
+        section:first-child a:hover {
+            background: rgba(255, 255, 255, .19);
+            transform: translateY(-1px);
+        }
+
+        form.filtros {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: end;
+            gap: 15px;
+            padding: 18px;
+            background: #f7fafc;
+            border: 1px solid var(--borda);
+            border-radius: 14px;
+        }
+
+        label {
+            display: inline-block;
+            margin-bottom: 7px;
+            color: var(--azul-escuro);
+            font-size: .88rem;
+            font-weight: 700;
+        }
+
+        input, select {
+            min-height: 44px;
+            max-width: 100%;
+            padding: 10px 12px;
+            color: var(--texto);
+            font: inherit;
+            background: white;
+            border: 1px solid #cbd9e3;
+            border-radius: 10px;
+            outline: none;
+            transition: border-color .2s, box-shadow .2s;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--verde);
+            box-shadow: 0 0 0 3px rgba(38, 131, 74, .13);
+        }
+
+        button {
+            display: inline-flex;
+            min-height: 42px;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            padding: 10px 15px;
+            color: white;
+            font: inherit;
+            font-size: .88rem;
+            font-weight: 750;
+            background: var(--azul);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background .2s, transform .2s, box-shadow .2s;
+        }
+
+        button:hover:not(:disabled) {
+            background: var(--azul-escuro);
+            box-shadow: 0 4px 12px rgba(16, 54, 87, .15);
+            transform: translateY(-1px);
+        }
+
+        button:focus-visible, a:focus-visible {
+            outline: 3px solid #86c99a;
+            outline-offset: 3px;
+        }
+
+        button.pago {
+            margin-top: 10px;
+            color: white;
+            background: var(--verde);
+        }
+
+        button.pago:hover:not(:disabled) {
+            background: var(--verde-escuro);
+        }
+
+        button.desativar {
+            color: #8c4a08;
+            background: var(--laranja-claro);
+            border-color: #edcf9d;
+        }
+
+        button.desativar:hover:not(:disabled) {
+            color: white;
+            background: var(--laranja);
+        }
+
+        button:disabled {
+            color: #758292;
+            background: #edf1f4;
+            border-color: #d8e0e6;
+            cursor: not-allowed;
+            opacity: .8;
+        }
+
+        section > p {
+            color: var(--texto-suave);
+        }
+
+        section > p strong {
+            display: inline-block;
+            margin: 4px 3px;
+            padding: 5px 10px;
+            color: var(--azul-escuro);
+            background: var(--azul-claro);
+            border: 1px solid #d3e5f4;
+            border-radius: 8px;
+        }
+
+        .tabela {
+            width: 100%;
+            overflow-x: auto;
+            border: 1px solid var(--verde-borda);
+            border-radius: 13px;
+            scrollbar-width: thin;
+            scrollbar-color: #8fbea0 #f1f7f3;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1000px;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: .9rem;
+        }
+
+        th, td {
+            padding: 15px 14px;
+            text-align: left;
+            vertical-align: top;
+            border-bottom: 1px solid #e6edf1;
+        }
+
+        th {
+            position: sticky;
+            top: 0;
+            color: #234664;
+            font-size: .77rem;
+            font-weight: 800;
+            letter-spacing: .045em;
+            text-transform: uppercase;
+            background: #edf5fb;
+            border-bottom: 2px solid var(--verde-borda);
+        }
+
+        tbody tr {
+            background: white;
+            transition: background .15s;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fbfdfd;
+        }
+
+        tbody tr:hover {
+            background: #f0f8f2;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: 0;
+        }
+
+        td strong {
+            color: var(--azul-escuro);
+        }
+
+        td form {
+            margin: 0;
+        }
+
+        .estado-pago,
+        .estado-pendente,
+        .ativa,
+        .inativa {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            font-size: .8rem;
+            font-weight: 800;
+            border-radius: 999px;
+        }
+
+        .estado-pago, .ativa {
+            color: #176638;
+            background: var(--verde-claro);
+            border: 1px solid #b7dfc3;
+        }
+
+        .estado-pendente, .inativa {
+            color: #8a510d;
+            background: var(--laranja-claro);
+            border: 1px solid #efd7ad;
+        }
+
+        .total {
+            color: var(--azul-escuro);
+            font-size: 1rem;
+            font-weight: 850;
+            white-space: nowrap;
+        }
+
+        .ementa {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 12px;
+            padding: 17px;
+            background: #fbfdfc;
+            border: 1px solid var(--verde-borda);
+            border-radius: 13px;
+            transition: background .2s, box-shadow .2s;
+        }
+
+        .ementa:hover {
+            background: #f3faf5;
+            box-shadow: 0 4px 14px rgba(38, 131, 74, .07);
+        }
+
+        .ementa > div {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .ementa form {
+            margin: 0;
+        }
+
+        .ementa strong {
+            margin-right: 4px;
+        }
+
+        .ementa > div > span:not(.ativa):not(.inativa) {
+            color: var(--texto-suave);
+            font-size: .85rem;
+        }
+
+        .tabela td[colspan] {
+            padding: 30px;
+            color: var(--texto-suave);
+            text-align: center;
+        }
+
+        @media (min-width: 1000px) {
+            section:nth-child(2) > p {
+                display: flex;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 8px;
+            }
+        }
+
+        @media (max-width: 760px) {
+            body {
+                padding: 15px 12px 32px;
+            }
+
+            section {
+                margin-bottom: 16px;
+                padding: 18px;
+                border-radius: 15px;
+            }
+
+            section:first-child {
+                padding: 25px 20px;
+            }
+
+            form.filtros {
+                align-items: stretch;
+                flex-direction: column;
+                padding: 14px;
+            }
+
+            form.filtros > div,
+            form.filtros input,
+            form.filtros button {
+                width: 100%;
+            }
+
+            section > p {
+                line-height: 2;
+            }
+
+            .ementa {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .ementa form,
+            .ementa form button {
+                width: 100%;
+            }
+
+            table {
+                min-width: 900px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <section>
+        <h1>🏢 Painel do Restaurante</h1>
+        <p>Consulta de reservas, pagamentos e disponibilidade das ementas.</p>
+        <a href="{% url 'logout_funcionarios' %}">Terminar sessão</a>
+    </section>
+
+    <section>
+        <h2>Consultar reservas</h2>
+        <form method="get" class="filtros">
+            <div>
+                <label for="data">Data da refeição</label><br>
+                <input id="data" type="date" name="data"
+                       value="{{ data_selecionada|date:'Y-m-d' }}">
+            </div>
+            <div>
+                <label for="pesquisa">Nome do cliente</label><br>
+                <input id="pesquisa" type="search" name="pesquisa"
+                       value="{{ pesquisa }}" placeholder="Pesquisar nome">
+            </div>
+            <button type="submit">Consultar</button>
+        </form>
+        <p>
+            Reservas: <strong>{{ total_reservas }}</strong> |
+            Pendentes: <strong>{{ total_pendentes }}</strong> |
+            Pagas: <strong>{{ total_pagos }}</strong> |
+            Recebido: <strong>€ {{ total_recebido|floatformat:2 }}</strong> | Por receber: <strong>€ {{ total_a_receber|floatformat:2 }}</strong>
+        </p>
+    </section>
+
+    <section>
+        <h2>Reservas de {{ data_selecionada|date:"d/m/Y" }}</h2>
+        <div class="tabela">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Cliente</th>
+                        <th>Hora</th>
+                        <th>Conta</th>
+                        <th>Refeição e extras</th>
+                        <th>Preparação</th>
+                        <th>Total</th>
+                        <th>Pagamento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for reserva in reservas %}
+                    <tr>
+                        <td>
+                            <strong>{{ reserva.nome }}</strong><br>
+                            {{ reserva.telemovel }}<br>
+                            Reserva #{{ reserva.id }}
+                        </td>
+                        <td>{{ reserva.criada_em|date:"H:i" }}</td>
+                        <td>
+                            {% if not reserva.utilizador %}
+                                Visitante
+                            {% elif reserva.utilizador.perfil %}
+                                {{ reserva.utilizador.perfil.get_tipo_display }}
+                            {% else %}
+                                Conta sem perfil
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if reserva.ementa %}
+                                <strong>Ementa de
+                                    {{ reserva.ementa.data_refeicao|date:"d/m/Y" }}
+                                </strong><br>
+                                Entrada:
+                                {{ reserva.ementa.entrada.nome|default:"Não definida" }}<br>
+                                Prato:
+                                {{ reserva.ementa.prato_principal.nome|default:"Não definido" }}
+                            {% elif reserva.prato %}
+                                Prato: {{ reserva.prato.nome }}
+                            {% elif reserva.sobremesa %}
+                                Sobremesa: {{ reserva.sobremesa.nome }}
+                            {% else %}
+                                Refeição não identificada
+                            {% endif %}
+
+                            {% for item in reserva.extras.all %}
+                                <br>{{ item.extra.nome }} × {{ item.quantidade }}
+                                — € {{ item.preco|floatformat:2 }} cada
+                            {% endfor %}
+                        </td>
+                        <td>{{ reserva.get_estado_preparacao_display }}</td>
+                        <td class="total">€ {{ reserva.total|floatformat:2 }}</td>
+                        <td>
+                            {% if reserva.pagamento == "pago" %}
+                                <span class="estado-pago">Pago</span>
+                                {% if reserva.estado != "cancelada" %}
+                                    <form method="post"
+                                          action="{% url 'marcar_pagamento_restaurante' reserva.id %}"
+                                          onsubmit="return confirm('Atenção: queres mesmo reverter o pagamento de € {{ reserva.total|floatformat:2 }} e marcar esta reserva como não paga?');">
+                                        {% csrf_token %}
+                                        <button class="desativar" type="submit">
+                                            Marcar como não pago
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            {% else %}
+                                <span class="estado-pendente">Pendente</span>
+                                {% if reserva.estado != "cancelada" %}
+                                    <form method="post"
+                                          action="{% url 'marcar_pagamento_restaurante' reserva.id %}"
+                                          onsubmit="return confirm('Confirmas que recebeste € {{ reserva.total|floatformat:2 }} desta reserva?');">
+                                        {% csrf_token %}
+                                        <button class="pago" type="submit">
+                                            Marcar como pago
+                                        </button>
+                                    </form>
+                                {% endif %}
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7">Não existem reservas para esta data.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section>
+        <h2>Gestão de ementas</h2>
+        {% for ementa in ementas %}
+            <div class="ementa">
+                <div>
+                    <strong>Ementa de {{ ementa.data_refeicao|date:"d/m/Y" }}</strong>
+                    {% if ementa.ativa %}
+                        <span class="ativa">Ativa</span>
+                    {% else %}
+                        <span class="inativa">Inativa</span>
+                    {% endif %}
+                    {% if not ementa.publicada %}
+                        <span>— Ainda não publicada</span>
+                    {% endif %}
+                </div>
+                <form method="post"
+                      action="{% url 'alternar_ementa_restaurante' ementa.id %}"
+                      onsubmit="return confirm('Queres realmente {% if ementa.ativa %}desativar{% else %}ativar{% endif %} esta ementa?');">
+                    {% csrf_token %}
+                    {% if ementa.ativa %}
+                        <button class="desativar" type="submit">Desativar</button>
+                    {% elif ementa.publicada %}
+                        <button type="submit">Ativar</button>
+                    {% else %}
+                        <button type="button" disabled>Por publicar</button>
+                    {% endif %}
+                </form>
+            </div>
+        {% empty %}
+            <p>Não existem ementas futuras ou atuais.</p>
+        {% endfor %}
+    </section>
+</main>
+</body>
+</html>
