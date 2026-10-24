@@ -626,5 +626,27 @@
         {% endfor %}
     </section>
 </main>
+
+<script>
+    // Atualizar o painel do restaurante a cada 5 segundos.
+    setInterval(() => {
+        // Não atualizar enquanto o utilizador estiver a interagir
+        // com um formulário ou uma caixa de diálogo.
+        if (document.visibilityState !== "visible") {
+            return;
+        }
+
+        if (document.querySelector("form:focus-within")) {
+            return;
+        }
+
+        if (document.querySelector("input:focus, select:focus, textarea:focus")) {
+            return;
+        }
+
+        window.location.reload();
+    }, 5000);
+</script>
+
 </body>
 </html>
