@@ -787,14 +787,8 @@ def cancelar_reserva(request, reserva_id):
 
 @csrf_exempt
 @require_POST
+
 def registar_dispositivo(request):
-
-    if not request.user.is_authenticated:
-        return JsonResponse(
-            {"erro": "É necessário iniciar sessão."},
-            status=401
-        )
-
     token = request.POST.get("token", "").strip()
     plataforma = request.POST.get("plataforma", "").strip().lower()
 
@@ -810,23 +804,42 @@ def registar_dispositivo(request):
             status=400
         )
 
+    # Associar o dispositivo à conta ou ao visitante.
+    if request.user.is_authenticated:
+        utilizador = request.user
+        token_visitante = None
+    else:
+        utilizador = None
+        token_visitante = obter_token_visitante(request)
+
     dispositivo, criado = Dispositivo.objects.update_or_create(
         token=token,
         defaults={
-            "utilizador": request.user,
+            "utilizador": utilizador,
+            "visitante_token": token_visitante,
             "plataforma": plataforma,
             "ativo": True,
         }
     )
 
-    return JsonResponse(
-        {
-            "sucesso": True,
-            "criado": criado,
-            "mensagem": "Dispositivo registado com sucesso.",
-            "plataforma": dispositivo.plataforma,
-        }
-    )
+    resposta = JsonResponse({
+        "sucesso": True,
+        "criado": criado,
+        "mensagem": "Dispositivo registado com sucesso.",
+        "plataforma": dispositivo.plataforma,
+        "tipo_utilizador": (
+            "utilizador" if utilizador is not None else "visitante"
+        ),
+    })
+
+    if token_visitante:
+        definir_cookie_visitante(
+            resposta,
+            token_visitante,
+            request
+        )
+
+    return resposta
 
 
 # REGISTAR SUBSCRIÇÃO WEB PUSH

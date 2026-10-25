@@ -98,6 +98,7 @@ def enviar_webpush(subscricoes, titulo, mensagem, url="/"):
     return enviados
 
 
+
 def enviar_notificacao_utilizador(utilizador, titulo, mensagem):
     if utilizador is None:
         return 0
@@ -111,13 +112,19 @@ def enviar_notificacao_utilizador(utilizador, titulo, mensagem):
 
     for dispositivo in dispositivos:
         try:
-            enviar_notificacao(
+            resultado = enviar_notificacao(
                 dispositivo.token,
                 titulo,
                 mensagem
             )
-            enviados += 1
 
+            if resultado:
+                enviados += 1
+            else:
+                print(
+                    "Profisabores: Firebase não confirmou "
+                    "o envio da notificação."
+                )
         except Exception as erro:
             print(
                 "Profisabores: erro Firebase:",
@@ -142,13 +149,45 @@ def enviar_notificacao_visitante(token_visitante, titulo, mensagem):
     if not token_visitante:
         return 0
 
+    enviados = 0
+
+    # Notificações nativas FCM para Android/iOS.
+    dispositivos = Dispositivo.objects.filter(
+        visitante_token=token_visitante,
+        ativo=True
+    )
+
+    for dispositivo in dispositivos:
+        try:
+            resultado = enviar_notificacao(
+                dispositivo.token,
+                titulo,
+                mensagem
+            )
+
+            if resultado:
+                enviados += 1
+            else:
+                print(
+                    "Profisabores: Firebase não confirmou "
+                    "o envio da notificação."
+                )
+        except Exception as erro:
+            print(
+                "Profisabores: erro Firebase para visitante:",
+                erro
+            )
+
+    # Manter também as notificações Web Push existentes.
     subscricoes = SubscricaoWebPush.objects.filter(
         visitante_token=token_visitante,
         ativo=True
     )
 
-    return enviar_webpush(
+    enviados += enviar_webpush(
         subscricoes,
         titulo,
         mensagem
     )
+
+    return enviados

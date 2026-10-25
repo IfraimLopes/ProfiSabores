@@ -237,6 +237,13 @@ class Dispositivo(models.Model):
         blank=True
     )
 
+    visitante_token = models.CharField(
+        max_length=64,
+        null=True,
+        blank=True,
+        db_index=True
+    )
+
     PLATAFORMAS = [
         ("ios", "iOS"),
         ("android", "Android"),
