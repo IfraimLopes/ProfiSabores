@@ -11,6 +11,10 @@ from django.views.decorators.http import require_POST
 
 from menu.models import Ementa
 from reservas.models import Pagamento, Reserva
+from reservas.notificacoes import (
+    enviar_notificacao_utilizador,
+    enviar_notificacao_visitante,
+)
 
 
 def restaurante_required(view_func):
@@ -174,6 +178,38 @@ def marcar_pagamento(request, reserva_id):
                     "pago_por",
                 ]
             )
+
+    try:
+        if reserva.pagamento == "pago":
+            titulo = "Pagamento confirmado"
+            mensagem = (
+                f"O pagamento da tua reserva "
+                f"#{reserva.pk} foi confirmado."
+            )
+        else:
+            titulo = "Pagamento pendente"
+            mensagem = (
+                f"O pagamento da tua reserva "
+                f"#{reserva.pk} voltou a ficar pendente."
+            )
+
+        if reserva.utilizador_id:
+            enviar_notificacao_utilizador(
+                reserva.utilizador,
+                titulo,
+                mensagem,
+            )
+        elif reserva.visitante_token:
+            enviar_notificacao_visitante(
+                reserva.visitante_token,
+                titulo,
+                mensagem,
+            )
+    except Exception as erro:
+        print(
+            "Profisabores: falha ao notificar "
+            f"o pagamento da reserva #{reserva.pk}: {erro}"
+        )
 
     return redirect(
         f"/restaurante/?data={reserva.data.isoformat()}"

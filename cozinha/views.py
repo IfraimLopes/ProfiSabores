@@ -7,7 +7,10 @@ from django.shortcuts import get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.shortcuts import render
 from django.utils import timezone
-
+from reservas.notificacoes import (
+    enviar_notificacao_utilizador,
+    enviar_notificacao_visitante,
+)
 from reservas.models import Reserva
 
 
@@ -113,8 +116,42 @@ def atualizar_estado_preparacao(request, reserva_id):
         return HttpResponseForbidden("Estado de preparação inválido.")
 
     reserva = get_object_or_404(Reserva, pk=reserva_id)
+    estado_anterior = reserva.estado_preparacao
 
     reserva.estado_preparacao = estado
     reserva.save(update_fields=["estado_preparacao"])
+
+    if estado != estado_anterior:
+        if estado == "feito":
+            titulo = "Prato pronto!"
+            mensagem = (
+                f"A tua reserva #{reserva.pk}: "
+                "o prato está pronto."
+            )
+        else:
+            titulo = "Preparação iniciada"
+            mensagem = (
+                f"A preparação da tua reserva "
+                f"#{reserva.pk} está em processo."
+            )
+
+        try:
+            if reserva.utilizador_id:
+                enviar_notificacao_utilizador(
+                    reserva.utilizador,
+                    titulo,
+                    mensagem,
+                )
+            elif reserva.visitante_token:
+                enviar_notificacao_visitante(
+                    reserva.visitante_token,
+                    titulo,
+                    mensagem,
+                )
+        except Exception as erro:
+            print(
+                "Profisabores: falha ao notificar "
+                f"a reserva #{reserva.pk}: {erro}"
+            )
 
     return redirect("painel_cozinha")
