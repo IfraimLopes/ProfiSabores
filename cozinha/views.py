@@ -124,16 +124,10 @@ def atualizar_estado_preparacao(request, reserva_id):
     if estado != estado_anterior:
         if estado == "feito":
             titulo = "Prato pronto!"
-            mensagem = (
-                f"A tua reserva #{reserva.pk}: "
-                "o prato está pronto."
-            )
+            mensagem = "O teu prato está pronto."
         else:
             titulo = "Preparação iniciada"
-            mensagem = (
-                f"A preparação da tua reserva "
-                f"#{reserva.pk} está em processo."
-            )
+            mensagem = "A preparação do teu prato começou."
 
         try:
             if reserva.utilizador_id:

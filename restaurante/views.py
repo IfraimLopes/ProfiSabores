@@ -182,16 +182,10 @@ def marcar_pagamento(request, reserva_id):
     try:
         if reserva.pagamento == "pago":
             titulo = "Pagamento confirmado"
-            mensagem = (
-                f"O pagamento da tua reserva "
-                f"#{reserva.pk} foi confirmado."
-            )
+            mensagem = "O pagamento da tua reserva foi confirmado."
         else:
             titulo = "Pagamento pendente"
-            mensagem = (
-                f"O pagamento da tua reserva "
-                f"#{reserva.pk} voltou a ficar pendente."
-            )
+            mensagem = "O pagamento da tua reserva está pendente."
 
         if reserva.utilizador_id:
             enviar_notificacao_utilizador(
