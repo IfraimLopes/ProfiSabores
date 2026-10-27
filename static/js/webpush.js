@@ -9,6 +9,20 @@
         return;
     }
 
+    // As aplicações nativas usam notificações FCM via Capacitor.
+    const capacitor = window.Capacitor;
+    const ambienteNativo =
+        capacitor &&
+        typeof capacitor.isNativePlatform === "function" &&
+        capacitor.isNativePlatform();
+
+    if (ambienteNativo) {
+        estado.textContent =
+            "As notificações são geridas pela aplicação nativa.";
+        botao.hidden = true;
+        return;
+    }
+
     const chavePublica = botao.dataset.vapidPublicKey;
 
     // Deteção de iPhone/iPad e aplicação instalada.
