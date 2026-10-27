@@ -3069,3 +3069,8 @@ html.profisabores-ios-nativo body > header .button-header {
     flex: 0 0 auto;
     margin: 0;
 }
+
+/* Ajuste fino: afastar mais o cabeçalho da barra de estado no iOS nativo. */
+html.profisabores-ios-nativo body > header {
+    padding-top: calc(25px + env(safe-area-inset-top, 0px));
+}
