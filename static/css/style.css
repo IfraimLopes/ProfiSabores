@@ -3036,3 +3036,36 @@ body::-webkit-scrollbar {
 #reservaModal textarea {
     font-size: 16px !important;
 }
+
+/* Ajuste do cabeçalho apenas na aplicação iOS nativa. */
+html.profisabores-ios-nativo body > header {
+    padding-top: calc(5px + env(safe-area-inset-top, 0px));
+}
+
+/* Corrige o cabeçalho no iOS nativo, sem alterar o Android. */
+html.profisabores-ios-nativo body > header {
+    min-height: calc(80px + env(safe-area-inset-top, 0px));
+    padding-top: calc(5px + env(safe-area-inset-top, 0px));
+    padding-right: max(20px, env(safe-area-inset-right, 0px));
+    padding-left: max(20px, env(safe-area-inset-left, 0px));
+    justify-content: space-between;
+    gap: 12px;
+}
+
+html.profisabores-ios-nativo body > header .header-text {
+    flex: 0 1 auto;
+    min-width: 0;
+    margin: 0;
+}
+
+html.profisabores-ios-nativo body > header .header-text > img {
+    width: 110px;
+    height: 80px;
+    margin: 0;
+    object-fit: contain;
+}
+
+html.profisabores-ios-nativo body > header .button-header {
+    flex: 0 0 auto;
+    margin: 0;
+}

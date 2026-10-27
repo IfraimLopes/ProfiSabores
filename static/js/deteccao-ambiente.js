@@ -64,9 +64,13 @@
     }
 
     window.ProfisaboresAmbiente = {
-        plataforma: plataforma,
-        navegador: navegador,
-        tipoExecucao: tipoExecucao,
-        standalone: standalone
-    };
+    plataforma: plataforma,
+    navegador: navegador,
+    tipoExecucao: tipoExecucao,
+    standalone: standalone
+};
+
+if (plataforma === "ios" && tipoExecucao === "capacitor") {
+    document.documentElement.classList.add("profisabores-ios-nativo");
+}
 })();
