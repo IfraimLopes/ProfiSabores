@@ -211,14 +211,15 @@ def criar_reserva(request):
                 status=404
             )
 
-        # A reserva da ementa só pode ser efetuada no dia da refeição.
+        # Permitir reservas antecipadas e no próprio dia da refeição.
+        # Bloquear apenas quando a data da refeição já passou.
         hoje = timezone.localdate()
-        if ementa.data_refeicao != hoje:
+        if ementa.data_refeicao < hoje:
             return JsonResponse(
                 {
                     "erro": (
-                        "Esta ementa só pode ser reservada no dia "
-                        f"{ementa.data_refeicao.strftime('%d/%m/%Y')}."
+                        "Esta ementa já não pode ser reservada, "
+                        "pois a data da refeição já passou."
                     )
                 },
                 status=400

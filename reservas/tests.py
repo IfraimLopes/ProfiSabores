@@ -1,5 +1,5 @@
-from unittest.mock import patch
 from datetime import date
+from unittest.mock import patch
 from decimal import Decimal
 
 from django.contrib.auth import get_user_model
@@ -132,3 +132,76 @@ class RegistoDispositivoVisitanteTests(TestCase):
             dispositivo.visitante_token,
             resposta.cookies["profisabores_visitante"].value,
         )
+
+
+class DataReservaEmentaTests(TestCase):
+    def setUp(self):
+        from django.utils import timezone
+        from menu.models import Ementa
+
+        self.hoje = timezone.localdate()
+
+        self.ementa = Ementa.objects.create(
+            data_refeicao=self.hoje,
+            descricao="Ementa de teste",
+            preco_base_aluno=Decimal("5.00"),
+            preco_base_staff=Decimal("5.00"),
+            preco_base_visitante=Decimal("5.00"),
+            publicada=True,
+            ativa=True,
+        )
+
+        self.dados_reserva = {
+            "ementa_id": str(self.ementa.pk),
+            "nome": "Aluno Teste",
+            "telemovel": "+351912345678",
+        }
+
+        self.url = reverse("criar_reserva")
+
+    @patch("reservas.views.timezone.localdate")
+    def test_permite_reserva_antecipada(self, mock_hoje):
+        from datetime import timedelta
+
+        mock_hoje.return_value = self.hoje
+        self.ementa.data_refeicao = self.hoje + timedelta(days=1)
+        self.ementa.save(update_fields=["data_refeicao"])
+
+        resposta = self.client.post(self.url, self.dados_reserva)
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(Reserva.objects.count(), 1)
+
+        reserva = Reserva.objects.get()
+        self.assertEqual(reserva.ementa, self.ementa)
+        self.assertEqual(reserva.data, self.ementa.data_refeicao)
+        self.assertEqual(reserva.estado, "confirmada")
+
+    @patch("reservas.views.timezone.localdate")
+    def test_permite_reserva_no_proprio_dia(self, mock_hoje):
+        mock_hoje.return_value = self.hoje
+
+        resposta = self.client.post(self.url, self.dados_reserva)
+
+        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(Reserva.objects.count(), 1)
+
+        reserva = Reserva.objects.get()
+        self.assertEqual(reserva.ementa, self.ementa)
+        self.assertEqual(reserva.data, self.hoje)
+        self.assertEqual(reserva.estado, "confirmada")
+
+    @patch("reservas.views.timezone.localdate")
+    def test_rejeita_reserva_de_ementa_passada(self, mock_hoje):
+        from datetime import timedelta
+
+        mock_hoje.return_value = self.hoje
+        self.ementa.data_refeicao = self.hoje - timedelta(days=1)
+        self.ementa.save(update_fields=["data_refeicao"])
+
+        quantidade_antes = Reserva.objects.count()
+        resposta = self.client.post(self.url, self.dados_reserva)
+
+        self.assertEqual(resposta.status_code, 400)
+        self.assertIn("já não pode ser reservada", resposta.json()["erro"])
+        self.assertEqual(Reserva.objects.count(), quantidade_antes)
