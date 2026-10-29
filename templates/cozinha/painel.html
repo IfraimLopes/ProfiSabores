@@ -576,9 +576,10 @@
                                         <div class="item-preparacao">
                                             <button type="button"
                                                     class="botao-check"
+                                                       data-check-id="entrada-{{ reserva.id }}-{{ reserva.ementa.entrada.id }}"
+    
                                                     aria-label="Marcar entrada como concluída"
                                                     aria-pressed="false">✓</button>
-
                                             <span class="texto-preparacao">
                                                 {{ reserva.ementa.entrada.nome }}
                                             </span>
@@ -593,9 +594,10 @@
                                         <div class="item-preparacao">
                                             <button type="button"
                                                     class="botao-check"
+
+                                            data-check-id="prato-{{ reserva.id }}-{{ reserva.ementa.prato_principal.id }}"
                                                     aria-label="Marcar prato principal como concluído"
                                                     aria-pressed="false">✓</button>
-
                                             <span class="texto-preparacao">
                                                 {{ reserva.ementa.prato_principal.nome }}
                                             </span>
@@ -612,7 +614,8 @@
                                                 <div class="item-preparacao">
                                                     <button type="button"
                                                             class="botao-check"
-                                                            aria-label="Marcar extra como concluído"
+                                                    
+                                                    data-check-id="extra-{{ reserva.id }}-{{ reserva_extra.id }}"        aria-label="Marcar extra como concluído"
                                                             aria-pressed="false">✓</button>
 
                                                     <span class="texto-preparacao">
@@ -720,46 +723,70 @@
     </section>
 </div>
 
+
 <script>
-    // Checklist exclusivamente visual e temporária.
+document.addEventListener("DOMContentLoaded", function () {
+
+    const STORAGE_KEY = "profisabores_checklist_cozinha";
+
+    // Recuperar checklist guardada no navegador.
+    function obterChecklist() {
+        try {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+        } catch (erro) {
+            return {};
+        }
+    }
+
+    let checklist = obterChecklist();
+
+    // Aplicar os checks guardados.
     document.querySelectorAll(".botao-check").forEach(function (botao) {
+
+        const id = botao.dataset.checkId;
+
+        if (!id) return;
+
+        const texto = botao.nextElementSibling;
+
+        if (checklist[id]) {
+            botao.classList.add("concluido");
+            texto.classList.add("concluido");
+            botao.setAttribute("aria-pressed", "true");
+        }
+
         botao.addEventListener("click", function () {
-            const texto = this.nextElementSibling;
 
-            const concluido = this.classList.toggle("concluido");
+            const concluido = !botao.classList.contains("concluido");
 
+            botao.classList.toggle("concluido", concluido);
             texto.classList.toggle("concluido", concluido);
 
-            this.setAttribute("aria-pressed", concluido ? "true" : "false");
+            botao.setAttribute(
+                "aria-pressed",
+                concluido ? "true" : "false"
+            );
 
-            // Atualiza o intervalo de atualização automática.
-            atualizarEstadoRefresh();
+            if (concluido) {
+                checklist[id] = true;
+            } else {
+                delete checklist[id];
+            }
+
+            // Guardar no navegador.
+            localStorage.setItem(
+                STORAGE_KEY,
+                JSON.stringify(checklist)
+            );
         });
     });
 
-    // Não atualizar a página enquanto houver itens assinalados.
-    let refreshInterval = setInterval(atualizarPagina, 5000);
+    // Atualizar a página automaticamente a cada 5 segundos.
+    setInterval(function () {
+        window.location.reload();
+    }, 5000);
 
-    function atualizarPagina() {
-        const existemItensMarcados =
-            document.querySelector(".botao-check.concluido");
-
-        if (!existemItensMarcados) {
-            window.location.reload();
-        }
-    }
-
-    function atualizarEstadoRefresh() {
-        const existemItensMarcados =
-            document.querySelector(".botao-check.concluido");
-
-        if (existemItensMarcados && refreshInterval) {
-            clearInterval(refreshInterval);
-            refreshInterval = null;
-        } else if (!existemItensMarcados && !refreshInterval) {
-            refreshInterval = setInterval(atualizarPagina, 5000);
-        }
-    }
+});
 </script>
 </body>
 </html>
