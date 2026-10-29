@@ -368,14 +368,6 @@
             }
         }
 
-        .reserva-cancelada {
-            opacity: 0.55;
-            background-color: #e5e7eb;
-        }
-
-        .reserva-cancelada td {
-            color: #6b7280;
-        }
     </style>
 </head>
 
@@ -510,7 +502,7 @@
                     </thead>
                     <tbody>
                         {% for reserva in reservas %}
-                            <tr class="{% if reserva.estado == 'cancelada' %}reserva-cancelada{% endif %}">
+                            <tr>
                                 <td>{{ reserva.criada_em|date:"d/m/Y" }}</td>
                                 <td class="hora">{{ reserva.criada_em|date:"H:i" }}</td>
 
