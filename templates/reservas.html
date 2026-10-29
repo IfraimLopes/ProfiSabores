@@ -508,6 +508,20 @@ async function carregarReservas() {
                                 ${escapeHtml(item)}
                             </h2>
 
+                            ${reserva.ementa?.entrada ? `
+                                <p class="reserva-entrada">
+                                    <strong>Entrada:</strong>
+                                    ${escapeHtml(reserva.ementa.entrada)}
+                                </p>
+                            ` : ""}
+
+                            ${reserva.ementa?.prato_principal ? `
+                                <p class="reserva-prato-principal">
+                                    <strong>Prato principal:</strong>
+                                    ${escapeHtml(reserva.ementa.prato_principal)}
+                                </p>
+                            ` : ""}
+
                         </div>
 
 

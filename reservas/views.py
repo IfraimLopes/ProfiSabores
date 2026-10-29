@@ -458,6 +458,14 @@ def criar_reserva(request):
                             reserva.ementa.data_refeicao
                         ),
                         "descricao": reserva.ementa.descricao,
+                        "entrada": (
+                            reserva.ementa.entrada.nome
+                            if reserva.ementa.entrada else None
+                        ),
+                        "prato_principal": (
+                            reserva.ementa.prato_principal.nome
+                            if reserva.ementa.prato_principal else None
+                        ),
                     }
                     if reserva.ementa else None
                 ),
