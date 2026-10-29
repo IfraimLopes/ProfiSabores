@@ -12,6 +12,40 @@
             padding: 0;
         }
 
+        .item-preparacao {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin: 5px 0;
+    line-height: 1.5;
+}
+
+        .botao-check {
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            border: 1px solid #9ca3af;
+            border-radius: 6px;
+            background: white;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .botao-check.concluido {
+            background: #16a34a;
+            border-color: #16a34a;
+        }
+
+        .texto-preparacao.concluido {
+            text-decoration: line-through;
+            color: #9ca3af;
+            opacity: 0.7;
+        }
         body {
             font-family: Arial, Helvetica, sans-serif;
             background: linear-gradient(135deg, #8bc2f5 0%, #b3daff 50%, #ffffff 100%);
@@ -532,39 +566,71 @@
                                     {% endif %}
                                 </td>
 
+                                
                                 <td class="refeicao">
-                                    {% if reserva.ementa %}
-                                        <strong>🥗 Entrada:</strong>
-                                        {% if reserva.ementa.entrada %}
-                                            {{ reserva.ementa.entrada.nome }}
-                                        {% else %}
-                                            Não definida
-                                        {% endif %}
+                                {% if reserva.ementa %}
 
-                                        <strong>🍛 Prato principal:</strong>
-                                        {% if reserva.ementa.prato_principal %}
-                                            {{ reserva.ementa.prato_principal.nome }}
-                                        {% else %}
-                                            Não definido
-                                        {% endif %}
+                                    <strong>🥗 Entrada:</strong>
 
-                                        {% with extras_reserva=reserva.extras.all %}
-                                            {% if extras_reserva %}
-                                                <strong>➕ Extras:</strong>
-                                                <ul>
-                                                    {% for reserva_extra in extras_reserva %}
-                                                        <li>
-                                                            {{ reserva_extra.extra.nome }}
-                                                            × {{ reserva_extra.quantidade }}
-                                                        </li>
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endif %}
-                                        {% endwith %}
+                                    {% if reserva.ementa.entrada %}
+                                        <div class="item-preparacao">
+                                            <button type="button"
+                                                    class="botao-check"
+                                                    aria-label="Marcar entrada como concluída"
+                                                    aria-pressed="false">✓</button>
+
+                                            <span class="texto-preparacao">
+                                                {{ reserva.ementa.entrada.nome }}
+                                            </span>
+                                        </div>
                                     {% else %}
-                                        Ementa não associada
+                                        Não definida
                                     {% endif %}
-                                </td>
+
+                                    <strong>🍛 Prato principal:</strong>
+
+                                    {% if reserva.ementa.prato_principal %}
+                                        <div class="item-preparacao">
+                                            <button type="button"
+                                                    class="botao-check"
+                                                    aria-label="Marcar prato principal como concluído"
+                                                    aria-pressed="false">✓</button>
+
+                                            <span class="texto-preparacao">
+                                                {{ reserva.ementa.prato_principal.nome }}
+                                            </span>
+                                        </div>
+                                    {% else %}
+                                        Não definido
+                                    {% endif %}
+
+                                    {% with extras_reserva=reserva.extras.all %}
+                                        {% if extras_reserva %}
+                                            <strong>➕ Extras:</strong>
+
+                                            {% for reserva_extra in extras_reserva %}
+                                                <div class="item-preparacao">
+                                                    <button type="button"
+                                                            class="botao-check"
+                                                            aria-label="Marcar extra como concluído"
+                                                            aria-pressed="false">✓</button>
+
+                                                    <span class="texto-preparacao">
+                                                        {{ reserva_extra.extra.nome }}
+                                                        × {{ reserva_extra.quantidade }}
+                                                    </span>
+                                                </div>
+                                            {% endfor %}
+                                        {% endif %}
+                                    {% endwith %}
+
+                                {% else %}
+                                    Ementa não associada
+                                {% endif %}
+                            </td>
+
+
+
 
                                 <td class="alergias">
                                     {% if reserva.alergias %}
@@ -655,9 +721,45 @@
 </div>
 
 <script>
-    setInterval(function () {
-        window.location.reload();
-    }, 5000);
+    // Checklist exclusivamente visual e temporária.
+    document.querySelectorAll(".botao-check").forEach(function (botao) {
+        botao.addEventListener("click", function () {
+            const texto = this.nextElementSibling;
+
+            const concluido = this.classList.toggle("concluido");
+
+            texto.classList.toggle("concluido", concluido);
+
+            this.setAttribute("aria-pressed", concluido ? "true" : "false");
+
+            // Atualiza o intervalo de atualização automática.
+            atualizarEstadoRefresh();
+        });
+    });
+
+    // Não atualizar a página enquanto houver itens assinalados.
+    let refreshInterval = setInterval(atualizarPagina, 5000);
+
+    function atualizarPagina() {
+        const existemItensMarcados =
+            document.querySelector(".botao-check.concluido");
+
+        if (!existemItensMarcados) {
+            window.location.reload();
+        }
+    }
+
+    function atualizarEstadoRefresh() {
+        const existemItensMarcados =
+            document.querySelector(".botao-check.concluido");
+
+        if (existemItensMarcados && refreshInterval) {
+            clearInterval(refreshInterval);
+            refreshInterval = null;
+        } else if (!existemItensMarcados && !refreshInterval) {
+            refreshInterval = setInterval(atualizarPagina, 5000);
+        }
+    }
 </script>
 </body>
 </html>
