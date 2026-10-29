@@ -37,7 +37,7 @@ def painel_cozinha(request):
     reservas = list(
         Reserva.objects.filter(
             data=data_atual,
-            estado="confirmada",
+            estado__in=["confirmada", "cancelada"],
             ementa__isnull=False,
         )
         .select_related(
