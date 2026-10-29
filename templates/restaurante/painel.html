@@ -498,7 +498,8 @@
                 <thead>
                     <tr>
                         <th>Cliente</th>
-                        <th>Hora</th>
+                        <th>Data da marcação</th>
+                        <th>Hora de chegada</th>
                         <th>Conta</th>
                         <th>Refeição e extras</th>
                         <th>Preparação</th>
@@ -513,6 +514,7 @@
                         <td>
                             <strong>{{ reserva.nome }}</strong><br>
                         </td>
+                        <td>{{ reserva.criada_em|date:"d/m/Y" }}</td>
                         <td>{{ reserva.criada_em|date:"H:i" }}</td>
                         <td>
                             {% if not reserva.utilizador %}
@@ -591,7 +593,7 @@
                         </td>
                     </tr>
                 {% empty %}
-                    <tr><td colspan="8">Não existem reservas para esta data.</td></tr>
+                    <tr><td colspan="9">Não existem reservas para esta data.</td></tr>
                 {% endfor %}
                 </tbody>
             </table>
