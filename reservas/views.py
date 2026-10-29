@@ -211,6 +211,19 @@ def criar_reserva(request):
                 status=404
             )
 
+        # A reserva da ementa só pode ser efetuada no dia da refeição.
+        hoje = timezone.localdate()
+        if ementa.data_refeicao != hoje:
+            return JsonResponse(
+                {
+                    "erro": (
+                        "Esta ementa só pode ser reservada no dia "
+                        f"{ementa.data_refeicao.strftime('%d/%m/%Y')}."
+                    )
+                },
+                status=400
+            )
+
         if tipo_utilizador == "visitante":
             preco = ementa.preco_base_visitante
         elif tipo_utilizador == "staff":

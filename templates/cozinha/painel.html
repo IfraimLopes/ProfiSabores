@@ -488,6 +488,7 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>Data da marcação</th>
                             <th>Hora de chegada</th>
 
                             <th>Nome</th>
@@ -501,6 +502,7 @@
                     <tbody>
                         {% for reserva in reservas %}
                             <tr>
+                                <td>{{ reserva.criada_em|date:"d/m/Y" }}</td>
                                 <td class="hora">{{ reserva.criada_em|date:"H:i" }}</td>
 
                                 <td class="nome">{{ reserva.nome }}</td>
