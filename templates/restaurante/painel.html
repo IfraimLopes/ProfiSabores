@@ -545,7 +545,13 @@
                                 — € {{ item.preco|floatformat:2 }} cada
                             {% endfor %}
                         </td>
-                        <td>{{ reserva.get_estado_preparacao_display }}</td>
+                        <td>
+                            {% if reserva.estado_preparacao == "feito" %}
+                                Prato pronto a servir
+                            {% else %}
+                                Em processo
+                            {% endif %}
+                        </td>
                         <td>
                             {% if reserva.estado == "cancelada" %}
                                 <span class="estado-cancelada">✕ Cancelada</span>
