@@ -235,7 +235,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (precoReserva) {
                 precoReserva.textContent =
-                    `€ ${precoAtual.toFixed(2).replace(".", ",")}`;
+                    `🍴 ${precoAtual.toFixed(2).replace(".", ",")}`;
             }
 
             if (alergiasInput) {
@@ -348,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
             precoTexto.textContent =
                 `+${(
                     Number.isFinite(preco) ? preco : 0
-                ).toFixed(2).replace(".", ",")} €`;
+                ).toFixed(2).replace(".", ",")} 🍴`;
 
             label.append(checkbox, conteudo, precoTexto);
             extrasLista.appendChild(label);
@@ -389,7 +389,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
         totalElement.textContent =
-            `€ ${(precoAtual + totalExtras).toFixed(2).replace(".", ",")}`;
+            `🍴 ${(precoAtual + totalExtras).toFixed(2).replace(".", ",")}`;
     }
 
 

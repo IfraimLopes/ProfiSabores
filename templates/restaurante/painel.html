@@ -487,7 +487,7 @@
             Reservas: <strong>{{ total_reservas }}</strong> |
             Pendentes: <strong>{{ total_pendentes }}</strong> |
             Pagas: <strong>{{ total_pagos }}</strong> |
-            Recebido: <strong>€ {{ total_recebido|floatformat:2 }}</strong> | Por receber: <strong>€ {{ total_a_receber|floatformat:2 }}</strong>
+            Recebido: <strong>🍴 {{ total_recebido|floatformat:2 }}</strong> | Por receber: <strong>🍴 {{ total_a_receber|floatformat:2 }}</strong>
         </p>
     </section>
 
@@ -544,7 +544,7 @@
 
                             {% for item in reserva.extras.all %}
                                 <br>{{ item.extra.nome }} × {{ item.quantidade }}
-                                — € {{ item.preco|floatformat:2 }} cada
+                                — 🍴 {{ item.preco|floatformat:2 }} cada
                             {% endfor %}
                         </td>
                         <td>
@@ -561,7 +561,7 @@
                                 <span class="estado-confirmada">✓ Confirmada</span>
                             {% endif %}
                         </td>
-                        <td class="total">€ {{ reserva.total|floatformat:2 }}</td>
+                        <td class="total">🍴 {{ reserva.total|floatformat:2 }}</td>
                         <td>
                             {% if reserva.estado == "cancelada" %}
                                 {% if reserva.pagamento == "pago" %}
@@ -583,7 +583,7 @@
                                 <span class="estado-pendente">Pendente</span>
                                 <form method="post"
                                       action="{% url 'marcar_pagamento_restaurante' reserva.id %}"
-                                      onsubmit="return confirm('Confirmas que recebeste € {{ reserva.total|floatformat:2 }} desta reserva?');">
+                                      onsubmit="return confirm('Confirmas que recebeste 🍴 {{ reserva.total|floatformat:2 }} desta reserva?');">
                                     {% csrf_token %}
                                     <button class="pago" type="submit">
                                         Marcar como pago

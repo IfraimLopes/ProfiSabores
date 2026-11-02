@@ -394,7 +394,7 @@ async function carregarReservas() {
                                         <li>
                                             ${escapeHtml(extra.nome)}
                                             × ${Number(extra.quantidade) || 1}
-                                            — € ${formatarPreco(extra.subtotal)}
+                                            — 🍴 ${formatarPreco(extra.subtotal)}
                                         </li>
                                     `).join("")}
                                 </ul>
@@ -592,7 +592,7 @@ ${extrasHtml}
                                 </small>
 
                                 <strong>
-                                    € ${formatarPreco(
+                                    🍴 ${formatarPreco(
                                         reserva.total
                                     )}
                                 </strong>

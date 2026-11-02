@@ -319,7 +319,7 @@ class Pagamento(models.Model):
     )
 
     def __str__(self):
-        return f"Pagamento #{self.id} - {self.reserva.nome} - {self.valor}€"
+        return f"Pagamento #{self.id} - {self.reserva.nome} - {self.valor}🍴"
 
 class SubscricaoWebPush(models.Model):
 
