@@ -242,16 +242,15 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 # Email
 
-MAILERS = {
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = os.environ["BREVO_SMTP_HOST"]
+EMAIL_PORT = int(os.environ["BREVO_SMTP_PORT"])
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ["BREVO_SMTP_USER"]
+EMAIL_HOST_PASSWORD = os.environ["BREVO_SMTP_KEY"]
+EMAIL_TIMEOUT = 20
 
-    'default': {
-
-        'BACKEND':
-        'django.core.mail.backends.console.EmailBackend',
-
-    },
-
-}
+DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
 
 
 # Web Push — notificações do navegador

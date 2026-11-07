@@ -317,3 +317,9 @@ msgstr "No menu has been published for tomorrow yet."
 
 msgid "Ainda não existe uma ementa publicada para depois de amanhã."
 msgstr "No menu has been published for the day after tomorrow yet."
+
+msgid "Aluno"
+msgstr "Student"
+
+msgid "Staff"
+msgstr "Staff"

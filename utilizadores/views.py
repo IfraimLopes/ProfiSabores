@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import secrets
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -11,7 +12,13 @@ from django.conf import settings
 from django.utils import translation
 
 from menu.models import Curso
-from .models import Perfil, CodigoVerificacao
+from .models import (
+    Aluno,
+    Staff,
+    Perfil,
+    CodigoVerificacao,
+    PreferenciasUtilizador,
+)
 
 @require_POST
 def alterar_idioma(request):
@@ -23,12 +30,10 @@ def alterar_idioma(request):
         return redirect("perfil")
 
     if request.user.is_authenticated:
-        try:
-            perfil = request.user.perfil
-            perfil.idioma = idioma
-            perfil.save(update_fields=["idioma"])
-        except Perfil.DoesNotExist:
-            pass
+        PreferenciasUtilizador.objects.update_or_create(
+            utilizador=request.user,
+            defaults={"idioma": idioma},
+        )
 
     translation.activate(idioma)
     request.session["django_language"] = idioma
@@ -254,9 +259,6 @@ def registar(request):
 
 
 
-import secrets
-
-
 def gerar_codigo():
     """Gera um PIN numérico de 6 dígitos."""
     return f"{secrets.randbelow(1_000_000):06d}"
@@ -351,68 +353,92 @@ def verificar_registo(request):
 # LOGIN
 # ============================================================
 
+def obter_utilizador_aluno_staff(email):
+    """
+    Devolve o User associado a uma conta Aluno ou Staff.
+    Não permite autenticação de contas operacionais.
+    """
+
+    aluno = (
+        Aluno.objects
+        .select_related("utilizador")
+        .filter(email__iexact=email)
+        .first()
+    )
+
+    staff = (
+        Staff.objects
+        .select_related("utilizador")
+        .filter(email__iexact=email)
+        .first()
+    )
+
+    # O mesmo email não pode estar associado aos dois tipos.
+    if bool(aluno) == bool(staff):
+        return None
+
+    conta = aluno or staff
+    utilizador = conta.utilizador
+
+    if not utilizador.is_active:
+        return None
+
+    if utilizador.email.strip().lower() != email:
+        return None
+
+    return utilizador
+
+
 @csrf_exempt
 @require_POST
 def login_utilizador(request):
     email = request.POST.get("email", "").strip().lower()
-    password = request.POST.get("password", "")
 
-    if not email or not password:
+    if not email:
         return JsonResponse(
-            {"erro": "O e-mail e a palavra-passe são obrigatórios."},
+            {"erro": "O e-mail é obrigatório."},
             status=400
         )
 
-    try:
-        utilizador = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return JsonResponse(
-            {"erro": "E-mail ou palavra-passe incorretos."},
-            status=401
+    utilizador = obter_utilizador_aluno_staff(email)
+
+    if utilizador:
+        # Invalidar todos os códigos de login anteriores.
+        CodigoVerificacao.objects.filter(
+            email__iexact=email,
+            finalidade="login",
+            usado=False
+        ).update(usado=True)
+
+        codigo = gerar_codigo()
+
+        CodigoVerificacao.objects.create(
+            email=email,
+            codigo=codigo,
+            finalidade="login",
+            expira_em=timezone.now() + timedelta(minutes=10)
         )
 
-    if not utilizador.is_active:
-        return JsonResponse(
-            {"erro": "A conta ainda não foi verificada."},
-            status=403
+        send_mail(
+            "Código de acesso - Restaurante Profitecla",
+            (
+                f"O seu código de acesso é: {codigo}\n\n"
+                "Este código é válido durante 10 minutos.\n"
+                "Se não solicitou este código, ignore esta mensagem."
+            ),
+            None,
+            [email],
+            fail_silently=False,
         )
 
-    utilizador_autenticado = authenticate(
-        request,
-        username=utilizador.username,
-        password=password
-    )
-
-    if utilizador_autenticado is None:
-        return JsonResponse(
-            {"erro": "E-mail ou palavra-passe incorretos."},
-            status=401
-        )
-
-    codigo = gerar_codigo()
-
-    CodigoVerificacao.objects.create(
-        email=email,
-        codigo=codigo,
-        finalidade="login",
-        expira_em=timezone.now() + timedelta(minutes=10)
-    )
-
-    send_mail(
-        "Código de acesso - Restaurante Profitecla",
-        (
-            f"O seu código de acesso é: {codigo}\n\n"
-            "Este código é válido durante 10 minutos."
-        ),
-        None,
-        [email],
-        fail_silently=False,
-    )
-
+    # Resposta genérica para não revelar se o endereço está registado.
     return JsonResponse(
         {
             "sucesso": True,
-            "mensagem": "Código enviado para o seu e-mail.",
+            "mensagem": (
+                "Se existir uma conta ativa associada a este e-mail, "
+                "receberá um código de acesso."
+            ),
             "email": email,
             "redirect": "/utilizadores/verificar-login/"
         },
@@ -432,10 +458,16 @@ def verificar_login(request):
             status=400
         )
 
+    if len(codigo_digitado) != 6 or not codigo_digitado.isdigit():
+        return JsonResponse(
+            {"erro": "O código deve conter exatamente seis dígitos."},
+            status=400
+        )
+
     codigo_obj = (
         CodigoVerificacao.objects
         .filter(
-            email=email,
+            email__iexact=email,
             finalidade="login",
             usado=False
         )
@@ -445,40 +477,57 @@ def verificar_login(request):
 
     if not codigo_obj:
         return JsonResponse(
-            {"erro": "Não existe um código de login válido."},
+            {"erro": "Não existe um código de login válido. Solicite um novo."},
             status=400
         )
 
     if timezone.now() > codigo_obj.expira_em:
+        codigo_obj.usado = True
+        codigo_obj.save(update_fields=["usado"])
+
         return JsonResponse(
             {"erro": "O código expirou. Faça login novamente."},
             status=400
         )
 
     if codigo_obj.tentativas >= 5:
+        codigo_obj.usado = True
+        codigo_obj.save(update_fields=["usado"])
+
         return JsonResponse(
-            {"erro": "Limite de tentativas atingido."},
+            {"erro": "Limite de tentativas atingido. Solicite um novo código."},
             status=400
         )
 
     codigo_obj.tentativas += 1
     codigo_obj.save(update_fields=["tentativas"])
 
-    if codigo_digitado != codigo_obj.codigo:
+    if not secrets.compare_digest(
+        codigo_digitado,
+        codigo_obj.codigo
+    ):
         return JsonResponse(
             {"erro": "Código incorreto."},
             status=400
         )
 
-    try:
-        utilizador = User.objects.get(email=email)
-    except User.DoesNotExist:
+    utilizador = obter_utilizador_aluno_staff(email)
+
+    if not utilizador:
+        codigo_obj.usado = True
+        codigo_obj.save(update_fields=["usado"])
+
         return JsonResponse(
-            {"erro": "Utilizador não encontrado."},
-            status=404
+            {"erro": "A conta não está disponível para autenticação."},
+            status=403
         )
 
-    login(request, utilizador)
+    # Autenticação por sessão, sem exigir palavra-passe.
+    login(
+        request,
+        utilizador,
+        backend="django.contrib.auth.backends.ModelBackend"
+    )
 
     codigo_obj.usado = True
     codigo_obj.save(update_fields=["usado"])
@@ -719,37 +768,49 @@ def pagina_registar(request):
 # ============================================================
 
 def pagina_perfil(request):
-    from django.conf import settings
-
-    perfil = None
     utilizador = None
+    nome_utilizador = "Visitante"
     tipo_utilizador = "visitante"
 
     if request.user.is_authenticated:
         utilizador = request.user
 
         try:
-            perfil = request.user.perfil
-        except Perfil.DoesNotExist:
-            perfil = None
+            aluno = utilizador.aluno
+            nome_utilizador = aluno.nome
+            tipo_utilizador = "aluno"
 
-        if perfil:
-            tipo_utilizador = perfil.tipo
+        except Aluno.DoesNotExist:
+            try:
+                staff = utilizador.staff
+                nome_utilizador = staff.nome
+                tipo_utilizador = "staff"
+
+            except Staff.DoesNotExist:
+                nome_utilizador = (
+                    utilizador.get_full_name()
+                    or utilizador.username
+                )
+                tipo_utilizador = "conta_interna"
 
     idioma_atual = request.COOKIES.get(
         settings.LANGUAGE_COOKIE_NAME,
         settings.LANGUAGE_CODE,
     )
 
-    if perfil and perfil.idioma:
-        idioma_atual = perfil.idioma
+    if utilizador:
+        try:
+            preferencias = utilizador.preferencias_utilizador
+            idioma_atual = preferencias.idioma
+        except PreferenciasUtilizador.DoesNotExist:
+            pass
 
     return render(
         request,
         "perfil.html",
         {
             "utilizador": utilizador,
-            "perfil": perfil,
+            "nome_utilizador": nome_utilizador,
             "tipo_utilizador": tipo_utilizador,
             "idiomas_disponiveis": settings.LANGUAGES,
             "idioma_atual": idioma_atual,

@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.utils import translation
 
+from .models import PreferenciasUtilizador
+
 
 class IdiomaPerfilMiddleware:
     """
-    Aplica o idioma guardado no perfil do utilizador autenticado.
+    Aplica o idioma guardado nas preferências do utilizador.
     Para visitantes, respeita o idioma selecionado no cookie.
     """
 
@@ -16,9 +18,12 @@ class IdiomaPerfilMiddleware:
 
         if request.user.is_authenticated:
             try:
-                perfil = request.user.perfil
-                idioma = perfil.idioma
-            except Exception:
+                preferencias = (
+                    request.user.preferencias_utilizador
+                )
+                idioma = preferencias.idioma
+
+            except PreferenciasUtilizador.DoesNotExist:
                 idioma = None
 
         if idioma not in dict(settings.LANGUAGES):

@@ -316,3 +316,9 @@ msgstr "Todavía no hay un menú publicado para mañana."
 
 msgid "Ainda não existe uma ementa publicada para depois de amanhã."
 msgstr "Todavía no hay un menú publicado para pasado mañana."
+
+msgid "Aluno"
+msgstr "Estudiante"
+
+msgid "Staff"
+msgstr "Personal"

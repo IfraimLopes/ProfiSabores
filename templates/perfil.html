@@ -131,15 +131,8 @@
 
                 <div>
                     <small>{% trans "Nome" %}</small>
-
                     <strong>
-                        {% if request.user.is_authenticated and perfil %}
-                            {{ perfil.nome_completo }}
-                        {% elif tipo_utilizador == "visitante" %}
-                            {% trans "Visitante" %}
-                        {% else %}
-                            {% trans "Não definido" %}
-                        {% endif %}
+                      {{ nome_utilizador }}
                     </strong>
                 </div>
 
@@ -198,12 +191,14 @@
                     <small>{% trans "Tipo de conta" %}</small>
 
                     <strong>
-                        {% if not request.user.is_authenticated %}
+                       {% if tipo_utilizador == "visitante" %}
                             {% trans "Visitante" %}
-                        {% elif perfil.tipo == "staff" %}
-                            Staff
-                        {% elif perfil %}
-                            Aluno
+                        {% elif tipo_utilizador == "aluno" %}
+                            {% trans "Aluno" %}
+                        {% elif tipo_utilizador == "staff" %}
+                            {% trans "Staff" %}
+                        {% elif tipo_utilizador == "conta_interna" %}
+                            {% trans "Conta interna" %}
                         {% else %}
                             {% trans "Não definido" %}
                         {% endif %}
@@ -231,13 +226,19 @@
                 id="webPushButton"
                 class="webpush-button"
                 data-vapid-public-key="{{ webpush_vapid_public_key }}"
+                data-language="{{ LANGUAGE_CODE }}"
             >
                 <i class="fa-solid fa-bell"></i>
                 {% trans "Ativar notificações" %}
             </button>
 
-            <p id="webPushStatus" class="webpush-status" role="status" aria-live="polite">
-                As notificações do navegador ainda não foram verificadas.
+            <p
+                id="webPushStatus"
+                class="webpush-status"
+                role="status"
+                aria-live="polite"
+            >
+                {% trans "As notificações do navegador ainda não foram verificadas." %}
             </p>
 
             <form id="webPushCsrfForm" hidden>

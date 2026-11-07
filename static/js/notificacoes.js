@@ -14,8 +14,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        
-        
+
+
         const { PushNotifications, LocalNotifications } =
         window.Capacitor.Plugins;
 
@@ -87,28 +87,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 try {
 
-                    const resposta =
-                        await fetch(
-                            "/reservas/dispositivo/",
-                            {
-                                method: "POST",
 
-                                headers: {
-                                    "Content-Type":
-                                        "application/x-www-form-urlencoded"
-                                },
-
-                                body:
-                                    new URLSearchParams({
-                                        token:
-                                            token.value,
-
-                                        plataforma:
-                                            "android"
-                                    })
-                            }
-                        );
-
+                     const resposta = await fetch("/reservas/dispositivo/", {
+                            method: "POST",
+                            credentials: "same-origin",
+                            headers: {
+                                "Content-Type": "application/x-www-form-urlencoded"
+                            },
+                            body: new URLSearchParams({
+                                token: token.value,
+                                plataforma: "android"
+                            })
+                });
 
                     const resultado =
                         await resposta.json();
@@ -117,8 +107,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     if (!resposta.ok) {
 
                         console.error(
-                            "Profisabores: erro ao registar dispositivo:",
-                            resultado
+                             "Profisabores: erro ao registar dispositivo:",
+                            resposta.status,
+                            JSON.stringify(resultado)
                         );
 
                         return;

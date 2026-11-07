@@ -5,6 +5,81 @@
     const estado = document.getElementById("webPushStatus");
     const formularioCSRF = document.getElementById("webPushCsrfForm");
 
+    const idioma = (
+        botao.dataset.language ||
+        document.documentElement.lang ||
+        "pt-pt"
+    ).toLowerCase();
+
+    const traducoes = {
+        "pt-pt": {
+            nativo: "As notificações são geridas pela aplicação nativa.",
+            iphone: "Para ativares as notificações no iPhone, adiciona primeiro o Profisabores ao ecrã principal. No Safari, toca em Partilhar, escolhe Adicionar ao ecrã principal e abre o Profisabores através do novo ícone.",
+            guardar: "Não foi possível guardar a subscrição.",
+            navegador: "Este navegador não suporta notificações Web Push.",
+            https: "As notificações exigem HTTPS ou localhost em desenvolvimento.",
+            chave: "A chave pública de notificações não está configurada.",
+            preparar: "A preparar as notificações…",
+            bloqueadas: "As notificações estão bloqueadas nas definições do navegador.",
+            negar: "Não autorizaste as notificações.",
+            ativadas: "Notificações ativadas",
+            ativa: "As notificações do navegador estão ativadas para esta conta.",
+            erro: "Não foi possível ativar as notificações. Tenta novamente.",
+            autorizadas: "Já autorizaste as notificações neste navegador. Podes confirmar a subscrição através do botão."
+        },
+        en: {
+            nativo: "Notifications are managed by the native app.",
+            iphone: "To enable notifications on iPhone, first add Profisabores to your Home Screen. In Safari, tap Share, choose Add to Home Screen, then open Profisabores using the new icon.",
+            guardar: "Unable to save the subscription.",
+            navegador: "This browser does not support Web Push notifications.",
+            https: "Notifications require HTTPS or localhost during development.",
+            chave: "The notification public key is not configured.",
+            preparar: "Preparing notifications…",
+            bloqueadas: "Notifications are blocked in your browser settings.",
+            negar: "You did not allow notifications.",
+            ativadas: "Notifications enabled",
+            ativa: "Browser notifications are enabled for this account.",
+            erro: "Could not enable notifications. Please try again.",
+            autorizadas: "You have already allowed notifications in this browser. You can confirm the subscription using the button."
+        },
+        es: {
+            nativo: "Las notificaciones se gestionan desde la aplicación nativa.",
+            iphone: "Para activar las notificaciones en el iPhone, primero añade Profisabores a la pantalla de inicio. En Safari, toca Compartir, selecciona Añadir a pantalla de inicio y abre Profisabores desde el nuevo icono.",
+            guardar: "No se pudo guardar la suscripción.",
+            navegador: "Este navegador no admite notificaciones Web Push.",
+            https: "Las notificaciones requieren HTTPS o localhost durante el desarrollo.",
+            chave: "La clave pública de notificaciones no está configurada.",
+            preparar: "Preparando las notificaciones…",
+            bloqueadas: "Las notificaciones están bloqueadas en la configuración del navegador.",
+            negar: "No has permitido las notificaciones.",
+            ativadas: "Notificaciones activadas",
+            ativa: "Las notificaciones del navegador están activadas para esta cuenta.",
+            erro: "No se pudieron activar las notificaciones. Inténtalo de nuevo.",
+            autorizadas: "Ya has permitido las notificaciones en este navegador. Puedes confirmar la suscripción con el botón."
+        },
+        fr: {
+            nativo: "Les notifications sont gérées par l’application native.",
+            iphone: "Pour activer les notifications sur iPhone, ajoutez d’abord Profisabores à l’écran d’accueil. Dans Safari, touchez Partager, choisissez Sur l’écran d’accueil, puis ouvrez Profisabores avec la nouvelle icône.",
+            guardar: "Impossible d’enregistrer l’abonnement.",
+            navegador: "Ce navigateur ne prend pas en charge les notifications Web Push.",
+            https: "Les notifications nécessitent HTTPS ou localhost en développement.",
+            chave: "La clé publique de notification n’est pas configurée.",
+            preparar: "Préparation des notifications…",
+            bloqueadas: "Les notifications sont bloquées dans les paramètres du navigateur.",
+            negar: "Vous n’avez pas autorisé les notifications.",
+            ativadas: "Notifications activées",
+            ativa: "Les notifications du navigateur sont activées pour ce compte.",
+            erro: "Impossible d’activer les notifications. Veuillez réessayer.",
+            autorizadas: "Vous avez déjà autorisé les notifications dans ce navigateur. Vous pouvez confirmer l’abonnement à l’aide du bouton."
+        }
+    };
+
+    const textos = traducoes[idioma] ||
+        traducoes[idioma.split("-")[0]] ||
+        traducoes["pt-pt"];
+
+    const t = (chave) => textos[chave];
+
     if (!botao || !estado || !formularioCSRF) {
         return;
     }
@@ -18,7 +93,7 @@
 
     if (ambienteNativo) {
         estado.textContent =
-            "As notificações são geridas pela aplicação nativa.";
+            t("nativo");
         botao.hidden = true;
         return;
     }
@@ -42,10 +117,7 @@
 
     function mostrarInstrucaoInstalacao() {
         mostrarEstado(
-            "Para ativares as notificações no iPhone, adiciona primeiro " +
-            "o Profisabores ao ecrã principal. No Safari, toca em Partilhar, " +
-            "escolhe Adicionar ao ecrã principal e abre o Profisabores " +
-            "através do novo ícone."
+            t("iphone")
         );
     }
 
@@ -92,7 +164,7 @@
 
         if (!resposta.ok) {
             throw new Error(
-                resultado.erro || "Não foi possível guardar a subscrição."
+                resultado.erro || t("guardar")
             );
         }
 
@@ -109,27 +181,27 @@
             !("PushManager" in window) ||
             !("Notification" in window)) {
             mostrarEstado(
-                "Este navegador não suporta notificações Web Push."
+                t("navegador")
             );
             return;
         }
 
         if (!window.isSecureContext) {
             mostrarEstado(
-                "As notificações exigem HTTPS ou localhost em desenvolvimento."
+                t("https")
             );
             return;
         }
 
         if (!chavePublica) {
             mostrarEstado(
-                "A chave pública de notificações não está configurada."
+                t("chave")
             );
             return;
         }
 
         botao.disabled = true;
-        mostrarEstado("A preparar as notificações…");
+        mostrarEstado(t("preparar"));
 
         try {
             let permissao = Notification.permission;
@@ -141,8 +213,8 @@
             if (permissao !== "granted") {
                 mostrarEstado(
                     permissao === "denied"
-                        ? "As notificações estão bloqueadas nas definições do navegador."
-                        : "Não autorizaste as notificações."
+                        ? t("bloqueadas")
+                        : t("negar")
                 );
                 return;
             }
@@ -185,10 +257,10 @@
             await guardarSubscricao(subscricao.toJSON());
 
             botao.innerHTML =
-                '<i class="fa-solid fa-check"></i> Notificações ativadas';
+                '<i class="fa-solid fa-check"></i> ' + t("ativadas");
 
             mostrarEstado(
-                "As notificações do navegador estão ativadas para esta conta."
+                t("ativa")
             );
             window.dispatchEvent(
                 new Event("profisabores:notificacoes-ativadas")
@@ -198,7 +270,7 @@
 
             mostrarEstado(
                 erro.message ||
-                "Não foi possível ativar as notificações. Tenta novamente."
+                t("erro")
             );
         } finally {
             botao.disabled = false;
@@ -219,7 +291,7 @@
     if ("Notification" in window &&
         Notification.permission === "granted") {
         mostrarEstado(
-            "Já autorizaste as notificações neste navegador. Podes confirmar a subscrição através do botão."
+            t("autorizadas")
         );
     }
 })();

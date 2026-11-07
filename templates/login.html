@@ -103,25 +103,6 @@
         box-shadow: 0 0 0 3px rgba(139, 194, 245, 0.18);
     }
 
-    .password-toggle {
-        position: absolute;
-        right: 16px;
-        left: auto !important;
-        cursor: pointer;
-        color: #777 !important;
-    }
-
-    .forgot-password {
-        display: block;
-        text-align: right;
-        margin-top: -6px;
-        margin-bottom: 22px;
-        color: #2684d9;
-        font-size: 14px;
-        text-decoration: none;
-        cursor: pointer;
-    }
-
     .login-button {
         width: 100%;
         height: 54px;
@@ -163,19 +144,6 @@
         display: block;
         background: #e5f7e9;
         color: #237a35;
-    }
-
-    .register-area {
-        text-align: center;
-        margin-top: 26px;
-        color: #777;
-        font-size: 14px;
-    }
-
-    .register-area a {
-        color: #2684d9;
-        text-decoration: none;
-        font-weight: 600;
     }
 
     .back-home-area {
@@ -225,7 +193,7 @@
     <h1 class="title">Bem-vindo</h1>
 
     <p class="subtitle">
-        Entre na sua conta da PROFISABORES
+        Introduza o seu e-mail institucional para aceder
     </p>
 
     <form id="loginForm">
@@ -243,37 +211,12 @@
             >
         </div>
 
-        <div class="input-group">
-            <i class="fa-solid fa-lock"></i>
-
-            <input
-                type="password"
-                id="password"
-                name="password"
-                placeholder="Palavra-passe"
-                autocomplete="current-password"
-                required
-            >
-
-            <i
-                class="fa-solid fa-eye password-toggle"
-                id="togglePassword"
-            ></i>
-        </div>
-
-        <a
-            href="/utilizadores/recuperar-password/"
-            class="forgot-password"
-        >
-            Esqueci-me da palavra-passe
-        </a>
-
         <button
             type="submit"
             class="login-button"
             id="loginButton"
         >
-            Entrar
+            Enviar código
         </button>
 
         <div
@@ -282,13 +225,6 @@
         ></div>
 
     </form>
-
-    <div class="register-area">
-        Ainda não tem conta?
-        <a href="/utilizadores/registar/">
-            Criar conta
-        </a>
-    </div>
 
     <div class="back-home-area">
         <a href="/" class="back-home-link">
@@ -308,35 +244,14 @@
     const loginButton = document.getElementById("loginButton");
     const message = document.getElementById("message");
 
-    const passwordInput = document.getElementById("password");
-    const togglePassword = document.getElementById("togglePassword");
-
-    togglePassword.addEventListener("click", () => {
-
-        const isPassword =
-            passwordInput.type === "password";
-
-        passwordInput.type =
-            isPassword ? "text" : "password";
-
-        togglePassword.classList.toggle(
-            "fa-eye"
-        );
-
-        togglePassword.classList.toggle(
-            "fa-eye-slash"
-        );
-    });
-
     loginForm.addEventListener("submit", async (event) => {
-
         event.preventDefault();
 
         message.className = "message";
         message.textContent = "";
 
         loginButton.disabled = true;
-        loginButton.textContent = "A entrar...";
+        loginButton.textContent = "A enviar código...";
 
         const formData = new FormData();
 
@@ -345,13 +260,7 @@
             document.getElementById("email").value.trim()
         );
 
-        formData.append(
-            "password",
-            passwordInput.value
-        );
-
         try {
-
             const response = await fetch(
                 "/utilizadores/api/login/",
                 {
@@ -362,9 +271,9 @@
 
             const data = await response.json();
 
-            if (!response.ok) {
+            if (!response.ok || !data.sucesso) {
                 throw new Error(
-                    data.erro || "Não foi possível iniciar sessão."
+                    data.erro || "Não foi possível processar o pedido."
                 );
             }
 
@@ -374,26 +283,19 @@
             );
 
             message.className = "message success";
-
-            message.textContent =
-                "Código enviado para o seu e-mail.";
+            message.textContent = data.mensagem;
 
             setTimeout(() => {
-
                 window.location.href =
-                    "/utilizadores/verificar-login/";
-
-            }, 700);
+                    data.redirect || "/utilizadores/verificar-login/";
+            }, 1200);
 
         } catch (error) {
-
             message.className = "message error";
-
-            message.textContent =
-                error.message;
+            message.textContent = error.message;
 
             loginButton.disabled = false;
-            loginButton.textContent = "Entrar";
+            loginButton.textContent = "Enviar código";
         }
     });
 </script>
