@@ -3213,7 +3213,7 @@ html.profisabores-ios-nativo body > header {
 .banner-marquee-track {
     display: flex;
     width: max-content;
-    animation: marqueeInfinita 35s linear infinite;
+    animation: marqueeInfinita 12s linear infinite;
 }
 
 .banner-marquee-grupo {
@@ -3229,6 +3229,7 @@ html.profisabores-ios-nativo body > header {
     overflow: hidden;
     border-radius: 16px;
 }
+
 
 .banner-marquee-item img {
     display: block;
