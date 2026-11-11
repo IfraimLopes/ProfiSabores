@@ -3074,3 +3074,206 @@ html.profisabores-ios-nativo body > header .button-header {
 html.profisabores-ios-nativo body > header {
     padding-top: calc(25px + env(safe-area-inset-top, 0px));
 }
+
+
+
+/* ==========================================
+   TRANSIÇÃO DIGITAL — EFEITO SCANNER
+========================================== */
+
+.mensagem-rotativa {
+    position: relative;
+    overflow: hidden;
+}
+
+.mensagem-rotativa h2,
+.mensagem-rotativa p {
+    will-change: opacity, filter, transform;
+}
+
+/* Texto a ser digitalizado e removido */
+.mensagem-rotativa.mensagem-saindo h2,
+.mensagem-rotativa.mensagem-saindo p {
+    animation: scannerSair 0.45s ease-in forwards;
+}
+
+/* Novo texto a ser digitalizado */
+.mensagem-rotativa.mensagem-entrando h2,
+.mensagem-rotativa.mensagem-entrando p {
+    animation: scannerEntrar 0.75s ease-out both;
+}
+
+@keyframes scannerSair {
+    0% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+
+    40% {
+        opacity: 0.8;
+        filter: blur(2px);
+    }
+
+    100% {
+        opacity: 0;
+        filter: blur(9px);
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes scannerEntrar {
+    0% {
+        opacity: 0;
+        filter: blur(9px);
+        transform: translateY(8px);
+        clip-path: inset(0 100% 0 0);
+    }
+
+    45% {
+        opacity: 0.7;
+        filter: blur(3px);
+        clip-path: inset(0 45% 0 0);
+    }
+
+    100% {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+        clip-path: inset(0 0 0 0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mensagem-rotativa.mensagem-saindo h2,
+    .mensagem-rotativa.mensagem-saindo p,
+    .mensagem-rotativa.mensagem-entrando h2,
+    .mensagem-rotativa.mensagem-entrando p {
+        animation: none;
+    }
+}
+
+
+
+
+/* ==========================================
+   DEGRADÊ AZUL — WELCOME CARD
+========================================== */
+
+.welcome-card {
+    background: linear-gradient(
+        120deg,
+        #2C4064,
+        #477EAD,
+        #8BC2F5,
+        #477EAD,
+        #2C4064
+    );
+
+    background-size: 300% 300%;
+    animation: welcomeGradient 20s ease-in-out infinite;
+
+    position: relative;
+    overflow: hidden;
+}
+
+@keyframes welcomeGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .welcome-card {
+        animation: none;
+    }
+}
+
+
+/* ==========================================
+   MARQUEE INFERIOR — IMAGENS EM MOVIMENTO
+========================================== */
+
+.banner-marquee {
+    width: 100%;
+    overflow: hidden;
+    position: relative;
+    border-radius: 18px;
+    margin: 24px 0;
+}
+
+.banner-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marqueeInfinita 35s linear infinite;
+}
+
+.banner-marquee-grupo {
+    display: flex;
+    flex-shrink: 0;
+    gap: 16px;
+    padding-right: 16px;
+}
+
+.banner-marquee-item {
+    flex: 0 0 clamp(260px, 75vw, 420px);
+    height: 180px;
+    overflow: hidden;
+    border-radius: 16px;
+}
+
+.banner-marquee-item img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: inherit;
+}
+
+/* Movimento contínuo */
+@keyframes marqueeInfinita {
+    from {
+        transform: translateX(0);
+    }
+
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* Pausa quando o utilizador coloca o rato sobre a marquee */
+.banner-marquee:hover .banner-marquee-track {
+    animation-play-state: paused;
+}
+
+/* Adaptação a dispositivos móveis */
+@media (max-width: 600px) {
+    .banner-marquee-item {
+        flex-basis: 280px;
+        height: 145px;
+    }
+
+    .banner-marquee-grupo {
+        gap: 12px;
+        padding-right: 12px;
+    }
+}
+
+/* Respeitar preferência por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .banner-marquee {
+        overflow-x: auto;
+    }
+
+    .banner-marquee-track {
+        animation: none;
+    }
+}

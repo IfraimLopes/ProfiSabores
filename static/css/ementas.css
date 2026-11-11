@@ -881,3 +881,33 @@
     }
 }
 
+
+
+
+/* ==========================================
+   DEGRADÊ AZUL ANIMADO — CARTÕES DE EMENTA
+========================================== */
+
+.ementa-card {
+    background: linear-gradient(
+        120deg,
+        #2C4064,
+        #477EAD,
+        #8BC2F5,
+        #477EAD,
+        #2C4064
+    );
+
+    background-size: 300% 300%;
+    animation: welcomeGradient 20s ease-in-out infinite;
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* Respeitar preferência por movimento reduzido */
+@media (prefers-reduced-motion: reduce) {
+    .ementa-card {
+        animation: none;
+    }
+}

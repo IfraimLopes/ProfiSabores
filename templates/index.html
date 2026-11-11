@@ -56,30 +56,33 @@
     <!-- CONTEÚDO PRINCIPAL -->
     <main>
         <section id="home" class="screen active">
-            <div class="welcome-card">
-                <div>
-                    <span class="muted">
-                        {% trans "Olá 👋" %}
-                           {% if request.user.is_authenticated %}
-            {% firstof request.user.perfil.nome_completo request.user.first_name request.user.username %}
-        {% else %}
-            {% trans "Visitante" %}
-        {% endif %}
-        !
-    </strong>
-                    </span>
 
-                    <h2>
-                        <strong>{% trans "O que vais comer hoje?" %}</strong>
-                    </h2>
+<div class="welcome-card">
+    <div>
+        <span class="muted">
+            {% trans "Olá 👋" %}
+            {% if request.user.is_authenticated %}
+                {% firstof request.user.perfil.nome_completo request.user.first_name request.user.username %}
+            {% else %}
+                {% trans "Visitante" %}
+            {% endif %}
+            !
+        </span>
 
-                    <p>
-                        {% trans "Consulta a ementa e faz a tua reserva sem papel." %}
-                    </p>
-                </div>
+        <div class="mensagem-rotativa" aria-live="polite">
+            <h2 id="mensagemTitulo">
+                <strong>{% trans "O que vais comer hoje?" %}</strong>
+            </h2>
 
-                <span class="plate">🍽️</span>
-            </div>
+            <p id="mensagemDescricao">
+                {% trans "Consulta a ementa e faz a tua reserva sem papel." %}
+            </p>
+        </div>
+    </div>
+
+    <span class="plate">🍽️</span>
+</div>
+
         </section>
     </main>
 
@@ -576,34 +579,45 @@ data-extras="{{ ementa.extras_json|escape }}"
 </div>
 
     <!-- CARROSSEL INFERIOR -->
-    {% if banners_fim %}
-    <section class="banner-carousel" id="bannerFim">
-        <div class="banner-slides">
-            {% for banner in banners_fim %}
-            <div
-                class="banner-slide {% if forloop.first %}ativo{% endif %}"
-                data-slide="{{ forloop.counter0 }}">
 
+<!-- MARQUEE INFERIOR — IMAGENS -->
+{% if banners_fim %}
+<section class="banner-marquee" id="bannerFim">
+
+    <div class="banner-marquee-track">
+
+        <!-- PRIMEIRO GRUPO DE IMAGENS -->
+        <div class="banner-marquee-grupo">
+
+            {% for banner in banners_fim %}
+            <div class="banner-marquee-item">
                 <img
                     src="{{ banner.imagem.url }}"
                     alt="Banner {{ forloop.counter }}"
                     loading="lazy">
             </div>
             {% endfor %}
+
         </div>
 
-        <div class="banner-dots">
+        <!-- SEGUNDO GRUPO — DUPLICAÇÃO PARA MOVIMENTO INFINITO -->
+        <div class="banner-marquee-grupo" aria-hidden="true">
+
             {% for banner in banners_fim %}
-            <button
-                type="button"
-                class="banner-dot {% if forloop.first %}ativo{% endif %}"
-                data-slide="{{ forloop.counter0 }}"
-                aria-label="Ir para imagem {{ forloop.counter }}">
-            </button>
+            <div class="banner-marquee-item">
+                <img
+                    src="{{ banner.imagem.url }}"
+                    alt=""
+                    loading="lazy">
+            </div>
             {% endfor %}
+
         </div>
-    </section>
-    {% endif %}
+
+    </div>
+
+</section>
+{% endif %}
 
     <!-- JAVASCRIPT -->
      <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.1/build/js/intlTelInput.min.js"></script>
