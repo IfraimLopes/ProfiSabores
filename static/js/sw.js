@@ -1,5 +1,79 @@
 "use strict";
 
+// ==========================================
+// CACHE OFFLINE
+// ==========================================
+
+const CACHE_NAME = "profisabores-offline-v1";
+const OFFLINE_URL = "/static/offline.html";
+
+self.addEventListener("install", function (event) {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(function (cache) {
+            return cache.addAll([
+                OFFLINE_URL,
+                "/static/css/erros.css",
+                "/static/img/profisabores-icon.svg"
+            ]);
+        }).then(function () {
+            return self.skipWaiting();
+        })
+    );
+});
+
+self.addEventListener("activate", function (event) {
+    event.waitUntil(
+        caches.keys().then(function (nomes) {
+            return Promise.all(
+                nomes
+                    .filter(function (nome) {
+                        return nome.startsWith("profisabores-offline-")
+                            && nome !== CACHE_NAME;
+                    })
+                    .map(function (nome) {
+                        return caches.delete(nome);
+                    })
+            );
+        }).then(function () {
+            return clients.claim();
+        })
+    );
+});
+
+// ==========================================
+// NAVEGAÇÃO SEM LIGAÇÃO
+// ==========================================
+
+self.addEventListener("fetch", function (event) {
+    if (event.request.mode !== "navigate") {
+        return;
+    }
+
+    event.respondWith(
+        fetch(event.request).catch(async function () {
+            const paginaOffline = await caches.match(OFFLINE_URL);
+
+            if (paginaOffline) {
+                return paginaOffline;
+            }
+
+            return new Response(
+                "Sem ligação ao Profisabores.",
+                {
+                    status: 503,
+                    headers: {
+                        "Content-Type": "text/plain; charset=utf-8"
+                    }
+                }
+            );
+        })
+    );
+});
+
+// ==========================================
+// NOTIFICAÇÕES PUSH
+// ==========================================
+
 self.addEventListener("push", function (event) {
     let dados = {
         title: "Profisabores",
@@ -35,6 +109,10 @@ self.addEventListener("push", function (event) {
         )
     );
 });
+
+// ==========================================
+// CLIQUE NAS NOTIFICAÇÕES
+// ==========================================
 
 self.addEventListener("notificationclick", function (event) {
     event.notification.close();

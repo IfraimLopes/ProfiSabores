@@ -1,0 +1,59 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8bc2f5">
+
+    <title>500 | Profisabores</title>
+
+    <link rel="icon" href="{% static 'img/profisabores-icon.svg' %}">
+    <link rel="stylesheet" href="{% static 'css/erros.css' %}">
+</head>
+
+<body class="pagina-erro">
+    <main class="erro-container">
+        <section class="erro-cartao">
+
+            <div class="erro-marca">
+                <img src="{% static 'img/profisabores-icon.svg' %}"
+                     alt="Logótipo Profisabores">
+                <span>Profisabores</span>
+            </div>
+
+            <div class="erro-ilustracao" aria-hidden="true">
+                <span>⚙️</span>
+            </div>
+
+            <p class="erro-codigo">500</p>
+
+            <h1 class="erro-titulo">
+                Algo correu mal!
+            </h1>
+
+            <p class="erro-descricao">
+                Ocorreu um problema interno no servidor.
+                Estamos a trabalhar para restabelecer o funcionamento
+                do Profisabores.
+            </p>
+
+            <div class="erro-acoes">
+                <button onclick="window.location.reload()"
+                        class="erro-botao">
+                    ↻ Tentar novamente
+                </button>
+
+                <a href="/" class="erro-botao erro-botao-secundario">
+                    Voltar ao início
+                </a>
+            </div>
+
+        </section>
+
+        <footer class="erro-rodape">
+            © {% now "Y" %} Profisabores
+        </footer>
+    </main>
+</body>
+</html>

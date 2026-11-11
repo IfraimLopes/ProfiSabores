@@ -1,5 +1,27 @@
 document.addEventListener("DOMContentLoaded", () => {
 
+        // ==========================================
+    // REGISTO GLOBAL DO SERVICE WORKER
+    // ==========================================
+
+    if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js", {
+            scope: "/"
+        })
+        .then((registo) => {
+            console.log(
+                "Service Worker registado:",
+                registo.scope
+            );
+        })
+        .catch((erro) => {
+            console.error(
+                "Erro ao registar Service Worker:",
+                erro
+            );
+        });
+    }
+
     // ==========================================
     // ERROS JAVASCRIPT
     // ==========================================
@@ -1182,5 +1204,80 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 1500);
             });
         });
+    }
+
+        // ==========================================
+    // MENSAGENS ROTATIVAS — PÁGINA INICIAL
+    // ==========================================
+
+    const contentorMensagem = document.querySelector(".mensagem-rotativa");
+    const tituloMensagem = document.querySelector("#mensagemTitulo strong");
+    const descricaoMensagem = document.getElementById("mensagemDescricao");
+
+    if (contentorMensagem && tituloMensagem && descricaoMensagem) {
+
+        const mensagens = [
+            {
+                titulo: "O que vais comer hoje?",
+                descricao: "Consulta a ementa e faz a tua reserva sem papel."
+            },
+            {
+                titulo: "A tua opinião também conta!",
+                descricao: "Participa e ajuda a melhorar o restaurante."
+            },
+            {
+                titulo: "Já descobriste a próxima ementa?",
+                descricao: "Fica a par das novidades e dos pratos disponíveis."
+            },
+            {
+                titulo: "O restaurante também é teu!",
+                descricao: "Partilha ideias e participa na comunidade escolar."
+            },
+            {
+                titulo: "Uma boa refeição começa aqui.",
+                descricao: "Descobre os sabores do nosso restaurante pedagógico."
+            },
+            {
+                titulo: "Participa. Sugere. Faz a diferença.",
+                descricao: "A tua participação ajuda-nos a melhorar."
+            }
+        ];
+
+        let indiceMensagem = 0;
+        let mensagemEmAnimacao = false;
+
+        function trocarMensagem() {
+
+            if (mensagemEmAnimacao || document.hidden) return;
+
+            mensagemEmAnimacao = true;
+
+            contentorMensagem.classList.remove("mensagem-entrando");
+            contentorMensagem.classList.add("mensagem-saindo");
+
+            setTimeout(() => {
+
+                indiceMensagem = (indiceMensagem + 1) % mensagens.length;
+
+                tituloMensagem.textContent =
+                    mensagens[indiceMensagem].titulo;
+
+                descricaoMensagem.textContent =
+                    mensagens[indiceMensagem].descricao;
+
+                contentorMensagem.classList.remove("mensagem-saindo");
+                contentorMensagem.classList.add("mensagem-entrando");
+
+                setTimeout(() => {
+
+                    contentorMensagem.classList.remove("mensagem-entrando");
+                    mensagemEmAnimacao = false;
+
+                }, 500);
+
+            }, 450);
+        }
+
+        setInterval(trocarMensagem, 3000);
     }
 });

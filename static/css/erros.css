@@ -1,0 +1,196 @@
+/* ==========================================
+   PROFISABORES — PÁGINAS DE ERRO
+   Identidade visual oficial
+   ========================================== */
+
+:root {
+    --erro-azul: #8bc2f5;
+    --erro-azul-escuro: #123657;
+    --erro-fundo: #f5f5f5;
+    --erro-branco: #ffffff;
+    --erro-texto: #263746;
+    --erro-secundario: #718096;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body.pagina-erro {
+    min-height: 100vh;
+    margin: 0;
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    color: var(--erro-texto);
+    background:
+        radial-gradient(circle at 10% 10%, rgba(139, 194, 245, .25), transparent 35%),
+        linear-gradient(145deg, #f5f5f5, #edf5fc);
+}
+
+.erro-container {
+    width: 100%;
+    max-width: 520px;
+    text-align: center;
+}
+
+.erro-cartao {
+    padding: 42px 30px;
+    background: var(--erro-branco);
+    border: 1px solid rgba(18, 54, 87, .07);
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(18, 54, 87, .09);
+}
+
+.erro-marca {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 11px;
+    margin-bottom: 34px;
+}
+
+.erro-marca img {
+    width: 48px;
+    height: 48px;
+    border-radius: 13px;
+}
+
+.erro-marca span {
+    color: var(--erro-azul-escuro);
+    font-size: 21px;
+    font-weight: 750;
+    letter-spacing: -.7px;
+}
+
+.erro-ilustracao {
+    width: 112px;
+    height: 112px;
+    margin: 0 auto 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 32px;
+    background: rgba(139, 194, 245, .19);
+    color: var(--erro-azul-escuro);
+    font-size: 54px;
+}
+
+.erro-codigo {
+    margin: 0;
+    color: var(--erro-azul-escuro);
+    font-size: clamp(58px, 12vw, 82px);
+    font-weight: 850;
+    line-height: 1;
+    letter-spacing: -5px;
+}
+
+.erro-titulo {
+    margin: 20px 0 10px;
+    color: var(--erro-azul-escuro);
+    font-size: 25px;
+    font-weight: 750;
+}
+
+.erro-descricao {
+    max-width: 370px;
+    margin: 0 auto;
+    color: var(--erro-secundario);
+    font-size: 15px;
+    line-height: 1.7;
+}
+
+.erro-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.erro-botao {
+    min-height: 47px;
+    padding: 0 23px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border: 0;
+    border-radius: 12px;
+    background: var(--erro-azul-escuro);
+    color: white;
+    font-size: 14px;
+    font-weight: 650;
+    text-decoration: none;
+    cursor: pointer;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+
+.erro-botao:hover {
+    transform: translateY(-2px);
+    background: #1b4c77;
+    box-shadow: 0 7px 18px rgba(18, 54, 87, .17);
+}
+
+.erro-botao-secundario {
+    background: #edf5fc;
+    color: var(--erro-azul-escuro);
+}
+
+.erro-botao-secundario:hover {
+    background: #dcecfb;
+}
+
+.erro-rodape {
+    margin-top: 25px;
+    color: #94a3b2;
+    font-size: 12px;
+}
+
+.erro-estado {
+    margin-top: 20px;
+    color: var(--erro-secundario);
+    font-size: 13px;
+}
+
+.erro-estado.online {
+    color: #16845b;
+}
+
+.erro-estado.offline {
+    color: #c05640;
+}
+
+@media (max-width: 480px) {
+    body.pagina-erro {
+        padding: 16px;
+    }
+
+    .erro-cartao {
+        padding: 34px 21px;
+        border-radius: 21px;
+    }
+
+    .erro-titulo {
+        font-size: 22px;
+    }
+
+    .erro-acoes {
+        flex-direction: column;
+    }
+
+    .erro-botao {
+        width: 100%;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}

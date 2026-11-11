@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8bc2f5">
+
+    <title>Sem ligação | Profisabores</title>
+
+    <link rel="icon" href="/static/img/profisabores-icon.svg">
+    <link rel="stylesheet" href="/static/css/erros.css">
+</head>
+
+<body class="pagina-erro">
+    <main class="erro-container">
+        <section class="erro-cartao">
+
+            <div class="erro-marca">
+                <img src="/static/img/profisabores-icon.svg"
+                     alt="Logótipo Profisabores">
+                <span>Profisabores</span>
+            </div>
+
+            <div class="erro-ilustracao" aria-hidden="true">
+                <span>📡</span>
+            </div>
+
+            <p class="erro-codigo">OFF</p>
+
+            <h1 class="erro-titulo">
+                Sem ligação à internet
+            </h1>
+
+            <p class="erro-descricao">
+                Neste momento não conseguimos estabelecer ligação
+                ao Profisabores. Verifica a tua ligação à internet
+                e tenta novamente.
+            </p>
+
+            <div class="erro-acoes">
+                <button onclick="tentarNovamente()"
+                        class="erro-botao">
+                    ↻ Tentar novamente
+                </button>
+
+                <a href="/" class="erro-botao erro-botao-secundario">
+                    Voltar ao início
+                </a>
+            </div>
+
+            <p id="estadoLigacao" class="erro-estado offline">
+                <span>●</span> A verificar ligação...
+            </p>
+
+        </section>
+
+        <footer class="erro-rodape">
+            © Profisabores
+        </footer>
+    </main>
+
+    <script>
+        const estado = document.getElementById("estadoLigacao");
+
+        async function tentarNovamente() {
+            estado.textContent = "A tentar restabelecer ligação...";
+            estado.className = "erro-estado";
+
+            try {
+                const resposta = await fetch("/", {
+                    method: "HEAD",
+                    cache: "no-store"
+                });
+
+                if (resposta.ok) {
+                    window.location.replace("/");
+                    return;
+                }
+            } catch (erro) {
+                // O servidor continua indisponível.
+            }
+
+            estado.textContent = "● Sem ligação ao servidor.";
+            estado.className = "erro-estado offline";
+        }
+
+        window.addEventListener("online", tentarNovamente);
+
+        window.addEventListener("offline", function () {
+            estado.textContent = "● Sem ligação à internet.";
+            estado.className = "erro-estado offline";
+        });
+    </script>
+</body>
+</html>
