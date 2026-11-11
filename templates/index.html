@@ -579,45 +579,35 @@ data-extras="{{ ementa.extras_json|escape }}"
 </div>
 
     <!-- CARROSSEL INFERIOR -->
+    {% if banners_fim %}
+    <section class="banner-carousel" id="bannerFim">
 
-<!-- MARQUEE INFERIOR — IMAGENS -->
-{% if banners_fim %}
-<section class="banner-marquee" id="bannerFim">
-
-    <div class="banner-marquee-track">
-
-        <!-- PRIMEIRO GRUPO DE IMAGENS -->
-        <div class="banner-marquee-grupo" id="bannerGrupoOriginal">
-
+        <div class="banner-slides">
             {% for banner in banners_fim %}
-            <div class="banner-marquee-item">
+            <div
+                class="banner-slide {% if forloop.first %}ativo{% endif %}"
+                data-slide="{{ forloop.counter0 }}">
+
                 <img
                     src="{{ banner.imagem.url }}"
-                    alt="Banner {{ forloop.counter }}"
-                    loading="eager">
+                    alt="Banner {{ forloop.counter }}">
             </div>
             {% endfor %}
-
         </div>
 
-        <!-- SEGUNDO GRUPO — DUPLICAÇÃO PARA MOVIMENTO INFINITO -->
-        <div class="banner-marquee-grupo" aria-hidden="true">
-
+        <div class="banner-dots">
             {% for banner in banners_fim %}
-            <div class="banner-marquee-item">
-                <img
-                    src="{{ banner.imagem.url }}"
-                    alt=""
-                    loading="eager">
-            </div>
+            <button
+                type="button"
+                class="banner-dot {% if forloop.first %}ativo{% endif %}"
+                data-slide="{{ forloop.counter0 }}"
+                aria-label="Ir para imagem {{ forloop.counter }}">
+            </button>
             {% endfor %}
-
         </div>
 
-    </div>
-
-</section>
-{% endif %}
+    </section>
+    {% endif %}
 
     <!-- JAVASCRIPT -->
      <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@25.10.1/build/js/intlTelInput.min.js"></script>

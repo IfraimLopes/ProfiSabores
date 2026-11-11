@@ -1,33 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
     // ==========================================
-// MARQUEE INFERIOR — CICLO INFINITO
-// ==========================================
-
-const marquee = document.querySelector("#bannerFim");
-const track = marquee?.querySelector(".banner-marquee-track");
-const grupo = marquee?.querySelector("#bannerGrupoOriginal");
-
-if (track && grupo) {
-    const atualizarDistancia = () => {
-        track.style.setProperty(
-            "--marquee-distance",
-            `${grupo.offsetWidth}px`
-        );
-    };
-
-    atualizarDistancia();
-
-    window.addEventListener("resize", atualizarDistancia);
-
-    grupo.querySelectorAll("img").forEach(img => {
-        if (!img.complete) {
-            img.addEventListener("load", atualizarDistancia, { once: true });
-        }
-    });
-}
-
-        // ==========================================
     // REGISTO GLOBAL DO SERVICE WORKER
     // ==========================================
 
