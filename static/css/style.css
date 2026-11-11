@@ -3213,7 +3213,7 @@ html.profisabores-ios-nativo body > header {
 .banner-marquee-track {
     display: flex;
     width: max-content;
-    animation: marqueeInfinita 12s linear infinite;
+    animation: marqueeInfinita 15s linear infinite;
 }
 
 .banner-marquee-grupo {
@@ -3230,6 +3230,11 @@ html.profisabores-ios-nativo body > header {
     border-radius: 16px;
 }
 
+.banner-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marqueeInfinita 12s linear infinite;
+}
 
 .banner-marquee-item img {
     display: block;
@@ -3246,7 +3251,7 @@ html.profisabores-ios-nativo body > header {
     }
 
     to {
-        transform: translateX(-50%);
+        transform: translateX(calc(-1 * var(--marquee-distance)));
     }
 }
 
