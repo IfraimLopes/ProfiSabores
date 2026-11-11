@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
 
     // ==========================================
@@ -7,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("error", (event) => {
         console.error(
-            "🔥 ERRO JS:",
+            " ERRO JS:",
             event.message,
             "arquivo:",
             event.filename,
@@ -20,7 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener("unhandledrejection", (event) => {
         console.error(
-            "🔥 PROMISE ERROR:",
+            " PROMISE ERROR:",
             event.reason
         );
     });
@@ -417,7 +416,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
- 
     // ==========================================
     // CRIAR RESERVA — PROTEÇÃO CONTRA DUPLICADOS
     // ==========================================
@@ -425,6 +423,49 @@ document.addEventListener("DOMContentLoaded", () => {
     if (form) {
 
         let aEnviarReserva = false;
+
+        // A mesma chave é reutilizada se o mesmo pedido for reenviado.
+        let chaveIdempotenciaAtual = null;
+        let assinaturaPedidoAtual = null;
+
+        function gerarChaveIdempotencia() {
+            if (window.crypto?.randomUUID) {
+                return window.crypto.randomUUID();
+            }
+
+            if (window.crypto?.getRandomValues) {
+                const valores = new Uint8Array(16);
+                window.crypto.getRandomValues(valores);
+
+                valores[6] = (valores[6] & 0x0f) | 0x40;
+                valores[8] = (valores[8] & 0x3f) | 0x80;
+
+                const hexadecimal = Array.from(valores, (valor) =>
+                    valor.toString(16).padStart(2, "0")
+                ).join("");
+
+                return (
+                    hexadecimal.slice(0, 8) + "-" +
+                    hexadecimal.slice(8, 12) + "-" +
+                    hexadecimal.slice(12, 16) + "-" +
+                    hexadecimal.slice(16, 20) + "-" +
+                    hexadecimal.slice(20)
+                );
+            }
+
+            // Compatibilidade com navegadores sem suporte à API crypto.
+            return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+                /[xy]/g,
+                (caractere) => {
+                    const aleatorio = Math.floor(Math.random() * 16);
+                    const valor = caractere === "x"
+                        ? aleatorio
+                        : (aleatorio & 0x3) | 0x8;
+
+                    return valor.toString(16);
+                }
+            );
+        }
 
         const botaoEnviar = form.querySelector(
             'button[type="submit"], input[type="submit"]'
@@ -496,7 +537,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
-                                // Validar o nome: letras, acentos, espaços,
+                // Validar o nome: letras, acentos, espaços,
                 // hífen e apóstrofos.
                 const nomeValido =
                     /^[\p{L}]+(?:[ '\u2019-][\p{L}]+)*$/u.test(nome);
@@ -597,6 +638,34 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             // ----------------------------------
+            // CHAVE DE IDEMPOTÊNCIA
+            // ----------------------------------
+
+            // A assinatura identifica os dados concretos deste pedido.
+            // Se os dados mudarem, é uma nova reserva e recebe outra chave.
+            const assinaturaPedido = JSON.stringify(
+                [...dados.entries()]
+                    .map(([chave, valor]) => [chave, String(valor)])
+                    .sort((a, b) => {
+                        const comparacaoChave = a[0].localeCompare(b[0]);
+                        return comparacaoChave || a[1].localeCompare(b[1]);
+                    })
+            );
+
+            if (
+                !chaveIdempotenciaAtual ||
+                assinaturaPedidoAtual !== assinaturaPedido
+            ) {
+                chaveIdempotenciaAtual = gerarChaveIdempotencia();
+                assinaturaPedidoAtual = assinaturaPedido;
+            }
+
+            dados.append(
+                "chave_idempotencia",
+                chaveIdempotenciaAtual
+            );
+
+            // ----------------------------------
             // BLOQUEAR NOVOS ENVIOS
             // ----------------------------------
 
@@ -684,6 +753,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 // ----------------------------------
 
                 reservaCriada = true;
+
+                // O servidor confirmou a criação. A próxima reserva
+                // deverá receber uma chave nova.
+                chaveIdempotenciaAtual = null;
+                assinaturaPedidoAtual = null;
 
                 if (mensagem) {
                     mensagem.textContent =

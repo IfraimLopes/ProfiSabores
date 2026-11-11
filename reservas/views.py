@@ -4,6 +4,9 @@ from reservas.notificacoes import (
     enviar_notificacao_utilizador,
     enviar_notificacao_visitante,
 )
+from uuid import UUID
+from django.db import IntegrityError
+
 from decimal import Decimal
 import secrets
 
@@ -70,7 +73,147 @@ def definir_cookie_visitante(resposta, token, request):
 
 
 
+def pedido_corresponde_reserva(
+    reserva,
+    request,
+    token_visitante,
+    autenticado,
+    nome,
+    telemovel,
+    curso,
+    ementa_id,
+    prato_id,
+    sobremesa_id,
+    extras_ids,
+    alergias,
+):
+    """
+    Confirma que uma chave de idempotência está associada
+    exatamente à mesma identidade e aos mesmos dados.
+    """
 
+    if autenticado:
+        if reserva.utilizador_id != request.user.id:
+            return False
+    else:
+        # A chave UUID identifica a submissão.
+        # Não exigir igualdade do token: a primeira resposta
+        # pode ter-se perdido antes de o browser receber a cookie.
+        if reserva.utilizador_id is not None:
+            return False
+
+    extras_existentes = sorted(
+        str(identificador)
+        for identificador in reserva.extras.values_list(
+            "extra_id",
+            flat=True
+        )
+    )
+
+    extras_recebidos = sorted(extras_ids)
+
+    return all([
+        reserva.nome == nome,
+        reserva.telemovel == telemovel,
+        reserva.curso_id == (curso.id if curso else None),
+        str(reserva.ementa_id or "") == ementa_id,
+        str(reserva.prato_id or "") == prato_id,
+        str(reserva.sobremesa_id or "") == sobremesa_id,
+        extras_existentes == extras_recebidos,
+        reserva.alergias == alergias,
+    ])
+
+
+def resposta_reserva_json(reserva, tipo_utilizador):
+    """
+    Constrói a resposta JSON de uma reserva,
+    mantendo a estrutura utilizada pelo JavaScript.
+    """
+
+    return JsonResponse({
+        "sucesso": True,
+        "mensagem": "Reserva criada com sucesso.",
+        "reserva": {
+            "id": reserva.id,
+            "nome": reserva.nome,
+            "telemovel": reserva.telemovel,
+            "curso": (
+                reserva.curso.codigo
+                if reserva.curso else None
+            ),
+            "ementa": (
+                {
+                    "id": reserva.ementa.id,
+                    "data_refeicao": str(
+                        reserva.ementa.data_refeicao
+                    ),
+                    "descricao": reserva.ementa.descricao,
+                    "entrada": (
+                        reserva.ementa.entrada.nome
+                        if reserva.ementa.entrada else None
+                    ),
+                    "prato_principal": (
+                        reserva.ementa.prato_principal.nome
+                        if reserva.ementa.prato_principal else None
+                    ),
+                }
+                if reserva.ementa else None
+            ),
+            "extras": [
+                {
+                    "id": reserva_extra.extra.id,
+                    "nome": reserva_extra.extra.nome,
+                    "quantidade": reserva_extra.quantidade,
+                    "preco": str(reserva_extra.preco),
+                }
+                for reserva_extra in (
+                    reserva.extras.select_related("extra")
+                )
+            ],
+            "prato": (
+                reserva.prato.nome
+                if reserva.prato else None
+            ),
+            "sobremesa": (
+                reserva.sobremesa.nome
+                if reserva.sobremesa else None
+            ),
+            "data": str(reserva.data),
+            "hora": str(reserva.hora),
+            "alergias": reserva.alergias,
+            "preco_unitario": str(reserva.preco_unitario),
+            "total": str(reserva.total),
+            "estado": reserva.estado,
+            "estado_preparacao": reserva.estado_preparacao,
+            "tipo_utilizador": tipo_utilizador,
+        }
+    })
+
+
+
+
+
+def associar_reserva_visitante(reserva, request, token_visitante):
+    """
+    Recupera uma reserva repetida para o visitante atual.
+    Atualiza o token e garante que a reserva fica na sessão.
+    """
+    if reserva.visitante_token != token_visitante:
+        reserva.visitante_token = token_visitante
+        reserva.save(update_fields=["visitante_token"])
+
+    reservas_visitante = request.session.get(
+        "reservas_visitante", []
+    )
+
+    if not isinstance(reservas_visitante, list):
+        reservas_visitante = []
+
+    if reserva.id not in reservas_visitante:
+        reservas_visitante.append(reserva.id)
+
+    request.session["reservas_visitante"] = reservas_visitante
+    request.session.modified = True
 
 
 @csrf_exempt
@@ -165,6 +308,76 @@ def criar_reserva(request):
 
     # Remover IDs repetidos sem alterar a ordem.
     extras_ids = list(dict.fromkeys(extras_ids))
+
+    # ----------------------------------------------------------
+    # VALIDAR A CHAVE DE IDEMPOTÊNCIA
+    # ----------------------------------------------------------
+
+    chave_recebida = request.POST.get(
+        "chave_idempotencia",
+        ""
+    ).strip()
+
+    try:
+        chave_idempotencia = UUID(chave_recebida)
+    except (ValueError, TypeError, AttributeError):
+        return JsonResponse(
+            {"erro": "A chave de submissão da reserva é inválida."},
+            status=400
+        )
+
+    # Verificar se esta submissão já foi processada.
+    reserva_existente = Reserva.objects.filter(
+        chave_idempotencia=chave_idempotencia
+    ).first()
+
+    if reserva_existente is not None:
+
+        corresponde = pedido_corresponde_reserva(
+            reserva=reserva_existente,
+            request=request,
+            token_visitante=token_visitante,
+            autenticado=autenticado,
+            nome=nome_reserva,
+            telemovel=telemovel_reserva,
+            curso=curso,
+            ementa_id=ementa_id,
+            prato_id=prato_id,
+            sobremesa_id=sobremesa_id,
+            extras_ids=extras_ids,
+            alergias=alergias,
+        )
+
+        if not corresponde:
+            return JsonResponse(
+                {
+                    "erro": (
+                        "Esta chave já foi utilizada "
+                        "com dados diferentes."
+                    )
+                },
+                status=409
+            )
+
+        resposta = resposta_reserva_json(
+            reserva_existente,
+            tipo_utilizador
+        )
+
+        if not autenticado:
+            associar_reserva_visitante(
+                reserva_existente,
+                request,
+                token_visitante
+            )
+
+            definir_cookie_visitante(
+                resposta,
+                token_visitante,
+                request
+            )
+
+        return resposta
 
     tipos_escolhidos = sum(
         bool(valor)
@@ -361,32 +574,90 @@ def criar_reserva(request):
     # CRIAR A RESERVA E OS EXTRAS
     # ----------------------------------------------------------
 
-    with transaction.atomic():
+    try:
+        with transaction.atomic():
 
-        reserva = Reserva.objects.create(
-        utilizador=request.user if autenticado else None,
-        visitante_token=token_visitante,
-        nome=nome_reserva,
-        telemovel=telemovel_reserva,
-        curso=curso,
-        ementa=ementa,
-        prato=prato,
-        sobremesa=sobremesa,
-        data=data,
-        hora="13:00",
-        alergias=alergias,
-        preco_unitario=preco,
-        total=total,
-        estado="confirmada"
+            reserva = Reserva.objects.create(
+                utilizador=request.user if autenticado else None,
+                visitante_token=token_visitante,
+                chave_idempotencia=chave_idempotencia,
+                nome=nome_reserva,
+                telemovel=telemovel_reserva,
+                curso=curso,
+                ementa=ementa,
+                prato=prato,
+                sobremesa=sobremesa,
+                data=data,
+                hora="13:00",
+                alergias=alergias,
+                preco_unitario=preco,
+                total=total,
+                estado="confirmada"
+            )
+
+            for extra, preco_extra in precos_extras:
+                ReservaExtra.objects.create(
+                    reserva=reserva,
+                    extra=extra,
+                    preco=preco_extra,
+                    quantidade=1
+                )
+
+    except IntegrityError:
+
+        # Outro pedido pode ter criado a reserva entretanto.
+        reserva_existente = Reserva.objects.filter(
+            chave_idempotencia=chave_idempotencia
+        ).first()
+
+        if reserva_existente is None:
+            raise
+
+        corresponde = pedido_corresponde_reserva(
+            reserva=reserva_existente,
+            request=request,
+            token_visitante=token_visitante,
+            autenticado=autenticado,
+            nome=nome_reserva,
+            telemovel=telemovel_reserva,
+            curso=curso,
+            ementa_id=ementa_id,
+            prato_id=prato_id,
+            sobremesa_id=sobremesa_id,
+            extras_ids=extras_ids,
+            alergias=alergias,
         )
 
-        for extra, preco_extra in precos_extras:
-            ReservaExtra.objects.create(
-                reserva=reserva,
-                extra=extra,
-                preco=preco_extra,
-                quantidade=1
+        if not corresponde:
+            return JsonResponse(
+                {
+                    "erro": (
+                        "Esta chave já foi utilizada "
+                        "com dados diferentes."
+                    )
+                },
+                status=409
             )
+
+        resposta = resposta_reserva_json(
+            reserva_existente,
+            tipo_utilizador
+        )
+
+        if not autenticado:
+            associar_reserva_visitante(
+                reserva_existente,
+                request,
+                token_visitante
+            )
+
+            definir_cookie_visitante(
+                resposta,
+                token_visitante,
+                request
+            )
+
+        return resposta
 
     # ----------------------------------------------------------
     # GUARDAR A RESERVA NA SESSÃO DO VISITANTE
@@ -453,65 +724,9 @@ def criar_reserva(request):
     # RESPOSTA JSON
     # ----------------------------------------------------------
 
-    resposta = JsonResponse(
-        {
-            "sucesso": True,
-            "mensagem": "Reserva criada com sucesso.",
-            "reserva": {
-                "id": reserva.id,
-                "nome": reserva.nome,
-                "telemovel": reserva.telemovel,
-                "curso": (
-                    reserva.curso.codigo
-                    if reserva.curso else None
-                ),
-                "ementa": (
-                    {
-                        "id": reserva.ementa.id,
-                        "data_refeicao": str(
-                            reserva.ementa.data_refeicao
-                        ),
-                        "descricao": reserva.ementa.descricao,
-                        "entrada": (
-                            reserva.ementa.entrada.nome
-                            if reserva.ementa.entrada else None
-                        ),
-                        "prato_principal": (
-                            reserva.ementa.prato_principal.nome
-                            if reserva.ementa.prato_principal else None
-                        ),
-                    }
-                    if reserva.ementa else None
-                ),
-                "extras": [
-                    {
-                        "id": reserva_extra.extra.id,
-                        "nome": reserva_extra.extra.nome,
-                        "quantidade": reserva_extra.quantidade,
-                        "preco": str(reserva_extra.preco),
-                    }
-                    for reserva_extra in (
-                        reserva.extras.select_related("extra")
-                    )
-                ],
-                "prato": (
-                    reserva.prato.nome
-                    if reserva.prato else None
-                ),
-                "sobremesa": (
-                    reserva.sobremesa.nome
-                    if reserva.sobremesa else None
-                ),
-                "data": str(reserva.data),
-                "hora": str(reserva.hora),
-                "alergias": reserva.alergias,
-                "preco_unitario": str(reserva.preco_unitario),
-                "total": str(reserva.total),
-                "estado": reserva.estado,
-                "estado_preparacao": reserva.estado_preparacao,
-                "tipo_utilizador": tipo_utilizador,
-            }
-        }
+    resposta = resposta_reserva_json(
+        reserva,
+        tipo_utilizador
     )
 
     if not autenticado:

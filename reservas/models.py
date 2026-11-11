@@ -44,6 +44,14 @@ class Reserva(models.Model):
         db_index=True
     )
 
+    # Identifica uma tentativa única de criação de reserva.
+    chave_idempotencia = models.UUIDField(
+        unique=True,
+        null=True,
+        blank=True,
+        editable=False,
+    )
+
     alergias = models.TextField(
         blank=True,
         default=""
@@ -243,6 +251,8 @@ class Dispositivo(models.Model):
         blank=True,
         db_index=True
     )
+
+
 
     PLATAFORMAS = [
         ("ios", "iOS"),
