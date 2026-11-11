@@ -166,7 +166,7 @@
                                     src="{{ ementa.entrada.imagem.url }}"
                                     alt="{{ ementa.entrada.nome }}"
                                     class="ementa-item-imagem"
-                                    loading="lazy"
+                                    loading="eager"
                                 >
                             {% endif %}
 
@@ -211,7 +211,7 @@
                                     src="{{ ementa.prato_principal.imagem.url }}"
                                     alt="{{ ementa.prato_principal.nome }}"
                                     class="ementa-item-imagem"
-                                    loading="lazy"
+                                    loading="eager"
                                 >
                             {% endif %}
 
@@ -594,7 +594,7 @@ data-extras="{{ ementa.extras_json|escape }}"
                 <img
                     src="{{ banner.imagem.url }}"
                     alt="Banner {{ forloop.counter }}"
-                    loading="lazy">
+                    loading="eager">
             </div>
             {% endfor %}
 
@@ -608,7 +608,7 @@ data-extras="{{ ementa.extras_json|escape }}"
                 <img
                     src="{{ banner.imagem.url }}"
                     alt=""
-                    loading="lazy">
+                    loading="eager">
             </div>
             {% endfor %}
 
