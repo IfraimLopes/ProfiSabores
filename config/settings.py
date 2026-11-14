@@ -240,17 +240,14 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 
 
-# Email
+# Email — Gmail API
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.environ["BREVO_SMTP_HOST"]
-EMAIL_PORT = int(os.environ["BREVO_SMTP_PORT"])
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ["BREVO_SMTP_USER"]
-EMAIL_HOST_PASSWORD = os.environ["BREVO_SMTP_KEY"]
-EMAIL_TIMEOUT = 20
+EMAIL_BACKEND = "utilizadores.email_backend.GmailAPIEmailBackend"
 
-DEFAULT_FROM_EMAIL = os.environ["DEFAULT_FROM_EMAIL"]
+DEFAULT_FROM_EMAIL = os.environ.get(
+    "GMAIL_FROM_EMAIL",
+    "profisabores.app@gmail.com",
+)
 
 
 # Web Push — notificações do navegador
