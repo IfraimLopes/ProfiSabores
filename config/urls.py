@@ -3,7 +3,7 @@ from django.urls import path, include
 from django.conf.urls.i18n import set_language
 from django.conf import settings
 from django.conf.urls.static import static
-
+from config.views import politica_privacidade, termos_servico
 from menu.views import pagina_entrada, home, menu, api_menu
 from reservas.views import servir_service_worker
 
@@ -16,6 +16,16 @@ urlpatterns = [
     path("inicio/", home, name="home"),
     path("i18n/set-language/", set_language, name="set_language"),
     path("menu/", menu, name="menu"),
+    path(
+    "politica-de-privacidade/",
+    politica_privacidade,
+    name="politica_privacidade"
+    ),
+    path(
+        "termos-de-servico/",
+        termos_servico,
+        name="termos_servico"
+    ),
     path("utilizadores/", include("utilizadores.urls")),
     path("reservas/", include("reservas.urls")),
     path("notificacoes/", include("notificacoes.urls")),
