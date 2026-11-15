@@ -6,162 +6,18 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.core.mail import send_mail
 from django.http import JsonResponse
+from django.shortcuts import render
 from django.utils import timezone
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 
+from utilizadores.models import Perfil, CodigoVerificacao
 from .models import Notificacao
-from reservas.models import Reserva, Dispositivo, SubscricaoWebPush
-from reservas.notificacoes import (enviar_notificacao_utilizador, enviar_webpush)
-from utilizadores.models import Perfil
 
 
 def gerar_codigo():
     return str(randint(100000, 999999))
 
-
-@csrf_exempt
-@require_POST
-def criar_notificacao(request):
-
-    titulo = request.POST.get(
-        "titulo",
-        ""
-    ).strip()
-
-    mensagem = request.POST.get(
-        "mensagem",
-        ""
-    ).strip()
-
-    tipo = request.POST.get(
-        "tipo",
-        "geral"
-    ).strip().lower()
-
-    reserva_id = request.POST.get(
-        "reserva_id",
-        ""
-    ).strip()
-
-    if not titulo:
-        return JsonResponse(
-            {
-                "erro": "O título é obrigatório."
-            },
-            status=400
-        )
-
-    if not mensagem:
-        return JsonResponse(
-            {
-                "erro": "A mensagem é obrigatória."
-            },
-            status=400
-        )
-
-    tipos_validos = [
-        "geral",
-        "reserva",
-        "menu",
-        "lembrete",
-    ]
-
-    if tipo not in tipos_validos:
-        return JsonResponse(
-            {
-                "erro": "Tipo de notificação inválido."
-            },
-            status=400
-        )
-
-    reserva = None
-
-    if reserva_id:
-
-        try:
-            reserva = Reserva.objects.get(
-                id=reserva_id
-            )
-
-        except Reserva.DoesNotExist:
-            return JsonResponse(
-                {
-                    "erro": "A reserva não existe."
-                },
-                status=404
-            )
-
-    notificacao = Notificacao.objects.create(
-        titulo=titulo,
-        mensagem=mensagem,
-        tipo=tipo,
-        reserva=reserva
-    )
-
-    enviados = 0
-
-    # Notificações gerais, de menu ou lembrete:
-    # enviadas para todos os dispositivos ativos.
-    if tipo in ["geral", "menu", "lembrete"]:
-
-        dispositivos = Dispositivo.objects.filter(
-            ativo=True,
-            utilizador__isnull=False
-        )
-
-        for dispositivo in dispositivos:
-
-            try:
-                from reservas.firebase_admin import enviar_notificacao
-
-                enviar_notificacao(
-                    dispositivo.token,
-                    titulo,
-                    mensagem
-                )
-
-                enviados += 1
-
-            except Exception as erro:
-                print(
-                    "Profisabores: erro ao enviar notificação geral:",
-                    erro
-                )
-
-        # Enviar também para as subscrições Web Push ativas,
-        # incluindo as de alunos, funcionários e visitantes.
-        subscricoes_webpush = SubscricaoWebPush.objects.filter(
-            ativo=True
-        )
-
-        enviados += enviar_webpush(
-            subscricoes_webpush,
-            titulo,
-            mensagem
-        )
-
-    # Notificação associada a uma reserva:
-    # enviada apenas ao utilizador dessa reserva.
-    elif tipo == "reserva" and reserva and reserva.utilizador:
-
-        enviados = enviar_notificacao_utilizador(
-            reserva.utilizador,
-            titulo,
-            mensagem
-        )
-
-    return JsonResponse(
-        {
-            "sucesso": True,
-            "mensagem": "Notificação criada com sucesso.",
-            "notificacao_id": notificacao.id,
-            "titulo": notificacao.titulo,
-            "tipo": notificacao.tipo,
-            "enviados": enviados,
-        },
-        status=201
-    )
 
 
 @csrf_exempt
@@ -357,3 +213,144 @@ def verificar_login(request):
             "escalao_preco": perfil.escalão_preco,
         }
     })
+
+
+# ============================================================
+# CAIXA DE ENTRADA DE NOTIFICAÇÕES
+# ============================================================
+
+@require_GET
+def listar_notificacoes(request):
+
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"erro": "É necessário iniciar sessão."},
+            status=401
+        )
+
+    notificacoes = Notificacao.objects.filter(
+        utilizador=request.user
+    ).order_by("-criada_em")
+
+    dados = [
+        {
+            "id": notificacao.id,
+            "titulo": notificacao.titulo,
+            "mensagem": notificacao.mensagem,
+            "tipo": notificacao.tipo,
+            "lida": notificacao.lida,
+            "criada_em": notificacao.criada_em.isoformat(),
+        }
+        for notificacao in notificacoes
+    ]
+
+    return JsonResponse({
+        "notificacoes": dados,
+        "total": len(dados),
+        "nao_lidas": notificacoes.filter(lida=False).count(),
+    })
+
+
+@require_POST
+def marcar_notificacao_lida(request, notificacao_id):
+
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"erro": "É necessário iniciar sessão."},
+            status=401
+        )
+
+    try:
+        notificacao = Notificacao.objects.get(
+            id=notificacao_id,
+            utilizador=request.user
+        )
+    except Notificacao.DoesNotExist:
+        return JsonResponse(
+            {"erro": "Notificação não encontrada."},
+            status=404
+        )
+
+    if not notificacao.lida:
+        notificacao.lida = True
+        notificacao.lida_em = timezone.now()
+        notificacao.save(
+            update_fields=["lida", "lida_em"]
+        )
+
+    return JsonResponse({
+        "sucesso": True,
+        "nao_lidas": Notificacao.objects.filter(
+            utilizador=request.user,
+            lida=False
+        ).count()
+    })
+
+
+@require_POST
+def eliminar_notificacao(request, notificacao_id):
+
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"erro": "É necessário iniciar sessão."},
+            status=401
+        )
+
+    eliminadas, _ = Notificacao.objects.filter(
+        id=notificacao_id,
+        utilizador=request.user
+    ).delete()
+
+    if not eliminadas:
+        return JsonResponse(
+            {"erro": "Notificação não encontrada."},
+            status=404
+        )
+
+    return JsonResponse({"sucesso": True})
+
+
+@require_POST
+def eliminar_todas_notificacoes(request):
+
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"erro": "É necessário iniciar sessão."},
+            status=401
+        )
+
+    eliminadas, _ = Notificacao.objects.filter(
+        utilizador=request.user
+    ).delete()
+
+    return JsonResponse({
+        "sucesso": True,
+        "eliminadas": eliminadas
+    })
+
+
+# ============================================================
+# PÁGINA VISUAL DA CAIXA DE ENTRADA
+# ============================================================
+
+@require_GET
+def caixa_notificacoes(request):
+
+    if not request.user.is_authenticated:
+        return JsonResponse(
+            {"erro": "É necessário iniciar sessão."},
+            status=401
+        )
+
+    notificacoes = Notificacao.objects.filter(
+        utilizador=request.user
+    ).order_by("-criada_em")
+
+    return render(
+        request,
+        "notificacoes/caixa.html",
+        {
+            "notificacoes": notificacoes,
+            "nao_lidas": notificacoes.filter(lida=False).count(),
+        }
+    )

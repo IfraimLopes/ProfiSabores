@@ -543,18 +543,14 @@
                                 <td class="nome">{{ reserva.nome }}</td>
 
                                 <td>
-                                    {% if reserva.utilizador %}
-                                        {% if reserva.utilizador.perfil %}
-                                            {% if reserva.utilizador.perfil.tipo == "staff" %}
-                                                <span class="tipo-utilizador tipo-staff">Staff</span>
-                                            {% else %}
-                                                <span class="tipo-utilizador tipo-aluno">Aluno</span>
-                                            {% endif %}
-                                        {% else %}
-                                            <span class="tipo-utilizador tipo-sem-perfil">Conta sem perfil</span>
-                                        {% endif %}
+                                    {% if reserva.tipo_utilizador == "staff" %}
+                                        <span class="tipo-utilizador tipo-staff">{{ reserva.get_tipo_utilizador_display }}</span>
+                                    {% elif reserva.tipo_utilizador == "aluno" %}
+                                        <span class="tipo-utilizador tipo-aluno">{{ reserva.get_tipo_utilizador_display }}</span>
+                                    {% elif reserva.tipo_utilizador == "visitante" %}
+                                        <span class="tipo-utilizador tipo-visitante">{{ reserva.get_tipo_utilizador_display }}</span>
                                     {% else %}
-                                        <span class="tipo-utilizador tipo-visitante">Visitante</span>
+                                        <span class="tipo-utilizador tipo-sem-perfil">{{ reserva.get_tipo_utilizador_display }}</span>
                                     {% endif %}
                                 </td>
 

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 
@@ -9,6 +10,14 @@ class Notificacao(models.Model):
         ("menu", "Menu"),
         ("lembrete", "Lembrete"),
     ]
+
+    utilizador = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+        related_name="notificacoes"
+    )
 
     titulo = models.CharField(
         max_length=150
@@ -28,6 +37,15 @@ class Notificacao(models.Model):
         null=True,
         blank=True,
         related_name="notificacoes"
+    )
+
+    lida = models.BooleanField(
+        default=False
+    )
+
+    lida_em = models.DateTimeField(
+        null=True,
+        blank=True
     )
 
     criada_em = models.DateTimeField(

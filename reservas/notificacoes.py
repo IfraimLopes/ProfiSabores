@@ -47,7 +47,7 @@ def verificar_chaves_vapid():
         )
 
 
-def enviar_webpush(subscricoes, titulo, mensagem, url="/"):
+def enviar_webpush(subscricoes, titulo, mensagem, url="/notificacoes/caixa/"):
     verificar_chaves_vapid()
     enviados = 0
 

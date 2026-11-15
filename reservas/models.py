@@ -35,6 +35,19 @@ class Reserva(models.Model):
         blank=True
     )
 
+    TIPOS_UTILIZADOR = [
+        ("aluno", "Aluno"),
+        ("staff", "Staff"),
+        ("visitante", "Visitante"),
+        ("desconhecido", "Não identificado"),
+    ]
+
+    tipo_utilizador = models.CharField(
+        max_length=20,
+        choices=TIPOS_UTILIZADOR,
+        default="desconhecido"
+    )
+
 
     # Identificação persistente das reservas de visitantes
     visitante_token = models.CharField(

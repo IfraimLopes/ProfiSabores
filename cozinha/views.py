@@ -1,6 +1,6 @@
 
 from collections import Counter
-
+from notificacoes.models import Notificacao
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect
@@ -106,6 +106,7 @@ def painel_cozinha(request):
         contexto,
     )
 
+
 @cozinha_required
 @require_POST
 def atualizar_estado_preparacao(request, reserva_id):
@@ -118,34 +119,49 @@ def atualizar_estado_preparacao(request, reserva_id):
     reserva = get_object_or_404(Reserva, pk=reserva_id)
     estado_anterior = reserva.estado_preparacao
 
+    if estado == estado_anterior:
+        return redirect("painel_cozinha")
+
     reserva.estado_preparacao = estado
     reserva.save(update_fields=["estado_preparacao"])
 
-    if estado != estado_anterior:
-        if estado == "feito":
-            titulo = "Prato pronto!"
-            mensagem = "O teu prato está pronto."
-        else:
-            titulo = "Preparação iniciada"
-            mensagem = "A preparação do teu prato começou."
+    if estado == "feito":
+        titulo = "Prato pronto!"
+        mensagem = "O teu prato está pronto."
+    else:
+        titulo = "Preparação iniciada"
+        mensagem = "A preparação do teu prato começou."
 
-        try:
-            if reserva.utilizador_id:
-                enviar_notificacao_utilizador(
-                    reserva.utilizador,
-                    titulo,
-                    mensagem,
-                )
-            elif reserva.visitante_token:
-                enviar_notificacao_visitante(
-                    reserva.visitante_token,
-                    titulo,
-                    mensagem,
-                )
-        except Exception as erro:
-            print(
-                "Profisabores: falha ao notificar "
-                f"a reserva #{reserva.pk}: {erro}"
+    try:
+        if reserva.utilizador_id:
+            # Guardar na caixa interna.
+            Notificacao.objects.create(
+                utilizador=reserva.utilizador,
+                titulo=titulo,
+                mensagem=mensagem,
+                tipo="reserva",
+                reserva=reserva,
             )
+
+            # Enviar também por push.
+            enviar_notificacao_utilizador(
+                reserva.utilizador,
+                titulo,
+                mensagem,
+            )
+
+        elif reserva.visitante_token:
+            # Visitantes continuam a receber apenas push.
+            enviar_notificacao_visitante(
+                reserva.visitante_token,
+                titulo,
+                mensagem,
+            )
+
+    except Exception as erro:
+        print(
+            "Profisabores: falha ao notificar "
+            f"a reserva #{reserva.pk}: {erro}"
+        )
 
     return redirect("painel_cozinha")

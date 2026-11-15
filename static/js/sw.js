@@ -78,7 +78,7 @@ self.addEventListener("push", function (event) {
     let dados = {
         title: "Profisabores",
         body: "Tens uma nova notificação.",
-        url: "/"
+        url: "/notificacoes/caixa/"
     };
 
     if (event.data) {
@@ -98,7 +98,7 @@ self.addEventListener("push", function (event) {
         icon: "/static/img/rofiteclaICON.png",
         badge: "/static/img/rofiteclaICON.png",
         data: {
-            url: dados.url || "/"
+            url: dados.url || "/notificacoes/caixa/"
         }
     };
 
@@ -118,7 +118,7 @@ self.addEventListener("notificationclick", function (event) {
     event.notification.close();
 
     const destino = new URL(
-        event.notification.data?.url || "/",
+        event.notification.data?.url || "/notificacoes/caixa/",
         self.location.origin
     );
 

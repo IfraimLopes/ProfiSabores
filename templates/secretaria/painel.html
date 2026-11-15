@@ -540,15 +540,7 @@
                                 </td>
 
                                 <td>
-                                    {% if reserva.utilizador %}
-                                        {% if reserva.utilizador.perfil %}
-                                            {{ reserva.utilizador.perfil.get_tipo_display }}
-                                        {% else %}
-                                            Conta sem perfil
-                                        {% endif %}
-                                    {% else %}
-                                        Visitante
-                                    {% endif %}
+                                    {{ reserva.get_tipo_utilizador_display }}
                                 </td>
 
                                 <td>

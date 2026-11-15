@@ -1,7 +1,7 @@
 from datetime import date
 from unittest.mock import patch
 from decimal import Decimal
-
+from uuid import uuid4
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
@@ -16,6 +16,7 @@ class CancelamentoEstadoPreparacaoTests(TestCase):
         self.utilizador = User.objects.create_user(
             username="aluno_cancelamento_teste",
             password="teste-seguro-123",
+
         )
 
         self.reserva = Reserva.objects.create(
@@ -155,6 +156,7 @@ class DataReservaEmentaTests(TestCase):
             "ementa_id": str(self.ementa.pk),
             "nome": "Aluno Teste",
             "telemovel": "+351912345678",
+            "chave_idempotencia": str(uuid4()),
         }
 
         self.url = reverse("criar_reserva")

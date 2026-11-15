@@ -3196,3 +3196,55 @@ html.profisabores-ios-nativo body > header {
         animation: none;
     }
 }
+
+
+/* =========================================================
+   PROFISABORES — SINO DE NOTIFICAÇÕES
+========================================================= */
+
+.button-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.notificacao-botao {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    color: #263238;
+    text-decoration: none;
+    border-radius: 50%;
+}
+
+.notificacao-botao svg {
+    width: 27px;
+    height: 27px;
+}
+
+.contador-notificacoes {
+    position: absolute;
+    top: -4px;
+    right: -5px;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background-color: #e41e3f;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.contador-notificacoes[hidden] {
+    display: none;
+}

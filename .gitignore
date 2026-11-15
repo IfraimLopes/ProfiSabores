@@ -66,3 +66,4 @@ ios/App/App/GoogleService-Info.plist
 
 # Configuração local da IDE Android
 android/.idea/
+secrets/

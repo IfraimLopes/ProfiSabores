@@ -1,0 +1,419 @@
+{% load static i18n %}
+<!DOCTYPE html>
+<html lang="{{ request.LANGUAGE_CODE|default:'pt-pt' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#ffffff">
+    <title>Notificações - ProfiSabores</title>
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <style>
+        body {
+            min-height: 100vh;
+            background: linear-gradient(
+                135deg,
+                #8bc2f5 0%,
+                #d9edff 35%,
+                #f4f9ff 70%,
+                #ffffff 100%
+            );
+            background-attachment: fixed;
+        }
+
+        .titulo-notificacoes {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            color: #245b85;
+        }
+
+        .titulo-notificacoes svg {
+            display: block;
+            flex-shrink: 0;
+        }
+
+        .caixa-notificacoes {
+            display: block;
+            width: min(900px, 92%);
+            height: auto;
+            min-height: calc(100vh - 100px);
+            margin: 35px auto;
+            padding-bottom: 100px;
+            box-sizing: border-box;
+        }
+
+        .caixa-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .caixa-topo h1 {
+            margin: 0;
+            font-size: 25px;
+        }
+
+        .caixa-contador {
+            color: #64748b;
+            margin-top: 7px;
+        }
+
+        .limpar-notificacoes {
+            border: 0;
+            background: #fee2e2;
+            color: #b91c1c;
+            padding: 10px 15px;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .notificacao-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+            padding: 19px;
+            margin-bottom: 12px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 13px;
+            box-shadow: 0 2px 7px rgba(0,0,0,.04);
+        }
+
+        .notificacao-card.nao-lida {
+            border-left: 4px solid #2563eb;
+            background: #f8fbff;
+        }
+
+        .notificacao-conteudo {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .notificacao-conteudo h3 {
+            margin: 0 0 8px;
+            font-size: 16px;
+            color: #1e293b;
+        }
+
+        .notificacao-conteudo p {
+            margin: 0 0 10px;
+            color: #475569;
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+        }
+
+        .notificacao-data {
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        .notificacao-acoes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .notificacao-acoes button {
+            border: 0;
+            border-radius: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .acao-lida {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .acao-eliminar {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .caixa-vazia {
+            text-align: center;
+            padding: 55px 20px;
+            color: #64748b;
+            background: #f8fafc;
+            border-radius: 13px;
+        }
+
+        .caixa-vazia span {
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .icone-caixa-vazia svg {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .caixa-mensagem {
+            margin: 15px 0;
+            color: #b91c1c;
+        }
+
+        @media (max-width: 600px) {
+            .notificacao-card {
+                flex-direction: column;
+            }
+
+            .notificacao-acoes {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    {% csrf_token %}
+
+    <main class="caixa-notificacoes">
+
+        <div class="caixa-topo">
+            <div>
+                <h1 class="titulo-notificacoes">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="30" height="30" viewBox="0 0 24 24"
+         fill="none" stroke="#245b85" stroke-width="1.8"
+         stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true">
+        <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+        <path d="M10 21h4"/>
+    </svg>
+    <span>Notificações</span>
+</h1>
+                <p class="caixa-contador" id="contador-caixa">
+                    A carregar notificações...
+                </p>
+            </div>
+
+            <button
+                type="button"
+                class="limpar-notificacoes"
+                id="eliminar-todas"
+                hidden
+            >
+                Eliminar todas
+            </button>
+        </div>
+
+        <div id="mensagem-caixa" class="caixa-mensagem"></div>
+        <section id="lista-notificacoes"></section>
+
+    </main>
+
+    <!-- NAVEGAÇÃO INFERIOR -->
+    <nav class="bottom-nav" aria-label="Navegação principal">
+
+        <a href="{% url 'home' %}" class="nav-btn">
+            <span>⌂</span>
+            <small>{% trans "Início" %}</small>
+        </a>
+
+        <a href="{% url 'menu' %}" class="nav-btn">
+            <span>☷</span>
+            <small>{% trans "Ementas" %}</small>
+        </a>
+
+        <a href="{% url 'pagina_reservas' %}" class="nav-btn">
+            <span>▣</span>
+            <small>{% trans "Reservas" %}</small>
+        </a>
+
+        <a href="{% url 'perfil' %}" class="nav-btn active">
+            <span><i class="fa fa-user" aria-hidden="true"></i></span>
+            <small>{% trans "Perfil" %}</small>
+        </a>
+
+    </nav>
+
+    <script>
+        const lista = document.getElementById("lista-notificacoes");
+        const contador = document.getElementById("contador-caixa");
+        const mensagem = document.getElementById("mensagem-caixa");
+        const botaoEliminarTodas = document.getElementById("eliminar-todas");
+
+        const csrfToken = document.querySelector(
+            '[name="csrfmiddlewaretoken"]'
+        ).value;
+
+        function mostrarMensagem(texto) {
+            mensagem.textContent = texto;
+        }
+
+        function formatarData(data) {
+            return new Date(data).toLocaleString("pt-PT");
+        }
+
+        async function enviarAcao(url) {
+            const resposta = await fetch(url, {
+                method: "POST",
+                credentials: "same-origin",
+                headers: {
+                    "X-CSRFToken": csrfToken,
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            const dados = await resposta.json();
+
+            if (!resposta.ok) {
+                throw new Error(dados.erro || "Não foi possível executar a operação.");
+            }
+
+            return dados;
+        }
+
+        function criarNotificacao(notificacao) {
+            const cartao = document.createElement("article");
+            cartao.className = "notificacao-card";
+
+            if (!notificacao.lida) {
+                cartao.classList.add("nao-lida");
+            }
+
+            const conteudo = document.createElement("div");
+            conteudo.className = "notificacao-conteudo";
+
+            const titulo = document.createElement("h3");
+            titulo.textContent = notificacao.titulo;
+
+            const texto = document.createElement("p");
+            texto.textContent = notificacao.mensagem;
+
+            const data = document.createElement("span");
+            data.className = "notificacao-data";
+            data.textContent = formatarData(notificacao.criada_em);
+
+            conteudo.append(titulo, texto, data);
+
+            const acoes = document.createElement("div");
+            acoes.className = "notificacao-acoes";
+
+            if (!notificacao.lida) {
+                const marcar = document.createElement("button");
+                marcar.type = "button";
+                marcar.className = "acao-lida";
+                marcar.textContent = "Marcar como lida";
+
+                marcar.addEventListener("click", async () => {
+                    try {
+                        await enviarAcao(
+                            `/notificacoes/${notificacao.id}/lida/`
+                        );
+                        await carregarNotificacoes();
+                    } catch (erro) {
+                        mostrarMensagem(erro.message);
+                    }
+                });
+
+                acoes.appendChild(marcar);
+            }
+
+            const eliminar = document.createElement("button");
+            eliminar.type = "button";
+            eliminar.className = "acao-eliminar";
+            eliminar.textContent = "Eliminar";
+
+            eliminar.addEventListener("click", async () => {
+                try {
+                    await enviarAcao(
+                        `/notificacoes/${notificacao.id}/eliminar/`
+                    );
+                    await carregarNotificacoes();
+                } catch (erro) {
+                    mostrarMensagem(erro.message);
+                }
+            });
+
+            acoes.appendChild(eliminar);
+            cartao.append(conteudo, acoes);
+
+            return cartao;
+        }
+
+        async function carregarNotificacoes() {
+            try {
+                mostrarMensagem("");
+
+                const resposta = await fetch("/notificacoes/", {
+                    credentials: "same-origin"
+                });
+
+                if (!resposta.ok) {
+                    throw new Error("Não foi possível carregar as notificações.");
+                }
+
+                const dados = await resposta.json();
+
+                lista.replaceChildren();
+
+                contador.textContent =
+                    `${dados.total} notificações · ${dados.nao_lidas} por ler`;
+
+                botaoEliminarTodas.hidden = dados.total === 0;
+
+                if (dados.total === 0) {
+                    const vazio = document.createElement("div");
+                    vazio.className = "caixa-vazia";
+
+                    const icone = document.createElement("span");
+                    icone.className = "icone-caixa-vazia";
+
+                    icone.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg"
+                             width="42" height="42" viewBox="0 0 24 24"
+                             fill="none" stroke="#4385b8" stroke-width="1.7"
+                             stroke-linecap="round" stroke-linejoin="round"
+                             aria-hidden="true">
+                            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                            <path d="M10 21h4"/>
+                        </svg>
+                    `;
+
+                    const texto = document.createElement("p");
+                    texto.textContent = "Não tens notificações.";
+
+                    vazio.append(icone, texto);
+                    lista.appendChild(vazio);
+                    return;
+                }
+
+                dados.notificacoes.forEach(notificacao => {
+                    lista.appendChild(criarNotificacao(notificacao));
+                });
+
+            } catch (erro) {
+                mostrarMensagem(erro.message);
+            }
+        }
+
+        botaoEliminarTodas.addEventListener("click", async () => {
+            if (!confirm("Tens a certeza de que queres eliminar todas as notificações?")) {
+                return;
+            }
+
+            try {
+                await enviarAcao("/notificacoes/eliminar-todas/");
+                await carregarNotificacoes();
+            } catch (erro) {
+                mostrarMensagem(erro.message);
+            }
+        });
+
+        carregarNotificacoes();
+    </script>
+
+</body>
+</html>

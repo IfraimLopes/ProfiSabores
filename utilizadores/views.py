@@ -353,6 +353,20 @@ def verificar_registo(request):
 # LOGIN
 # ============================================================
 
+def dominio_institucional_permitido(email):
+    dominios_permitidos = {
+        "alunos.profitecla.pt",
+        "professores.profitecla.pt",
+        "profitecla.pt",
+    }
+
+    if "@" not in email:
+        return False
+
+    dominio = email.rsplit("@", 1)[1].lower()
+    return dominio in dominios_permitidos
+
+
 def obter_utilizador_aluno_staff(email):
     """
     Devolve o User associado a uma conta Aluno ou Staff.
@@ -397,6 +411,17 @@ def login_utilizador(request):
     if not email:
         return JsonResponse(
             {"erro": "O e-mail é obrigatório."},
+            status=400
+        )
+
+    if not dominio_institucional_permitido(email):
+        return JsonResponse(
+            {
+                "erro": (
+                    "Utilize o seu e-mail institucional "
+                    "da Profitecla."
+                )
+            },
             status=400
         )
 

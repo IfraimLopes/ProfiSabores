@@ -2,6 +2,8 @@
 from django.contrib import admin
 from django.utils import timezone
 
+from notificacoes.models import Notificacao
+
 from .models import (
     Reserva,
     ReservaExtra,
@@ -63,7 +65,6 @@ class ReservaAdmin(admin.ModelAdmin):
     )
 
     fieldsets = (
-
         (
             "👤 Dados do utilizador",
             {
@@ -75,7 +76,6 @@ class ReservaAdmin(admin.ModelAdmin):
                 )
             }
         ),
-
         (
             "🍽️ Refeição",
             {
@@ -88,7 +88,6 @@ class ReservaAdmin(admin.ModelAdmin):
                 )
             }
         ),
-
         (
             "⚠️ Alergias e restrições alimentares",
             {
@@ -97,7 +96,6 @@ class ReservaAdmin(admin.ModelAdmin):
                 )
             }
         ),
-
         (
             "💰 Valores",
             {
@@ -107,7 +105,6 @@ class ReservaAdmin(admin.ModelAdmin):
                 )
             }
         ),
-
         (
             "💳 Pagamento",
             {
@@ -118,7 +115,6 @@ class ReservaAdmin(admin.ModelAdmin):
                 )
             }
         ),
-
         (
             "📋 Estado da reserva",
             {
@@ -140,7 +136,6 @@ class ReservaAdmin(admin.ModelAdmin):
     def item_reserva(self, obj):
 
         if obj.ementa:
-
             partes = []
 
             if obj.ementa.entrada:
@@ -185,20 +180,20 @@ class ReservaAdmin(admin.ModelAdmin):
 
     def save_model(self, request, obj, form, change):
         """
-        Mantém temporariamente a compatibilidade com os campos
-        antigos de pagamento da Reserva.
+        Mantém a compatibilidade com os campos antigos
+        de pagamento da Reserva.
 
         Ao confirmar o pagamento:
         - regista a data/hora;
         - regista o administrador;
         - sincroniza o modelo Pagamento;
-        - envia a notificação ao utilizador.
+        - guarda a notificação interna;
+        - envia a notificação push.
         """
 
         pagamento_anterior = None
 
         if obj.pk:
-
             try:
                 reserva_anterior = Reserva.objects.get(pk=obj.pk)
                 pagamento_anterior = reserva_anterior.pagamento
@@ -218,7 +213,6 @@ class ReservaAdmin(admin.ModelAdmin):
                 obj.pago_por = request.user
 
         else:
-
             obj.pago_em = None
             obj.pago_por = None
 
@@ -245,35 +239,38 @@ class ReservaAdmin(admin.ModelAdmin):
         pagamento.estado = obj.pagamento
 
         if obj.pagamento == "pago":
-
             pagamento.pago_em = obj.pago_em
             pagamento.pago_por = obj.pago_por
 
         else:
-
             pagamento.pago_em = None
             pagamento.pago_por = None
 
         pagamento.save()
 
         # ==================================================
-        # NOTIFICAÇÃO
+        # NOTIFICAÇÃO DE PAGAMENTO
         # ==================================================
 
         if pagamento_confirmado_agora:
 
             if obj.ementa and obj.ementa.prato_principal:
                 item_reserva = obj.ementa.prato_principal.nome
+
             elif obj.ementa:
                 item_reserva = str(obj.ementa)
+
             elif obj.prato:
                 item_reserva = obj.prato.nome
+
             elif obj.sobremesa:
                 item_reserva = obj.sobremesa.nome
+
             else:
                 item_reserva = "a refeição"
 
             titulo_notificacao = "✅ Profisabores"
+
             mensagem_notificacao = (
                 f"O pagamento da tua reserva de "
                 f"{item_reserva} para "
@@ -288,17 +285,34 @@ class ReservaAdmin(admin.ModelAdmin):
             )
 
             if obj.utilizador:
+
+                # Guardar na caixa interna
+                Notificacao.objects.create(
+                    utilizador=obj.utilizador,
+                    titulo=titulo_notificacao,
+                    mensagem=mensagem_notificacao,
+                    tipo="reserva",
+                    reserva=obj,
+                )
+
+                # Enviar push
                 resultado_notificacao = enviar_notificacao_utilizador(
                     obj.utilizador,
                     titulo_notificacao,
                     mensagem_notificacao
                 )
-            else:
+
+            elif obj.visitante_token:
+
+                # Visitantes recebem apenas push
                 resultado_notificacao = enviar_notificacao_visitante(
                     obj.visitante_token,
                     titulo_notificacao,
                     mensagem_notificacao
                 )
+
+            else:
+                resultado_notificacao = None
 
             print(
                 "PROFISABORES DEBUG — "

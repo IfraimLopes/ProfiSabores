@@ -6,6 +6,7 @@ from reservas.notificacoes import (
 )
 from uuid import UUID
 from django.db import IntegrityError
+from notificacoes.models import Notificacao
 
 from decimal import Decimal
 import secrets
@@ -232,18 +233,37 @@ def criar_reserva(request):
         token_visitante = obter_token_visitante(request)
 
     if autenticado:
-        try:
-            perfil = request.user.perfil
-        except AttributeError:
-            return JsonResponse(
-                {"erro": "O perfil do utilizador não foi encontrado."},
-                status=400
-            )
+        # Primeiro, tentar obter o perfil antigo, se existir.
+        perfil = getattr(request.user, "perfil", None)
 
-        tipo_utilizador = perfil.tipo
-        nome_reserva = perfil.nome_completo
-        telemovel_reserva = perfil.telemovel
-        curso = perfil.curso
+        if perfil:
+            tipo_utilizador = perfil.tipo
+            nome_reserva = perfil.nome_completo
+            telemovel_reserva = perfil.telemovel or ""
+            curso = perfil.curso
+
+        else:
+            # Utilizadores com o modelo atual de aluno.
+            aluno = getattr(request.user, "aluno", None)
+            staff = getattr(request.user, "staff", None)
+
+            if aluno:
+                tipo_utilizador = "aluno"
+                nome_reserva = aluno.nome
+                telemovel_reserva = ""
+                curso = aluno.curso
+
+            elif staff:
+                tipo_utilizador = "staff"
+                nome_reserva = staff.nome
+                telemovel_reserva = ""
+                curso = None
+
+            else:
+                return JsonResponse(
+                    {"erro": "Não foi possível identificar os dados da tua conta."},
+                    status=400
+                )
 
     else:
         # Os visitantes não precisam de criar uma conta.
@@ -579,6 +599,7 @@ def criar_reserva(request):
 
             reserva = Reserva.objects.create(
                 utilizador=request.user if autenticado else None,
+                tipo_utilizador=tipo_utilizador,
                 visitante_token=token_visitante,
                 chave_idempotencia=chave_idempotencia,
                 nome=nome_reserva,
@@ -703,6 +724,16 @@ def criar_reserva(request):
     )
 
     if autenticado:
+        # Guardar a notificação na caixa interna.
+        Notificacao.objects.create(
+            utilizador=request.user,
+            titulo=titulo_notificacao,
+            mensagem=mensagem_notificacao,
+            tipo="reserva",
+            reserva=reserva,
+        )
+
+        # Enviar também a notificação push.
         resultado_notificacao = enviar_notificacao_utilizador(
             request.user,
             titulo_notificacao,

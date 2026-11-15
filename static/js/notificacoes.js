@@ -232,3 +232,61 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
 });
+
+
+
+// ==========================================
+// PROFISABORES — CONTADOR DA CAIXA DE ENTRADA
+// ==========================================
+
+document.addEventListener("DOMContentLoaded", () => {
+    const contador = document.getElementById("contador-notificacoes");
+
+    if (!contador) return;
+
+    async function atualizarContadorNotificacoes() {
+        try {
+            const resposta = await fetch("/notificacoes/", {
+                method: "GET",
+                credentials: "same-origin",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            });
+
+            if (!resposta.ok) return;
+
+            const dados = await resposta.json();
+            const total = Number(dados.nao_lidas) || 0;
+
+            contador.textContent = total > 99 ? "99+" : total;
+            contador.hidden = total === 0;
+
+        } catch (erro) {
+            console.error(
+                "Profisabores: erro ao atualizar contador:",
+                erro
+            );
+        }
+    }
+
+    atualizarContadorNotificacoes();
+
+    // Atualização periódica do contador.
+    setInterval(() => {
+        if (!document.hidden) {
+            atualizarContadorNotificacoes();
+        }
+    }, 5000);
+
+    // Atualizar quando o utilizador regressa à página.
+    window.addEventListener("focus", atualizarContadorNotificacoes);
+
+    window.addEventListener("pageshow", atualizarContadorNotificacoes);
+
+    document.addEventListener("visibilitychange", () => {
+        if (!document.hidden) {
+            atualizarContadorNotificacoes();
+        }
+    });
+});

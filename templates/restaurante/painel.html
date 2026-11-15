@@ -517,13 +517,7 @@
                         <td>{{ reserva.criada_em|date:"d/m/Y" }}</td>
                         <td>{{ reserva.criada_em|date:"H:i" }}</td>
                         <td>
-                            {% if not reserva.utilizador %}
-                                Visitante
-                            {% elif reserva.utilizador.perfil %}
-                                {{ reserva.utilizador.perfil.get_tipo_display }}
-                            {% else %}
-                                Conta sem perfil
-                            {% endif %}
+                            {{ reserva.get_tipo_utilizador_display }}
                         </td>
                         <td>
                             {% if reserva.ementa %}
