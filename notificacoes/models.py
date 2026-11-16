@@ -19,6 +19,14 @@ class Notificacao(models.Model):
         related_name="notificacoes"
     )
 
+
+    visitante_token = models.CharField(
+    max_length=64,
+    null=True,
+    blank=True,
+    db_index=True
+    )
+
     titulo = models.CharField(
         max_length=150
     )

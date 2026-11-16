@@ -151,7 +151,16 @@ def atualizar_estado_preparacao(request, reserva_id):
             )
 
         elif reserva.visitante_token:
-            # Visitantes continuam a receber apenas push.
+            # Guardar na caixa interna do visitante.
+            Notificacao.objects.create(
+                visitante_token=reserva.visitante_token,
+                titulo=titulo,
+                mensagem=mensagem,
+                tipo="reserva",
+                reserva=reserva,
+            )
+
+            # Enviar também por push.
             enviar_notificacao_visitante(
                 reserva.visitante_token,
                 titulo,

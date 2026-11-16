@@ -304,12 +304,22 @@ class ReservaAdmin(admin.ModelAdmin):
 
             elif obj.visitante_token:
 
-                # Visitantes recebem apenas push
+                # Guardar na caixa interna do visitante.
+                Notificacao.objects.create(
+                    visitante_token=obj.visitante_token,
+                    titulo=titulo_notificacao,
+                    mensagem=mensagem_notificacao,
+                    tipo="reserva",
+                    reserva=obj,
+                )
+
+                # Enviar também por push.
                 resultado_notificacao = enviar_notificacao_visitante(
                     obj.visitante_token,
                     titulo_notificacao,
                     mensagem_notificacao
                 )
+
 
             else:
                 resultado_notificacao = None

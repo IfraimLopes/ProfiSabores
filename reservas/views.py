@@ -740,6 +740,16 @@ def criar_reserva(request):
             mensagem_notificacao
         )
     else:
+        # Guardar a notificação na caixa interna do visitante.
+        Notificacao.objects.create(
+            visitante_token=token_visitante,
+            titulo=titulo_notificacao,
+            mensagem=mensagem_notificacao,
+            tipo="reserva",
+            reserva=reserva,
+        )
+
+        # Enviar também a notificação push.
         resultado_notificacao = enviar_notificacao_visitante(
             token_visitante,
             titulo_notificacao,
