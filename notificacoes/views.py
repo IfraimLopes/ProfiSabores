@@ -408,30 +408,3 @@ def caixa_notificacoes(request):
         )
 
     return resposta
-
-
-# ============================================================
-# PÁGINA VISUAL DA CAIXA DE ENTRADA
-# ============================================================
-
-@require_GET
-def caixa_notificacoes(request):
-
-    if not request.user.is_authenticated:
-        return JsonResponse(
-            {"erro": "É necessário iniciar sessão."},
-            status=401
-        )
-
-    notificacoes = Notificacao.objects.filter(
-        utilizador=request.user
-    ).order_by("-criada_em")
-
-    return render(
-        request,
-        "notificacoes/caixa.html",
-        {
-            "notificacoes": notificacoes,
-            "nao_lidas": notificacoes.filter(lida=False).count(),
-        }
-    )
