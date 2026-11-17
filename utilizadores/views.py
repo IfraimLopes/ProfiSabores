@@ -6,10 +6,11 @@ from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.utils import timezone
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, ensure_csrf_cookie
 from django.views.decorators.http import require_POST
 from django.conf import settings
 from django.utils import translation
+from django.db import transaction
 
 from menu.models import Curso
 from .models import (
@@ -768,18 +769,22 @@ def redefinir_password(request):
 # PÁGINAS HTML
 # ============================================================
 
+@ensure_csrf_cookie
 def pagina_login(request):
     return render(request, "login.html")
 
 
+@ensure_csrf_cookie
 def pagina_verificar_registo(request):
     return render(request, "verificar-registo.html")
 
 
+@ensure_csrf_cookie
 def pagina_verificar_login(request):
     return render(request, "verificar-login.html")
 
 
+@ensure_csrf_cookie
 def pagina_recuperar_password(request):
     return render(request, "recuperar-password.html")
 
@@ -861,6 +866,7 @@ def logout_utilizador(request):
         status=200
     )
 
+@ensure_csrf_cookie
 def pagina_registar(request):
     cursos = Curso.objects.all().order_by("nome")
 
