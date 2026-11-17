@@ -123,3 +123,22 @@ class CodigoVerificacao(models.Model):
 
     def __str__(self):
         return f"{self.email} - {self.finalidade} - [PROTEGIDO]"
+
+
+class EmailAutorizado(models.Model):
+    TIPOS = [
+        ("aluno", "Aluno"),
+        ("staff", "Staff"),
+    ]
+
+    email = models.EmailField(unique=True)
+    tipo = models.CharField(max_length=10, choices=TIPOS)
+    ativo = models.BooleanField(default=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        self.email = self.email.strip().lower()
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.email} ({self.tipo})"
