@@ -19,6 +19,7 @@ from .models import (
     Perfil,
     CodigoVerificacao,
     PreferenciasUtilizador,
+    EmailAutorizado,
 )
 
 @require_POST
@@ -370,9 +371,18 @@ def dominio_institucional_permitido(email):
 
 def obter_utilizador_aluno_staff(email):
     """
-    Devolve o User associado a uma conta Aluno ou Staff.
-    Não permite autenticação de contas operacionais.
+    Devolve o User associado a uma conta Aluno ou Staff,
+    apenas quando o email completo está autorizado na whitelist.
     """
+    email = email.strip().lower()
+
+    autorizado = EmailAutorizado.objects.filter(
+        email__iexact=email,
+        ativo=True
+    ).first()
+
+    if not autorizado:
+        return None
 
     aluno = (
         Aluno.objects
@@ -393,6 +403,12 @@ def obter_utilizador_aluno_staff(email):
         return None
 
     conta = aluno or staff
+    tipo_conta = "aluno" if aluno else "staff"
+
+    # O tipo da whitelist tem de corresponder à conta.
+    if autorizado.tipo != tipo_conta:
+        return None
+
     utilizador = conta.utilizador
 
     if not utilizador.is_active:
@@ -526,16 +542,33 @@ def verificar_login(request):
         )
 
     codigo_obj.tentativas += 1
-    codigo_obj.save(update_fields=["tentativas"])
 
     if not secrets.compare_digest(
         codigo_digitado,
         codigo_obj.codigo
     ):
+        if codigo_obj.tentativas >= 5:
+            codigo_obj.usado = True
+            codigo_obj.save(update_fields=["tentativas", "usado"])
+
+            return JsonResponse(
+                {
+                    "erro": (
+                        "Limite de tentativas atingido. "
+                        "Solicite um novo código."
+                    )
+                },
+                status=400
+            )
+
+        codigo_obj.save(update_fields=["tentativas"])
+
         return JsonResponse(
             {"erro": "Código incorreto."},
             status=400
         )
+
+    codigo_obj.save(update_fields=["tentativas"])
 
     utilizador = obter_utilizador_aluno_staff(email)
 
