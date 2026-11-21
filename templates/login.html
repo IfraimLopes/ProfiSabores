@@ -197,6 +197,7 @@
     </p>
 
     <form id="loginForm">
+        {% csrf_token %}
 
         <div class="input-group">
             <i class="fa-solid fa-envelope"></i>
@@ -265,6 +266,11 @@
                 "/utilizadores/api/login/",
                 {
                     method: "POST",
+                    headers: {
+                        "X-CSRFToken": document.querySelector(
+                            '[name="csrfmiddlewaretoken"]'
+                        ).value
+                    },
                     body: formData
                 }
             );
@@ -291,6 +297,7 @@
             }, 1200);
 
         } catch (error) {
+
             message.className = "message error";
             message.textContent = error.message;
 
