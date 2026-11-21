@@ -1,162 +1,138 @@
 // ==========================================
-// PROFISABORES — NOTIFICAÇÕES PUSH
+// PROFISABORES — NOTIFICAÇÕES NATIVAS
 // ==========================================
-console.log("PROFISABORES: notificacoes.js FOI CARREGADO");
+
+console.log("PROFISABORES: notificacoes.js carregado");
 
 document.addEventListener("DOMContentLoaded", async () => {
 
-    // Verificar se estamos dentro do Capacitor
-    if (!window.Capacitor) {
+    const plugins = window.CapacitorPlugins;
+
+    if (!plugins) {
         console.log(
             "Profisabores: aplicação a correr no navegador."
         );
         return;
     }
 
+    const {
+        Capacitor,
+        PushNotifications,
+        LocalNotifications
+    } = plugins;
+
+    if (!Capacitor.isNativePlatform()) {
+        console.log(
+            "Profisabores: plataforma Web, mantém-se o Web Push."
+        );
+        return;
+    }
+
+    const plataforma = Capacitor.getPlatform();
+
+    console.log(
+        "Profisabores: aplicação nativa detetada:",
+        plataforma
+    );
+
     try {
 
-
-        const { PushNotifications, LocalNotifications } =
-        window.Capacitor.Plugins;
-
-
-        if (!PushNotifications) {
-
-            console.error(
-                "Profisabores: plugin PushNotifications não encontrado."
-            );
-
-            return;
-        }
-
-
         // ==========================================
-        // PEDIR PERMISSÃO
+        // PERMISSÕES
         // ==========================================
 
         let permissao =
             await PushNotifications.checkPermissions();
 
-
         if (permissao.receive === "prompt") {
-
             permissao =
                 await PushNotifications.requestPermissions();
-
         }
 
-
         if (permissao.receive !== "granted") {
-
             console.warn(
-                "Profisabores: permissão para notificações não concedida."
+                "Profisabores: permissão de notificações recusada."
             );
-
             return;
         }
 
-
         // ==========================================
-        // TOKEN FCM
+        // REGISTO DO TOKEN FCM
         // ==========================================
 
-        PushNotifications.addListener(
+        await PushNotifications.addListener(
             "registration",
             async (token) => {
 
                 console.log(
-                    "================================="
+                    "Profisabores: token FCM recebido.",
+                    token.value.substring(0, 12) + "..."
                 );
-
-                console.log(
-                    "PROFISABORES — TOKEN FCM"
-                );
-
-                console.log(
-                    token.value
-                );
-
-                console.log(
-                    "================================="
-                );
-
-
-                // ==========================================
-                // ENVIAR TOKEN PARA O DJANGO
-                // ==========================================
 
                 try {
 
-
-                     const resposta = await fetch("/reservas/dispositivo/", {
+                    const resposta = await fetch(
+                        "/reservas/dispositivo/",
+                        {
                             method: "POST",
                             credentials: "same-origin",
                             headers: {
-                                "Content-Type": "application/x-www-form-urlencoded"
+                                "Content-Type":
+                                    "application/x-www-form-urlencoded"
                             },
                             body: new URLSearchParams({
                                 token: token.value,
-                                plataforma: "android"
+                                plataforma: plataforma
                             })
-                });
+                        }
+                    );
 
-                    const resultado =
-                        await resposta.json();
-
+                    const resultado = await resposta.json();
 
                     if (!resposta.ok) {
-
                         console.error(
-                             "Profisabores: erro ao registar dispositivo:",
+                            "Profisabores: erro ao registar dispositivo:",
                             resposta.status,
-                            JSON.stringify(resultado)
+                            resultado
                         );
-
                         return;
                     }
 
-
                     console.log(
-                        "Profisabores: dispositivo registado no Django:",
+                        "Profisabores: dispositivo registado:",
                         resultado
                     );
-
 
                 } catch (erro) {
 
                     console.error(
-                        "Profisabores: erro ao enviar token para Django:",
+                        "Profisabores: erro ao enviar token:",
                         erro
                     );
 
                 }
-
             }
         );
-
 
         // ==========================================
         // ERRO DE REGISTO
         // ==========================================
 
-        PushNotifications.addListener(
+        await PushNotifications.addListener(
             "registrationError",
             (erro) => {
-
                 console.error(
-                    "Profisabores: erro ao obter token FCM:",
+                    "Profisabores: erro de registo FCM:",
                     erro
                 );
-
             }
         );
 
-
         // ==========================================
-        // NOTIFICAÇÃO RECEBIDA
+        // NOTIFICAÇÃO RECEBIDA EM PRIMEIRO PLANO
         // ==========================================
 
-        PushNotifications.addListener(
+        await PushNotifications.addListener(
             "pushNotificationReceived",
             async (notificacao) => {
 
@@ -170,7 +146,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     await LocalNotifications.schedule({
                         notifications: [
                             {
-                                id: Math.floor(Date.now() % 2147483647),
+                                id: Math.floor(
+                                    Date.now() % 2147483647
+                                ),
                                 title:
                                     notificacao.title ||
                                     "🍽️ Profisabores",
@@ -189,104 +167,47 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } catch (erro) {
 
                     console.error(
-                        "Profisabores: erro ao apresentar notificação local:",
+                        "Profisabores: erro na notificação local:",
                         erro
                     );
 
                 }
-
             }
-    );
+        );
 
         // ==========================================
-        // UTILIZADOR TOCOU NA NOTIFICAÇÃO
+        // UTILIZADOR ABRIU UMA NOTIFICAÇÃO
         // ==========================================
 
-        PushNotifications.addListener(
+        await PushNotifications.addListener(
             "pushNotificationActionPerformed",
             (evento) => {
 
                 console.log(
-                    "Profisabores: utilizador abriu a notificação:",
+                    "Profisabores: notificação aberta:",
                     evento
                 );
 
             }
         );
 
-
         // ==========================================
-        // REGISTAR DISPOSITIVO NO FCM
+        // REGISTAR NO FCM
         // ==========================================
 
         await PushNotifications.register();
 
+        console.log(
+            "Profisabores: pedido de registo FCM efetuado."
+        );
 
     } catch (erro) {
 
         console.error(
-            "Profisabores: erro na configuração das notificações:",
+            "Profisabores: erro na configuração:",
             erro
         );
 
     }
 
-});
-
-
-
-// ==========================================
-// PROFISABORES — CONTADOR DA CAIXA DE ENTRADA
-// ==========================================
-
-document.addEventListener("DOMContentLoaded", () => {
-    const contador = document.getElementById("contador-notificacoes");
-
-    if (!contador) return;
-
-    async function atualizarContadorNotificacoes() {
-        try {
-            const resposta = await fetch("/notificacoes/", {
-                method: "GET",
-                credentials: "same-origin",
-                headers: {
-                    "X-Requested-With": "XMLHttpRequest"
-                }
-            });
-
-            if (!resposta.ok) return;
-
-            const dados = await resposta.json();
-            const total = Number(dados.nao_lidas) || 0;
-
-            contador.textContent = total > 99 ? "99+" : total;
-            contador.hidden = total === 0;
-
-        } catch (erro) {
-            console.error(
-                "Profisabores: erro ao atualizar contador:",
-                erro
-            );
-        }
-    }
-
-    atualizarContadorNotificacoes();
-
-    // Atualização periódica do contador.
-    setInterval(() => {
-        if (!document.hidden) {
-            atualizarContadorNotificacoes();
-        }
-    }, 5000);
-
-    // Atualizar quando o utilizador regressa à página.
-    window.addEventListener("focus", atualizarContadorNotificacoes);
-
-    window.addEventListener("pageshow", atualizarContadorNotificacoes);
-
-    document.addEventListener("visibilitychange", () => {
-        if (!document.hidden) {
-            atualizarContadorNotificacoes();
-        }
-    });
 });

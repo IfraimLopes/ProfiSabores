@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:capacitor": "vite build"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "@capacitor/push-notifications": "^8.1.2"
   },
   "devDependencies": {
-    "@capacitor/assets": "^3.0.5"
+    "@capacitor/assets": "^3.0.5",
+    "vite": "^8.3.8"
   }
 }
