@@ -81,15 +81,15 @@ class TestWhitelistLogin(TestCase):
             utilizador,
         )
 
-    def test_email_sem_whitelist_e_rejeitado(self):
+    def test_email_sem_whitelist_e_aceite(self):
         email = "aluno@alunos.profitecla.pt"
         self.criar_aluno(email)
 
-        self.assertIsNone(
+        self.assertIsNotNone(
             obter_utilizador_aluno_staff(email)
         )
 
-    def test_email_inativo_na_whitelist_e_rejeitado(self):
+    def test_email_inativo_na_whitelist_e_aceite(self):
         email = "aluno@alunos.profitecla.pt"
         self.criar_aluno(email)
 
@@ -99,11 +99,11 @@ class TestWhitelistLogin(TestCase):
             ativo=False,
         )
 
-        self.assertIsNone(
+        self.assertIsNotNone(
             obter_utilizador_aluno_staff(email)
         )
 
-    def test_tipo_incorreto_e_rejeitado(self):
+    def test_tipo_incorreto_na_whitelist_e_ignorado(self):
         email = "aluno@alunos.profitecla.pt"
         self.criar_aluno(email)
 
@@ -113,7 +113,7 @@ class TestWhitelistLogin(TestCase):
             ativo=True,
         )
 
-        self.assertIsNone(
+        self.assertIsNotNone(
             obter_utilizador_aluno_staff(email)
         )
 
@@ -238,7 +238,7 @@ class TestWhitelistLogin(TestCase):
         mock_send.assert_called_once()
 
     @patch("utilizadores.views.send_mail")
-    def test_login_sem_whitelist_nao_cria_codigo(self, mock_send):
+    def test_login_sem_whitelist_cria_codigo(self, mock_send):
         email = "aluno@alunos.profitecla.pt"
         self.criar_aluno(email)
 
@@ -248,10 +248,10 @@ class TestWhitelistLogin(TestCase):
         )
 
         self.assertEqual(resposta.status_code, 200)
-        self.assertFalse(
+        self.assertTrue(
             CodigoVerificacao.objects.filter(email=email).exists()
         )
-        mock_send.assert_not_called()
+        mock_send.assert_called_once()
 
     @patch("utilizadores.views.send_mail")
     @patch("utilizadores.views.gerar_codigo", return_value="654321")
@@ -293,7 +293,7 @@ class TestWhitelistLogin(TestCase):
 
 
     @patch("utilizadores.views.send_mail")
-    def test_login_whitelist_inativa_nao_cria_codigo(self, mock_send):
+    def test_login_whitelist_inativa_e_ignorada(self, mock_send):
         email = "aluno@alunos.profitecla.pt"
         self.criar_aluno(email)
 
@@ -309,13 +309,13 @@ class TestWhitelistLogin(TestCase):
         )
 
         self.assertEqual(resposta.status_code, 200)
-        self.assertFalse(
+        self.assertTrue(
             CodigoVerificacao.objects.filter(email=email).exists()
         )
-        mock_send.assert_not_called()
+        mock_send.assert_called_once()
 
     @patch("utilizadores.views.send_mail")
-    def test_login_tipo_incorreto_nao_cria_codigo(self, mock_send):
+    def test_login_tipo_incorreto_na_whitelist_e_ignorado(self, mock_send):
         email = "aluno@alunos.profitecla.pt"
         self.criar_aluno(email)
 
@@ -331,10 +331,10 @@ class TestWhitelistLogin(TestCase):
         )
 
         self.assertEqual(resposta.status_code, 200)
-        self.assertFalse(
+        self.assertTrue(
             CodigoVerificacao.objects.filter(email=email).exists()
         )
-        mock_send.assert_not_called()
+        mock_send.assert_called_once()
 
     @patch("utilizadores.views.send_mail")
     def test_login_conta_inativa_nao_cria_codigo(self, mock_send):
@@ -352,7 +352,7 @@ class TestWhitelistLogin(TestCase):
             {"email": email},
         )
 
-        self.assertEqual(resposta.status_code, 200)
+        self.assertEqual(resposta.status_code, 403)
         self.assertFalse(
             CodigoVerificacao.objects.filter(email=email).exists()
         )

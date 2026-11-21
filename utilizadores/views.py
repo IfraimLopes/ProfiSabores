@@ -19,7 +19,6 @@ from .models import (
     Perfil,
     CodigoVerificacao,
     PreferenciasUtilizador,
-    EmailAutorizado,
 )
 
 @require_POST
@@ -60,205 +59,13 @@ def alterar_idioma(request):
 @require_POST
 
 def registar(request):
-
-    nome = request.POST.get("nome", "").strip()
-    email = request.POST.get("email", "").strip().lower()
-    password = request.POST.get("password", "")
-    telemovel = request.POST.get("telemovel", "").strip()
-    tipo = request.POST.get("tipo", "").strip().lower()
-    curso_id = request.POST.get("curso", "").strip()
-
-    sexo = request.POST.get("sexo", "").strip().lower()
-    data_nascimento = request.POST.get("data_nascimento", "").strip()
-
-
-# Validar campos obrigatórios
-    
-    # Validar campos obrigatórios
-
-    if not nome:
-        return JsonResponse(
-            {"erro": "O nome é obrigatório."},
-            status=400
-        )
-
-    if not email:
-        return JsonResponse(
-            {"erro": "O e-mail é obrigatório."},
-            status=400
-        )
-
-    if not password:
-        return JsonResponse(
-            {"erro": "A palavra-passe é obrigatória."},
-            status=400
-        )
-
-    if len(password) < 8:
-        return JsonResponse(
-            {
-                "erro": (
-                    "A palavra-passe deve ter "
-                    "pelo menos 8 caracteres."
-                )
-            },
-            status=400
-        )
-
-    if not telemovel:
-        return JsonResponse(
-            {"erro": "O telemóvel é obrigatório."},
-            status=400
-        )
-
-    # Validar sexo
-
-    if not sexo:
-        return JsonResponse(
-            {"erro": "O sexo é obrigatório."},
-            status=400
-        )
-
-    if sexo not in [
-        "masculino",
-        "feminino",
-        "outro"
-    ]:
-        return JsonResponse(
-            {"erro": "Sexo inválido."},
-            status=400
-        )
-
-    # Validar ano de nascimento
-    # Validar data de nascimento
-
-    if not data_nascimento:
-        return JsonResponse(
-            {
-                "sucesso": False,
-                "erro": "A data de nascimento é obrigatória."
-            },
-            status=400
-        )
-
-    try:
-        data_nascimento = datetime.strptime(
-            data_nascimento,
-            "%Y-%m-%d"
-        ).date()
-
-    except ValueError:
-        return JsonResponse(
-            {
-                "sucesso": False,
-                "erro": "A data de nascimento é inválida."
-            },
-            status=400
-        )
-    # Validar tipo de utilizador
-
-    if tipo not in ["aluno", "staff"]:
-        return JsonResponse(
-            {"erro": "Tipo de utilizador inválido."},
-            status=400
-        )
-
-    # Validar curso: obrigatório apenas para alunos
-
-    curso = None
-
-    if tipo == "aluno":
-
-        if not curso_id:
-            return JsonResponse(
-                {
-                    "erro": (
-                        "O curso é obrigatório "
-                        "para alunos."
-                    )
-                },
-                status=400
-            )
-
-        try:
-            curso = Curso.objects.get(pk=curso_id)
-        except (Curso.DoesNotExist, ValueError):
-            return JsonResponse(
-                {"erro": "Curso inválido."},
-                status=400
-            )
-
-    # Verificar se o e-mail já existe
-
-    if User.objects.filter(email=email).exists():
-        return JsonResponse(
-            {
-                "erro": (
-                    "Já existe uma conta "
-                    "com este e-mail."
-                )
-            },
-            status=400
-        )
-
-    # Criar utilizador inativo até validar o PIN
-
-    utilizador = User.objects.create_user(
-        username=email,
-        email=email,
-        password=password,
-        first_name=nome,
-        is_active=False
-    )
-
-    # Criar perfil
-
-    Perfil.objects.create(
-        utilizador=utilizador,
-        nome_completo=nome,
-        tipo=tipo,
-        telemovel=telemovel,
-        sexo=sexo,
-        data_nascimento=data_nascimento,
-        curso=curso,
-        verificado=False
-    )
-
-    # Gerar e guardar PIN
-
-    codigo = gerar_codigo()
-
-    CodigoVerificacao.objects.create(
-        email=email,
-        codigo=codigo,
-        finalidade="registo",
-        expira_em=timezone.now() + timedelta(minutes=10)
-    )
-
-    # Enviar PIN por e-mail
-
-    send_mail(
-        "Código de verificação - Restaurante Profitecla",
-        (
-            f"O seu código de verificação é: {codigo}\n\n"
-            "Este código é válido durante 10 minutos."
-        ),
-        None,
-        [email],
-        fail_silently=False,
-    )
-
     return JsonResponse(
         {
-            "sucesso": True,
-            "mensagem": (
-                "Conta criada. Verifique o seu e-mail."
-            ),
-            "email": email,
+            "sucesso": False,
+            "erro": "O registo público está desativado."
         },
-        status=201
+        status=403
     )
-
 
 
 def gerar_codigo():
@@ -269,85 +76,12 @@ def gerar_codigo():
 @csrf_exempt
 @require_POST
 def verificar_registo(request):
-    email = request.POST.get("email", "").strip().lower()
-    codigo_digitado = request.POST.get("codigo", "").strip()
-
-    if not email or not codigo_digitado:
-        return JsonResponse(
-            {"erro": "O e-mail e o PIN são obrigatórios."},
-            status=400
-        )
-
-    # Procurar o código mais recente de registo ainda não utilizado
-    codigo_obj = (
-        CodigoVerificacao.objects
-        .filter(
-            email=email,
-            finalidade="registo",
-            usado=False
-        )
-        .order_by("-criado_em")
-        .first()
-    )
-
-    if not codigo_obj:
-        return JsonResponse(
-            {"erro": "Não existe um PIN válido para este registo."},
-            status=400
-        )
-
-    # Verificar validade temporal
-    if timezone.now() > codigo_obj.expira_em:
-        return JsonResponse(
-            {"erro": "O PIN expirou. Solicite um novo código."},
-            status=400
-        )
-
-    # Limitar tentativas
-    if codigo_obj.tentativas >= 5:
-        return JsonResponse(
-            {"erro": "Limite de tentativas atingido. Solicite um novo PIN."},
-            status=400
-        )
-
-    # Contar a tentativa
-    codigo_obj.tentativas += 1
-    codigo_obj.save(update_fields=["tentativas"])
-
-    if codigo_digitado != codigo_obj.codigo:
-        return JsonResponse(
-            {"erro": "PIN incorreto."},
-            status=400
-        )
-
-    # Encontrar a conta associada
-    try:
-        utilizador = User.objects.get(email=email)
-        perfil = Perfil.objects.get(utilizador=utilizador)
-    except (User.DoesNotExist, Perfil.DoesNotExist):
-        return JsonResponse(
-            {"erro": "Não foi encontrada uma conta para este e-mail."},
-            status=404
-        )
-
-    # Ativar a conta e verificar o perfil
-    utilizador.is_active = True
-    utilizador.save(update_fields=["is_active"])
-
-    perfil.verificado = True
-    perfil.save(update_fields=["verificado"])
-
-    # Marcar o PIN como utilizado
-    codigo_obj.usado = True
-    codigo_obj.save(update_fields=["usado"])
-
     return JsonResponse(
         {
-            "sucesso": True,
-            "mensagem": "Conta verificada com sucesso. Já pode iniciar sessão.",
-            "redirect": "/utilizadores/login/"
+            "sucesso": False,
+            "erro": "A verificação de registos públicos está desativada."
         },
-        status=200
+        status=403
     )
 
 
@@ -355,34 +89,9 @@ def verificar_registo(request):
 # LOGIN
 # ============================================================
 
-def dominio_institucional_permitido(email):
-    dominios_permitidos = {
-        "alunos.profitecla.pt",
-        "professores.profitecla.pt",
-        "profitecla.pt",
-    }
-
-    if "@" not in email:
-        return False
-
-    dominio = email.rsplit("@", 1)[1].lower()
-    return dominio in dominios_permitidos
-
 
 def obter_utilizador_aluno_staff(email):
-    """
-    Devolve o User associado a uma conta Aluno ou Staff,
-    apenas quando o email completo está autorizado na whitelist.
-    """
     email = email.strip().lower()
-
-    autorizado = EmailAutorizado.objects.filter(
-        email__iexact=email,
-        ativo=True
-    ).first()
-
-    if not autorizado:
-        return None
 
     aluno = (
         Aluno.objects
@@ -398,17 +107,10 @@ def obter_utilizador_aluno_staff(email):
         .first()
     )
 
-    # O mesmo email não pode estar associado aos dois tipos.
     if bool(aluno) == bool(staff):
         return None
 
     conta = aluno or staff
-    tipo_conta = "aluno" if aluno else "staff"
-
-    # O tipo da whitelist tem de corresponder à conta.
-    if autorizado.tipo != tipo_conta:
-        return None
-
     utilizador = conta.utilizador
 
     if not utilizador.is_active:
@@ -420,8 +122,6 @@ def obter_utilizador_aluno_staff(email):
     return utilizador
 
 
-@csrf_exempt
-@require_POST
 def login_utilizador(request):
     email = request.POST.get("email", "").strip().lower()
 
@@ -431,56 +131,45 @@ def login_utilizador(request):
             status=400
         )
 
-    if not dominio_institucional_permitido(email):
-        return JsonResponse(
-            {
-                "erro": (
-                    "Utilize o seu e-mail institucional "
-                    "da Profitecla."
-                )
-            },
-            status=400
-        )
-
     utilizador = obter_utilizador_aluno_staff(email)
 
-    if utilizador:
-        # Invalidar todos os códigos de login anteriores.
-        CodigoVerificacao.objects.filter(
-            email__iexact=email,
-            finalidade="login",
-            usado=False
-        ).update(usado=True)
-
-        codigo = gerar_codigo()
-
-        CodigoVerificacao.objects.create(
-            email=email,
-            codigo=codigo,
-            finalidade="login",
-            expira_em=timezone.now() + timedelta(minutes=10)
+    if not utilizador:
+        return JsonResponse(
+            {"erro": "Não existe uma conta ativa de Aluno ou Staff com este e-mail."},
+            status=403
         )
 
-        send_mail(
-            "Código de acesso - Restaurante Profitecla",
-            (
-                f"O seu código de acesso é: {codigo}\n\n"
-                "Este código é válido durante 10 minutos.\n"
-                "Se não solicitou este código, ignore esta mensagem."
-            ),
-            None,
-            [email],
-            fail_silently=False,
-        )
+    CodigoVerificacao.objects.filter(
+        email__iexact=email,
+        finalidade="login",
+        usado=False
+    ).update(usado=True)
 
-    # Resposta genérica para não revelar se o endereço está registado.
+    codigo = gerar_codigo()
+
+    CodigoVerificacao.objects.create(
+        email=email,
+        codigo=codigo,
+        finalidade="login",
+        expira_em=timezone.now() + timedelta(minutes=10)
+    )
+
+    send_mail(
+        "Código de acesso - Restaurante Profitecla",
+        (
+            f"O seu código de acesso é: {codigo}\n\n"
+            "Este código é válido durante 10 minutos.\n"
+            "Se não solicitou este código, ignore esta mensagem."
+        ),
+        None,
+        [email],
+        fail_silently=False,
+    )
+
     return JsonResponse(
         {
             "sucesso": True,
-            "mensagem": (
-                "Se existir uma conta ativa associada a este e-mail, "
-                "receberá um código de acesso."
-            ),
+            "mensagem": "Código de acesso enviado para o seu e-mail.",
             "email": email,
             "redirect": "/utilizadores/verificar-login/"
         },
@@ -616,13 +305,19 @@ def recuperar_password(request):
             status=400
         )
 
-    try:
-        User.objects.get(email=email)
-    except User.DoesNotExist:
+    utilizador = obter_utilizador_aluno_staff(email)
+
+    if not utilizador:
         return JsonResponse(
-            {"erro": "Não existe uma conta com este e-mail."},
-            status=404
+            {"erro": "Não existe uma conta ativa de Aluno ou Staff com este e-mail."},
+            status=403
         )
+
+    CodigoVerificacao.objects.filter(
+        email__iexact=email,
+        finalidade="recuperacao",
+        usado=False
+    ).update(usado=True)
 
     codigo = gerar_codigo()
 
@@ -636,7 +331,7 @@ def recuperar_password(request):
     send_mail(
         "Recuperação de palavra-passe - Restaurante Profitecla",
         (
-            f"O seu código de recuperação é: {codigo}\n\n"
+            f"O seu código de recuperação é: {codigo}\\n\\n"
             "Este código é válido durante 10 minutos."
         ),
         None,
@@ -664,6 +359,14 @@ def verificar_recuperacao(request):
         return JsonResponse(
             {"erro": "O e-mail e o código são obrigatórios."},
             status=400
+        )
+
+    utilizador = obter_utilizador_aluno_staff(email)
+
+    if not utilizador:
+        return JsonResponse(
+            {"erro": "A conta não está disponível para recuperação."},
+            status=403
         )
 
     codigo_obj = (
@@ -698,7 +401,7 @@ def verificar_recuperacao(request):
     codigo_obj.tentativas += 1
     codigo_obj.save(update_fields=["tentativas"])
 
-    if codigo_digitado != codigo_obj.codigo:
+    if not secrets.compare_digest(codigo_digitado, codigo_obj.codigo):
         return JsonResponse(
             {"erro": "Código incorreto."},
             status=400
@@ -721,9 +424,15 @@ def redefinir_password(request):
     nova_password = request.POST.get("password", "")
     codigo_digitado = request.POST.get("codigo", "").strip()
 
-    if not email:
+    if not email or not codigo_digitado:
         return JsonResponse(
-            {"erro": "O e-mail é obrigatório."},
+            {"erro": "O e-mail e o código são obrigatórios."},
+            status=400
+        )
+
+    if len(codigo_digitado) != 6 or not codigo_digitado.isdigit():
+        return JsonResponse(
+            {"erro": "O código deve conter exatamente seis dígitos."},
             status=400
         )
 
@@ -735,13 +444,16 @@ def redefinir_password(request):
 
     if len(nova_password) < 8:
         return JsonResponse(
-            {
-                "erro": (
-                    "A palavra-passe deve ter pelo menos "
-                    "8 caracteres."
-                )
-            },
+            {"erro": "A palavra-passe deve ter pelo menos 8 caracteres."},
             status=400
+        )
+
+    utilizador = obter_utilizador_aluno_staff(email)
+
+    if not utilizador:
+        return JsonResponse(
+            {"erro": "A conta não está disponível para recuperação."},
+            status=403
         )
 
     codigo_obj = (
@@ -767,24 +479,20 @@ def redefinir_password(request):
             status=400
         )
 
-    # Se o frontend enviar o código nesta etapa,
-    # validamos novamente.
-    if codigo_digitado and codigo_digitado != codigo_obj.codigo:
+    if codigo_obj.tentativas >= 5:
+        return JsonResponse(
+            {"erro": "Limite de tentativas atingido."},
+            status=400
+        )
+
+    if not secrets.compare_digest(codigo_digitado, codigo_obj.codigo):
         return JsonResponse(
             {"erro": "Código incorreto."},
             status=400
         )
 
-    try:
-        utilizador = User.objects.get(email=email)
-    except User.DoesNotExist:
-        return JsonResponse(
-            {"erro": "Utilizador não encontrado."},
-            status=404
-        )
-
     utilizador.set_password(nova_password)
-    utilizador.save()
+    utilizador.save(update_fields=["password"])
 
     codigo_obj.usado = True
     codigo_obj.save(update_fields=["usado"])

@@ -1,6 +1,4 @@
 from django.urls import path
-from .views import pagina_registar
-from django.urls import path
 from .views import (
     registar,
     verificar_registo,
@@ -11,18 +9,14 @@ from .views import (
     redefinir_password,
     alterar_idioma,
     pagina_login,
-    pagina_verificar_registo,
     pagina_verificar_login,
     pagina_recuperar_password,
-    pagina_registar,
     pagina_perfil,
     logout_utilizador,
 )
 
 
 urlpatterns = [
-    path("registar/", pagina_registar, name="pagina_registar"),
-
     path(
         "login/",
         pagina_login,
@@ -33,11 +27,6 @@ urlpatterns = [
     alterar_idioma,
     name="alterar_idioma",
 ),
-    path(
-        "verificar-registo/",
-        pagina_verificar_registo,
-        name="pagina_verificar_registo"
-    ),
 
     path(
         "verificar-login/",
@@ -51,11 +40,6 @@ urlpatterns = [
         name="pagina_recuperar_password"
     ),
 
-    path(
-        "registar/",
-        pagina_registar,
-        name="pagina_registar"
-    ),
 
     # API
     path(
